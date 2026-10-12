@@ -1,0 +1,16 @@
+{
+  "name": "portfolio-aarav-shah",
+  "version": "1.0.0",
+  "description": "Portfolio of Aarav Shah - Data Science & Full-Stack Developer",
+  "scripts": {
+    "dev": "npx -y serve . -l 3000",
+    "start": "npx -y serve . -l 3000"
+  },
+  "keywords": [
+    "portfolio",
+    "data-science",
+    "interactive-web"
+  ],
+  "author": "Aarav Shah",
+  "license": "ISC"
+}
