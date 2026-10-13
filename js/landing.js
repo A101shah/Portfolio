@@ -124,10 +124,37 @@ class LandingPortal {
 
   initTunnelRings() {
     this.tunnelRings = [];
-    for (let r = 0; r < 20; r++) {
+    const webCount = 14;
+    for (let r = 0; r < webCount; r++) {
       this.tunnelRings.push({
-        z: 70 + r * 50,
-        rotation: (r * Math.PI) / 8
+        z: 80 + r * 68,
+        rotation: (r * Math.PI) / 8,
+        wobblePhase: r * 0.45,
+        sagFactor: 0.14 + (r % 3) * 0.03
+      });
+    }
+
+    // High-speed radial silk pulses traveling along the 16 spokes
+    this.silkPulses = [];
+    for (let p = 0; p < 18; p++) {
+      this.silkPulses.push({
+        spokeIndex: Math.floor(Math.random() * 16),
+        progress: Math.random(),
+        speed: 0.7 + Math.random() * 0.8,
+        size: 3 + Math.random() * 2.5
+      });
+    }
+
+    // Floating dewdrifts (3D moisture particles glistening in the slipstream)
+    this.dewdrifts = [];
+    for (let d = 0; d < 80; d++) {
+      this.dewdrifts.push({
+        x: (Math.random() - 0.5) * this.width * 1.6,
+        y: (Math.random() - 0.5) * this.height * 1.6,
+        z: Math.random() * 1000 + 20,
+        speed: Math.random() * 1.2 + 0.8,
+        size: Math.random() * 2.5 + 1.2,
+        alpha: Math.random() * 0.6 + 0.3
       });
     }
   }
@@ -432,7 +459,7 @@ class LandingPortal {
     const velText = document.getElementById("warp-velocity-text");
     const velFill = document.getElementById("warp-velocity-fill");
     if (hud) hud.classList.add("active");
-    if (statusText) statusText.textContent = "QUANTUM DRIVE: ENGAGED";
+    if (statusText) statusText.textContent = "QUANTUM SILK WEAVE: ENGAGED";
     if (velText) velText.textContent = "0.2c";
     if (velFill) velFill.style.width = "10%";
 
@@ -445,20 +472,22 @@ class LandingPortal {
         this.container.classList.add("warp-active");
       }
 
-      if (statusText) statusText.textContent = "HYPERSPACE INJECTION // RELATIVISTIC FLIGHT";
+      if (statusText) statusText.textContent = "RELATIVISTIC SILK VORTEX // ACCELERATING";
 
       // Animate velocity bar smoothly through hyperspace
+      if (this.velInterval) clearInterval(this.velInterval);
       let vProgress = 0.15;
-      const velInterval = setInterval(() => {
+      this.velInterval = setInterval(() => {
         vProgress += 0.038;
         if (vProgress >= 0.55 && vProgress < 0.85) {
-          if (statusText) statusText.textContent = "RELATIVISTIC SLIPSTREAM // APPROACHING EVENT HORIZON";
+          if (statusText) statusText.textContent = "HARMONIC SILK RESONANCE // APPROACHING CORE NEXUS";
         } else if (vProgress >= 0.85 && vProgress < 0.99) {
-          if (statusText) statusText.textContent = "CRITICAL VELOCITY: 9.9c // BREACHING NEXUS DIMENSION";
+          if (statusText) statusText.textContent = "CRITICAL TENSION: 9.9c // SYNCHRONIZING NEURAL WEAVE";
         } else if (vProgress >= 0.99) {
           vProgress = 1.0;
-          clearInterval(velInterval);
-          if (statusText) statusText.textContent = "MAX WARP: 9.9c // SYNCHRONIZING NEURAL NEXUS";
+          clearInterval(this.velInterval);
+          this.velInterval = null;
+          if (statusText) statusText.textContent = "MAX WARP: 9.9c // NEXUS ARRIVAL CONFIRMED";
         }
         if (velText) {
           const c = (vProgress * 9.9).toFixed(1);
@@ -477,20 +506,22 @@ class LandingPortal {
           this.container.classList.add("warp-dissolving");
         }
 
-        // Initialize celestial dive in Spider Web Universe
+        // Initialize celestial dive in Spider Web Universe (aligned right on center Nexus (0, 0)!)
         if (window.spiderWebInstance && typeof window.spiderWebInstance.triggerCelestialEntrance === "function") {
           window.spiderWebInstance.triggerCelestialEntrance();
         } else if (window.spiderWebInstance) {
           const web = window.spiderWebInstance;
-          web.camera.zoom = 0.20;
-          web.camera.y = -400;
+          web.camera.zoom = 0.40;
+          web.camera.y = 0;
           web.camera.x = 0;
-          web.camera.targetZoom = 1.05;
+          web.camera.targetZoom = 1.0;
           web.camera.targetY = 0;
           web.camera.targetX = 0;
           web.camera.isGliding = true;
-          web.triggerVibration(0, 0);
-          setTimeout(() => web.triggerVibration(0, 0), 300);
+          if (typeof web.triggerVibration === "function") {
+            web.triggerVibration(0, 0);
+            setTimeout(() => web.triggerVibration(0, 0), 250);
+          }
         }
 
         // Phase 4: Settle & Finalize (3900ms)
@@ -521,6 +552,10 @@ class LandingPortal {
     this.isWarping = false;
     this.isSingularity = false;
     this.warpProgress = 0;
+    if (this.velInterval) {
+      clearInterval(this.velInterval);
+      this.velInterval = null;
+    }
 
     // Reset button
     if (this.enterBtn) {
@@ -599,7 +634,7 @@ class LandingPortal {
       } else if (this.isSingularity) {
         this.renderSingularityImplosion(dt);
       } else {
-        this.warpProgress = Math.min(this.warpProgress + dt * 0.75, 1.0);
+        this.warpProgress = Math.min(this.warpProgress + dt * 0.44, 1.0);
         this.renderWarpSpeed(dt);
       }
     }
@@ -749,17 +784,40 @@ class LandingPortal {
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
 
-    // Gentle radiant aura
-    const glowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 220);
-    glowGrad.addColorStop(0, "rgba(220, 235, 255, 0.45)");
-    glowGrad.addColorStop(0.35, "rgba(150, 180, 255, 0.2)");
-    glowGrad.addColorStop(1, "transparent");
-    ctx.fillStyle = glowGrad;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 220, 0, Math.PI * 2);
-    ctx.fill();
+    // 1. Draw 16 converging silken anchor threads shooting inward from screen perimeter
+    const spokeCount = 16;
+    const maxR = Math.max(this.width, this.height) * 0.85;
+    for (let s = 0; s < spokeCount; s++) {
+      const angle = (s / spokeCount) * Math.PI * 2;
+      const ex = cx + Math.cos(angle) * maxR;
+      const ey = cy + Math.sin(angle) * maxR;
 
-    // Smooth inward cosmic flow
+      // Elastic tension wave along the thread
+      const wave = Math.sin(Date.now() * 0.02 + s * 2.2) * 5;
+      const perpAngle = angle + Math.PI / 2;
+      const midX = (cx + ex) / 2 + Math.cos(perpAngle) * wave;
+      const midY = (cy + ey) / 2 + Math.sin(perpAngle) * wave;
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.quadraticCurveTo(midX, midY, ex, ey);
+      ctx.strokeStyle = "rgba(180, 205, 245, 0.45)";
+      ctx.lineWidth = 1.3;
+      ctx.stroke();
+
+      // Glistening dewdrops along converging spoke
+      for (let d = 1; d <= 4; d++) {
+        const t = d / 5;
+        const dx = cx + (ex - cx) * t;
+        const dy = cy + (ey - cy) * t;
+        ctx.beginPath();
+        ctx.arc(dx, dy, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(225, 240, 255, 0.9)";
+        ctx.fill();
+      }
+    }
+
+    // 2. Cosmic inward spiral of particles into the core
     for (let i = 0; i < pts.length; i++) {
       const p = pts[i];
       const dx = p.x - cx;
@@ -767,165 +825,254 @@ class LandingPortal {
       let r = Math.hypot(dx, dy);
       let angle = Math.atan2(dy, dx);
 
-      angle += (140 / (r + 40)) * dt * 2.5;
-      r = Math.max(3, r - (r * 2.2 + 60) * dt);
+      angle += (160 / (r + 30)) * dt * 3.2;
+      r = Math.max(4, r - (r * 2.8 + 80) * dt);
 
       p.x = cx + Math.cos(angle) * r;
       p.y = cy + Math.sin(angle) * r;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.baseRadius * 1.3, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(200, 220, 255, 0.85)";
+      ctx.arc(p.x, p.y, p.baseRadius * 1.4, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(200, 225, 255, 0.9)";
       ctx.fill();
     }
 
-    // Singularity center point
+    // 3. Central Nexus Pearl Swelling (matching the main web's central pearl)
+    const pearlR = 12 + Math.sin(Date.now() * 0.015) * 3;
+    const pearlGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pearlR * 3);
+    pearlGrad.addColorStop(0, "#ffffff");
+    pearlGrad.addColorStop(0.25, "rgba(215, 235, 255, 0.9)");
+    pearlGrad.addColorStop(0.6, "rgba(140, 185, 255, 0.3)");
+    pearlGrad.addColorStop(1, "transparent");
+
+    ctx.fillStyle = pearlGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffffff";
+    ctx.arc(cx, cy, pearlR * 3, 0, Math.PI * 2);
     ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, pearlR, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowBlur = 24;
+    ctx.shadowColor = "#38bdf8";
+    ctx.fill();
+    ctx.shadowBlur = 0;
 
     ctx.restore();
   }
 
   renderWarpSpeed(dt) {
     const ctx = this.ctx;
-    const pts = this.particles;
-    const len = pts.length;
     const cx = this.width / 2;
     const cy = this.height / 2;
 
-    const speedMultiplier = 1 + Math.pow(this.warpProgress, 2.5) * 45;
+    // Silky, non-strobe relativistic acceleration (velvety smooth forward velocity)
+    const speedMultiplier = 1 + Math.pow(this.warpProgress, 1.6) * 7.5;
 
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
 
-    // 1. Draw 3D Spider-Silk Hyper-Tunnel Polygonal Rings (Pure 60fps)
-    const sides = 8;
-    const baseRadius = Math.max(this.width, this.height) * 0.45;
+    const baseRadius = Math.max(this.width, this.height) * 0.52;
+    const sides = 16; // 16 radial spokes aligning perfectly with the Spider Web Nexus Hub!
 
-    for (let i = 0; i < this.tunnelRings.length; i++) {
-      const ring = this.tunnelRings[i];
-      ring.z -= 380 * speedMultiplier * dt;
-      ring.rotation += 0.5 * dt;
-
-      if (ring.z <= 15) {
-        ring.z = 1000;
-      }
-
-      const k = 280 / ring.z;
-      const r = baseRadius * k;
-      const alpha = Math.min(Math.max((1 - ring.z / 1000) * 0.75, 0), 0.7);
-
-      if (r > 3 && r < Math.max(this.width, this.height) * 1.8) {
-        // Dual-pass for silky neon glow: translucent halo stroke + crisp core
-        ctx.beginPath();
-        for (let s = 0; s < sides; s++) {
-          const a = (s / sides) * Math.PI * 2 + ring.rotation;
-          const vx = cx + Math.cos(a) * r;
-          const vy = cy + Math.sin(a) * r;
-          if (s === 0) ctx.moveTo(vx, vy);
-          else ctx.lineTo(vx, vy);
-        }
-        ctx.closePath();
-
-        // Outer soft glow stroke
-        ctx.strokeStyle = `rgba(150, 180, 255, ${alpha * 0.35})`;
-        ctx.lineWidth = Math.min(k * 4.5, 7);
-        ctx.stroke();
-
-        // Inner crisp stroke
-        ctx.strokeStyle = `rgba(215, 230, 255, ${alpha * 0.85})`;
-        ctx.lineWidth = Math.min(k * 1.5, 2.5);
-        ctx.stroke();
-
-        // Node dewdrops on polygonal corners
-        for (let s = 0; s < sides; s++) {
-          const a = (s / sides) * Math.PI * 2 + ring.rotation;
-          const vx = cx + Math.cos(a) * r;
-          const vy = cy + Math.sin(a) * r;
-          ctx.beginPath();
-          ctx.arc(vx, vy, Math.min(k * 2.5, 4), 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.9})`;
-          ctx.fill();
-        }
-      }
-    }
-
-    // 2. Longitudinal Silk Beams projecting from center vanishing point
+    // 1. Draw 16 Longitudinal Silk Highway Spokes radiating from vanishing point
     for (let s = 0; s < sides; s++) {
-      const a = (s / sides) * Math.PI * 2 + (this.tunnelRings[0] ? this.tunnelRings[0].rotation * 0.3 : 0);
-      const ex = cx + Math.cos(a) * Math.max(this.width, this.height);
-      const ey = cy + Math.sin(a) * Math.max(this.width, this.height);
+      const spokeAngle = (s / sides) * Math.PI * 2 + (this.tunnelRings[0] ? this.tunnelRings[0].rotation * 0.2 : 0);
+      const ex = cx + Math.cos(spokeAngle) * Math.max(this.width, this.height) * 1.3;
+      const ey = cy + Math.sin(spokeAngle) * Math.max(this.width, this.height) * 1.3;
+
+      // Delicate elastic sine wave in silk thread
+      const wave = Math.sin(Date.now() * 0.006 + s * 1.6) * 2.8;
+      const perp = spokeAngle + Math.PI / 2;
+      const midX = (cx + ex) * 0.5 + Math.cos(perp) * wave;
+      const midY = (cy + ey) * 0.5 + Math.sin(perp) * wave;
 
       ctx.beginPath();
       ctx.moveTo(cx, cy);
-      ctx.lineTo(ex, ey);
-      ctx.strokeStyle = `rgba(160, 185, 255, ${0.12 + this.warpProgress * 0.25})`;
-      ctx.lineWidth = 1.2;
+      ctx.quadraticCurveTo(midX, midY, ex, ey);
+      ctx.strokeStyle = `rgba(200, 218, 240, ${0.16 + this.warpProgress * 0.35})`;
+      ctx.lineWidth = 1.25;
       ctx.stroke();
     }
 
-    // 3. Hyperspace Photon Streaks (Zero shadowBlur - pure fast alpha lines)
-    for (let i = 0; i < len; i++) {
-      const p = pts[i];
-      const prevZ = p.wz;
-      p.wz -= 340 * p.wSpeed * speedMultiplier * dt;
+    // 2. High-Speed Traveling Silk Energy Pulses racing down the 16 spokes
+    if (this.silkPulses) {
+      for (let p = 0; p < this.silkPulses.length; p++) {
+        const pulse = this.silkPulses[p];
+        pulse.progress += pulse.speed * speedMultiplier * dt * 0.42;
+        if (pulse.progress >= 1.0) {
+          pulse.progress = 0;
+          pulse.spokeIndex = Math.floor(Math.random() * sides);
+        }
 
-      if (p.wz <= 1) {
-        p.wz = 1000;
-        p.wx = (Math.random() - 0.5) * this.width * 1.5;
-        p.wy = (Math.random() - 0.5) * this.height * 1.5;
-        continue;
+        const angle = (pulse.spokeIndex / sides) * Math.PI * 2 + (this.tunnelRings[0] ? this.tunnelRings[0].rotation * 0.2 : 0);
+        const dist = Math.pow(pulse.progress, 1.35) * Math.max(this.width, this.height) * 1.05;
+        const px = cx + Math.cos(angle) * dist;
+        const py = cy + Math.sin(angle) * dist;
+
+        ctx.beginPath();
+        ctx.arc(px, py, pulse.size * (0.6 + pulse.progress * 0.8), 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(235, 248, 255, 0.95)";
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = "#93c5fd";
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    // 3. Draw 3D Nested Spider Webs in Relativistic Perspective
+    for (let i = 0; i < this.tunnelRings.length; i++) {
+      const ring = this.tunnelRings[i];
+      ring.z -= 280 * speedMultiplier * dt;
+      ring.rotation += (0.28 + (1000 - ring.z) * 0.00035) * dt;
+
+      if (ring.z <= 20) {
+        ring.z = 1000;
       }
 
-      const k = 280 / p.wz;
-      const px = cx + p.wx * k;
-      const py = cy + p.wy * k;
+      const k = 270 / ring.z;
+      const webR = baseRadius * k;
+      const distFade = Math.min(Math.max((1 - ring.z / 1000) * 0.88, 0), 0.88);
+      const nearFade = ring.z < 120 ? Math.max(0, (ring.z - 20) / 100) : 1;
+      const alpha = distFade * nearFade;
 
-      const prevK = 280 / Math.min(prevZ, 1000);
-      const prevPx = cx + p.wx * prevK;
-      const prevPy = cy + p.wy * prevK;
+      if (webR > 8 && webR < Math.max(this.width, this.height) * 2.8 && alpha > 0.01) {
+        const angles = [];
+        for (let s = 0; s < sides; s++) {
+          angles[s] = (s / sides) * Math.PI * 2 + ring.rotation;
+        }
 
-      const alpha = Math.min((1 - p.wz / 1000) * 1.2, 1);
+        const ringLevels = 4;
+        for (let lvl = 1; lvl <= ringLevels; lvl++) {
+          const spiralR = webR * (lvl / (ringLevels + 0.3));
 
-      // Streak tail line
-      ctx.beginPath();
-      ctx.moveTo(prevPx, prevPy);
-      ctx.lineTo(px, py);
-      ctx.strokeStyle = `rgba(180, 205, 255, ${alpha * 0.75})`;
-      ctx.lineWidth = Math.min(k * 2.2, 3);
-      ctx.stroke();
+          ctx.beginPath();
+          for (let s = 0; s < sides; s++) {
+            const a1 = angles[s];
+            const a2 = angles[(s + 1) % sides];
 
-      // Bright photon head
-      ctx.beginPath();
-      ctx.arc(px, py, Math.max(1, (1 - p.wz / 1000) * 3), 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-      ctx.fill();
+            const p1x = cx + Math.cos(a1) * spiralR;
+            const p1y = cy + Math.sin(a1) * spiralR;
+            const p2x = cx + Math.cos(a2) * spiralR;
+            const p2y = cy + Math.sin(a2) * spiralR;
+
+            const midAngle = (a1 + a2) * 0.5;
+            const sagR = spiralR * (1 - ring.sagFactor);
+            const ctrlX = cx + Math.cos(midAngle) * sagR;
+            const ctrlY = cy + Math.sin(midAngle) * sagR;
+
+            if (s === 0) ctx.moveTo(p1x, p1y);
+            ctx.quadraticCurveTo(ctrlX, ctrlY, p2x, p2y);
+          }
+          ctx.closePath();
+
+          ctx.strokeStyle = `rgba(195, 215, 242, ${alpha * (lvl === ringLevels ? 0.65 : 0.36)})`;
+          ctx.lineWidth = Math.min(k * 1.5, 2.2);
+          ctx.stroke();
+
+          if (lvl >= 2) {
+            for (let s = 0; s < sides; s++) {
+              const a = angles[s];
+              const dx = cx + Math.cos(a) * spiralR;
+              const dy = cy + Math.sin(a) * spiralR;
+
+              ctx.beginPath();
+              ctx.arc(dx, dy, Math.min(k * 1.9, 3.4), 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(240, 248, 255, ${alpha * 0.95})`;
+              ctx.fill();
+            }
+          }
+        }
+      }
     }
 
-    // 4. Vanishing Point Stellar Core Glow
-    const flareR = 20 + this.warpProgress * 30;
-    const flareGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, flareR);
-    flareGrad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
-    flareGrad.addColorStop(0.3, "rgba(190, 215, 255, 0.6)");
-    flareGrad.addColorStop(1, "transparent");
+    // 4. Floating 3D Dewdrifts (Glistening moisture motes in relativistic slipstream)
+    if (this.dewdrifts) {
+      for (let d = 0; d < this.dewdrifts.length; d++) {
+        const drop = this.dewdrifts[d];
+        const prevZ = drop.z;
+        drop.z -= 320 * drop.speed * speedMultiplier * dt;
 
-    ctx.fillStyle = flareGrad;
+        if (drop.z <= 10) {
+          drop.z = 1000;
+          drop.x = (Math.random() - 0.5) * this.width * 1.5;
+          drop.y = (Math.random() - 0.5) * this.height * 1.5;
+          continue;
+        }
+
+        const k = 270 / drop.z;
+        const px = cx + drop.x * k;
+        const py = cy + drop.y * k;
+
+        const prevK = 270 / Math.min(prevZ, 1000);
+        const prevPx = cx + drop.x * prevK;
+        const prevPy = cy + drop.y * prevK;
+
+        const dropFade = drop.z < 100 ? (drop.z - 10) / 90 : 1;
+        const dropAlpha = Math.min((1 - drop.z / 1000) * 1.1, 1) * drop.alpha * dropFade;
+
+        ctx.beginPath();
+        ctx.moveTo(prevPx, prevPy);
+        ctx.lineTo(px, py);
+        ctx.strokeStyle = `rgba(210, 228, 255, ${dropAlpha * 0.65})`;
+        ctx.lineWidth = Math.min(k * 2.0, 2.5);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(1, (1 - drop.z / 1000) * drop.size * 1.8), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${dropAlpha})`;
+        ctx.fill();
+      }
+    }
+
+    // 5. Center Nexus Pearl (The focal destination of the Spider Web universe)
+    const pearlR = 14 + this.warpProgress * 26;
+    const pearlGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pearlR * 2.8);
+    pearlGrad.addColorStop(0, "#ffffff");
+    pearlGrad.addColorStop(0.28, "rgba(220, 238, 255, 0.9)");
+    pearlGrad.addColorStop(0.65, "rgba(147, 197, 253, 0.38)");
+    pearlGrad.addColorStop(1, "transparent");
+
+    ctx.fillStyle = pearlGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, flareR, 0, Math.PI * 2);
+    ctx.arc(cx, cy, pearlR * 2.8, 0, Math.PI * 2);
     ctx.fill();
 
-    // 4-point cross diffraction spikes
-    const spikeLen = flareR * 2.2;
-    ctx.strokeStyle = "rgba(220, 235, 255, 0.5)";
-    ctx.lineWidth = 1.2;
     ctx.beginPath();
-    ctx.moveTo(cx - spikeLen, cy);
-    ctx.lineTo(cx + spikeLen, cy);
-    ctx.moveTo(cx, cy - spikeLen);
-    ctx.lineTo(cx, cy + spikeLen);
-    ctx.stroke();
+    ctx.arc(cx, cy, pearlR * 0.55, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = "#93c5fd";
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // 6. Climax Expanding Silk Shockwaves & Emergence Bloom (Emergence wavefront)
+    if (this.warpProgress > 0.82) {
+      const waveProgress = (this.warpProgress - 0.82) / 0.18;
+      const waveR = waveProgress * Math.max(this.width, this.height) * 1.4;
+      const waveAlpha = (1 - waveProgress) * 0.85;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, waveR, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(225, 240, 255, ${waveAlpha})`;
+      ctx.lineWidth = 3.2 * (1 - waveProgress);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, Math.max(0, waveR - 40), 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(147, 197, 253, ${waveAlpha * 0.5})`;
+      ctx.lineWidth = 2.0 * (1 - waveProgress);
+      ctx.stroke();
+
+      const bloomGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, waveR * 0.7);
+      bloomGrad.addColorStop(0, `rgba(255, 255, 255, ${waveAlpha * 0.3})`);
+      bloomGrad.addColorStop(0.5, `rgba(180, 215, 255, ${waveAlpha * 0.12})`);
+      bloomGrad.addColorStop(1, "transparent");
+      ctx.fillStyle = bloomGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, waveR * 0.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     ctx.restore();
   }

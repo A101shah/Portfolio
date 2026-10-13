@@ -1221,23 +1221,23 @@ class SpiderWeb {
   }
 
   triggerCelestialEntrance() {
-    // Start camera far out in the wide cosmic void
-    this.camera.zoom = 0.22;
-    this.camera.y = -420;
+    // Start camera smoothly on the central Nexus core (0, 0) - perfectly matching tunnel vanishing point!
+    this.camera.zoom = 0.40;
     this.camera.x = 0;
-    this.camera.targetZoom = 1.05;
-    this.camera.targetY = 0;
+    this.camera.y = 0;
+    this.camera.targetZoom = 1.0;
     this.camera.targetX = 0;
+    this.camera.targetY = 0;
     this.camera.isGliding = true;
 
     // Resonant shockwaves rippling through living silk threads
     this.triggerVibration(0, 0);
     setTimeout(() => {
       this.triggerVibration(0, 0);
-    }, 320);
+    }, 240);
     setTimeout(() => {
       this.triggerVibration(0, 0);
-    }, 700);
+    }, 550);
 
     // Ignite the primary Nexus core
     if (this.junctions && this.junctions[0]) {
