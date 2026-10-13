@@ -107,8 +107,102 @@ class SoundEngine {
       osc.stop(this.audioCtx.currentTime + 0.03);
     } catch (e) {}
   }
+
+  playGlitchChirp() {
+    if (this.isMuted || !this.audioCtx) return;
+    try {
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(900 + Math.random() * 400, now);
+      osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+
+      gain.gain.setValueAtTime(0.02, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } catch (e) {}
+  }
+
+  playWarpJump() {
+    this.init();
+    if (this.audioCtx && this.audioCtx.state === "suspended") {
+      this.audioCtx.resume();
+    }
+    if (this.isMuted || !this.audioCtx) return;
+
+    try {
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+
+      // 1. Sub-bass boom & sweep
+      const subOsc = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      subOsc.type = "sine";
+      subOsc.frequency.setValueAtTime(110, now);
+      subOsc.frequency.exponentialRampToValueAtTime(32, now + 0.9);
+
+      subGain.gain.setValueAtTime(0.12, now);
+      subGain.gain.linearRampToValueAtTime(0.2, now + 0.2);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+
+      subOsc.connect(subGain);
+      subGain.connect(ctx.destination);
+      subOsc.start(now);
+      subOsc.stop(now + 1.1);
+
+      // 2. High-speed rising particle acceleration tone
+      const riseOsc = ctx.createOscillator();
+      const riseFilter = ctx.createBiquadFilter();
+      const riseGain = ctx.createGain();
+
+      riseOsc.type = "sawtooth";
+      riseOsc.frequency.setValueAtTime(220, now);
+      riseOsc.frequency.exponentialRampToValueAtTime(1600, now + 0.7);
+
+      riseFilter.type = "lowpass";
+      riseFilter.frequency.setValueAtTime(400, now);
+      riseFilter.frequency.exponentialRampToValueAtTime(3200, now + 0.65);
+      riseFilter.Q.setValueAtTime(4, now);
+
+      riseGain.gain.setValueAtTime(0.01, now);
+      riseGain.gain.linearRampToValueAtTime(0.06, now + 0.5);
+      riseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
+
+      riseOsc.connect(riseFilter);
+      riseFilter.connect(riseGain);
+      riseGain.connect(ctx.destination);
+      riseOsc.start(now);
+      riseOsc.stop(now + 0.85);
+
+      // 3. Dimensional warp chime resolution
+      const chimeOsc = ctx.createOscillator();
+      const chimeGain = ctx.createGain();
+      chimeOsc.type = "sine";
+      chimeOsc.frequency.setValueAtTime(880, now + 0.6);
+      chimeOsc.frequency.exponentialRampToValueAtTime(1320, now + 0.9);
+
+      chimeGain.gain.setValueAtTime(0.0001, now);
+      chimeGain.gain.setValueAtTime(0.04, now + 0.6);
+      chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.3);
+
+      chimeOsc.connect(chimeGain);
+      chimeGain.connect(ctx.destination);
+      chimeOsc.start(now + 0.6);
+      chimeOsc.stop(now + 1.3);
+    } catch (e) {
+      console.warn("Warp sound synthesis error", e);
+    }
+  }
 }
 
 if (typeof window !== "undefined") {
   window.SoundEngine = SoundEngine;
 }
+

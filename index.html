@@ -16,10 +16,109 @@
   <!-- Favicon SVG (Spider Web Glyph) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0b0e'/><polygon points='50,15 85,32 85,68 50,85 15,68 15,32' fill='none' stroke='%2300f0ff' stroke-width='4'/><polygon points='50,28 72,40 72,60 50,72 28,60 28,40' fill='none' stroke='%2300f0ff' stroke-width='3'/><line x1='50' y1='15' x2='50' y2='85' stroke='%2300f0ff' stroke-width='2'/><line x1='15' y1='32' x2='85' y2='68' stroke='%2300f0ff' stroke-width='2'/><line x1='15' y1='68' x2='85' y2='32' stroke='%2300f0ff' stroke-width='2'/><circle cx='50' cy='50' r='5' fill='%2300f0ff'/></svg>">
 
-  <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <!-- Core Stylesheet & Landing Page Styles -->
+  <link rel="stylesheet" href="css/style.css?v=11">
+  <link rel="stylesheet" href="css/landing.css?v=11">
 </head>
 <body class="web-only-mode">
+
+  <!-- Quantum Hyperspace Flash Overlay -->
+  <div class="warp-flash" id="warp-flash" aria-hidden="true"></div>
+
+  <!-- ======================================================================
+       CINEMATIC LANDING GATEWAY — AARAV SHAH
+       Interactive Constellation, 3D Tilt & Hyperspace Warp Entrance
+       ====================================================================== -->
+  <section id="landing-page" aria-label="Aarav Shah Portfolio Gateway">
+    <!-- Starfield & Constellation Canvas -->
+    <canvas id="landing-particles" aria-hidden="true"></canvas>
+
+    <!-- Deep Ambient Glow Core Orb -->
+    <div class="landing-glow-orb" aria-hidden="true"></div>
+
+    <!-- Triple Orbital Rings with Quantum Beacons -->
+    <div class="orbital-ring orbital-ring--1" aria-hidden="true"></div>
+    <div class="orbital-ring orbital-ring--2" aria-hidden="true"></div>
+    <div class="orbital-ring orbital-ring--3" aria-hidden="true"></div>
+
+    <!-- Holographic Vignette & Laser Scanline -->
+    <div class="landing-vignette" aria-hidden="true"></div>
+    <div class="landing-scanline" aria-hidden="true"></div>
+
+    <!-- Futuristic Corner Telemetry Readouts -->
+    <div class="landing-corner landing-corner--tl" aria-hidden="true">
+      <div>SYS: QUANTUM_NEXUS // v2.6.4</div>
+      <div>COORD: 19.0760° N, 72.8777° E</div>
+    </div>
+    <div class="landing-corner landing-corner--tr" aria-hidden="true">
+      <div>NMIMS MPSTME // DATA SCIENCE</div>
+      <div>STATUS: ONLINE // READY</div>
+    </div>
+    <div class="landing-corner landing-corner--bl" aria-hidden="true">
+      <div>DEV_CORE: AARAV SHAH</div>
+      <div>ARCHITECT // ML RESEARCH</div>
+    </div>
+    <div class="landing-corner landing-corner--br" aria-hidden="true">
+      <div>QUANTUM STATE: ENTANGLED</div>
+      <div>INITIALIZATION: STANDBY</div>
+    </div>
+
+    <!-- Center Hero Card with 3D Tilt -->
+    <div class="landing-center">
+      <!-- Top Status Code Line -->
+      <div class="landing-status-line">
+        <span>// NEURAL INTERFACE ONLINE &bull; ACCESS AUTHORIZED</span>
+      </div>
+
+      <!-- Glitch Shimmer Title -->
+      <h1 class="landing-title" data-text="AARAV SHAH">
+        <span class="first-name">AARAV</span>
+        <span class="last-name">SHAH</span>
+      </h1>
+
+      <!-- Subtitle / Roles -->
+      <p class="landing-subtitle">
+        DATA SCIENTIST <span class="accent">&bull;</span> FULL-STACK ARCHITECT <span class="accent">&bull;</span> ML RESEARCHER
+      </p>
+
+      <!-- Floating Tech Badges Cluster -->
+      <div class="landing-skills-orbit" aria-label="Core Competencies">
+        <span class="skill-tag-float" style="animation-delay: 0.1s">Deep Learning</span>
+        <span class="skill-tag-float" style="animation-delay: 0.2s">Computer Vision</span>
+        <span class="skill-tag-float" style="animation-delay: 0.3s">NLP &amp; LLMs</span>
+        <span class="skill-tag-float" style="animation-delay: 0.4s">Full-Stack Systems</span>
+        <span class="skill-tag-float" style="animation-delay: 0.5s">Data Analytics</span>
+        <span class="skill-tag-float" style="animation-delay: 0.6s">Autonomous Agents</span>
+      </div>
+
+      <!-- Magnetic Warp Gate Enter Button -->
+      <button class="landing-enter-btn" id="landing-enter-btn" aria-label="Enter Neural Spider Web Universe">
+        <span>INITIALIZE NEURAL UNIVERSE</span>
+        <span class="enter-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <!-- Bottom Social Links Bar -->
+    <nav class="landing-social-row" aria-label="External Profiles">
+      <a href="https://github.com/A101shah" target="_blank" rel="noopener noreferrer" class="landing-social-link" title="GitHub Profile">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        <span>GITHUB</span>
+      </a>
+      <a href="https://linkedin.com/in/aarav-shah-81525b293" target="_blank" rel="noopener noreferrer" class="landing-social-link" title="LinkedIn Profile">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        <span>LINKEDIN</span>
+      </a>
+      <a href="mailto:aaravshah101@gmail.com" class="landing-social-link" title="Direct Email">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span>CONTACT</span>
+      </a>
+    </nav>
+  </section>
 
   <!-- Background Living Infinite Organic Spider Web Canvas -->
   <canvas id="spider-web-canvas" aria-label="Interactive Infinite Spider Web Network"></canvas>
@@ -27,8 +126,12 @@
   <!-- Cybernetic Grid & Vignette Overlay -->
   <div class="web-vignette-overlay" aria-hidden="true"></div>
 
-  <!-- Floating Infinite Canvas Navigation Controls (Zoom & Recenter) -->
+  <!-- Floating Infinite Canvas Navigation Controls (Zoom, Recenter & Gateway Return) -->
   <aside class="infinite-canvas-controls" aria-label="Canvas Pan and Zoom Controls">
+    <button class="gateway-portal-btn" id="gateway-portal-btn" title="Return to Landing Gateway" aria-label="Return to Landing Gateway">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="7"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span>GATEWAY</span>
+    </button>
     <button class="canvas-tool-btn" id="canvas-zoom-in" title="Zoom In (+)" aria-label="Zoom In">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </button>
@@ -56,6 +159,7 @@
       <span>DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK SILK GUIDES TO GLIDE BETWEEN WEBS &bull; CLICK CENTER GLOW TO OPEN KEY CARD</span>
     </div>
   </div>
+
 
   <!-- ======================================================================
        KEY CARD MODAL / POPUP OVERLAY SYSTEM
@@ -120,10 +224,11 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/portfolio-data.js?v=10"></script>
-  <script src="js/audio-effects.js?v=10"></script>
-  <script src="js/spider-web.js?v=10"></script>
-  <script src="js/interactive-terminal.js?v=10"></script>
-  <script src="js/main.js?v=10"></script>
+  <script src="js/portfolio-data.js?v=11"></script>
+  <script src="js/audio-effects.js?v=11"></script>
+  <script src="js/spider-web.js?v=11"></script>
+  <script src="js/landing.js?v=11"></script>
+  <script src="js/interactive-terminal.js?v=11"></script>
+  <script src="js/main.js?v=11"></script>
 </body>
 </html>
