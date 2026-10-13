@@ -1221,9 +1221,9 @@ class SpiderWeb {
   }
 
   triggerCelestialEntrance() {
-    // Start camera far out in the celestial void
-    this.camera.zoom = 0.35;
-    this.camera.y = -360;
+    // Start camera far out in the wide cosmic void
+    this.camera.zoom = 0.22;
+    this.camera.y = -420;
     this.camera.x = 0;
     this.camera.targetZoom = 1.05;
     this.camera.targetY = 0;
@@ -1234,10 +1234,10 @@ class SpiderWeb {
     this.triggerVibration(0, 0);
     setTimeout(() => {
       this.triggerVibration(0, 0);
-    }, 280);
+    }, 320);
     setTimeout(() => {
       this.triggerVibration(0, 0);
-    }, 620);
+    }, 700);
 
     // Ignite the primary Nexus core
     if (this.junctions && this.junctions[0]) {

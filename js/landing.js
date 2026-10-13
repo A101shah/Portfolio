@@ -124,10 +124,10 @@ class LandingPortal {
 
   initTunnelRings() {
     this.tunnelRings = [];
-    for (let r = 0; r < 14; r++) {
+    for (let r = 0; r < 20; r++) {
       this.tunnelRings.push({
-        z: 80 + r * 68,
-        rotation: (r * Math.PI) / 10
+        z: 70 + r * 50,
+        rotation: (r * Math.PI) / 8
       });
     }
   }
@@ -413,7 +413,7 @@ class LandingPortal {
       if (btnText) btnText.textContent = "CALIBRATING QUANTUM LINK...";
     }
 
-    // Phase 1: Singularity Accretion & Dimensional Swell (0ms -> 750ms)
+    // Phase 1: Singularity Accretion & Card Dissolve (0ms -> 700ms)
     if (this.container) {
       this.container.classList.add("warp-charging");
     }
@@ -426,17 +426,17 @@ class LandingPortal {
       window.soundEngineInstance.playNodeClick();
     }
 
-    // Reveal telemetry HUD
+    // Reveal top flight telemetry HUD
     const hud = document.getElementById("warp-telemetry-hud");
     const statusText = document.getElementById("warp-status-text");
     const velText = document.getElementById("warp-velocity-text");
     const velFill = document.getElementById("warp-velocity-fill");
     if (hud) hud.classList.add("active");
-    if (statusText) statusText.textContent = "GRAVITATIONAL ANCHOR DISENGAGED";
-    if (velText) velText.textContent = "VELOCITY: 0.1c";
+    if (statusText) statusText.textContent = "QUANTUM DRIVE: ENGAGED";
+    if (velText) velText.textContent = "0.2c";
     if (velFill) velFill.style.width = "10%";
 
-    // Phase 2: Relativistic Hyperspace Wormhole Tunnel (750ms -> 2000ms)
+    // Phase 2: Relativistic Hyperspace Wormhole Tunnel (700ms -> 3000ms)
     setTimeout(() => {
       this.isSingularity = false;
 
@@ -447,37 +447,34 @@ class LandingPortal {
 
       if (statusText) statusText.textContent = "HYPERSPACE INJECTION // RELATIVISTIC FLIGHT";
 
-      // Animate velocity bar through hyperspace
-      let vProgress = 0.1;
+      // Animate velocity bar smoothly through hyperspace
+      let vProgress = 0.15;
       const velInterval = setInterval(() => {
-        vProgress += 0.08;
-        if (vProgress >= 0.99) {
+        vProgress += 0.038;
+        if (vProgress >= 0.55 && vProgress < 0.85) {
+          if (statusText) statusText.textContent = "RELATIVISTIC SLIPSTREAM // APPROACHING EVENT HORIZON";
+        } else if (vProgress >= 0.85 && vProgress < 0.99) {
+          if (statusText) statusText.textContent = "CRITICAL VELOCITY: 9.9c // BREACHING NEXUS DIMENSION";
+        } else if (vProgress >= 0.99) {
           vProgress = 1.0;
           clearInterval(velInterval);
-          if (statusText) statusText.textContent = "MAX VELOCITY REACHED // BREACHING EVENT HORIZON";
+          if (statusText) statusText.textContent = "MAX WARP: 9.9c // SYNCHRONIZING NEURAL NEXUS";
         }
         if (velText) {
           const c = (vProgress * 9.9).toFixed(1);
-          velText.textContent = `VELOCITY: ${c}c`;
+          velText.textContent = `${c}c`;
         }
         if (velFill) {
           velFill.style.width = `${Math.round(vProgress * 100)}%`;
         }
-      }, 70);
+      }, 85);
 
-      // Phase 3: Event Horizon Breakthrough & Celestial Swoop (2000ms -> 2600ms)
+      // Phase 3: Relativistic Emergence & Seamless Blend into Web Universe (3000ms -> 3900ms)
       setTimeout(() => {
-        if (hud) hud.classList.remove("active");
-
-        // Quantum Veil Flash
-        if (this.warpFlash) {
-          this.warpFlash.classList.add("active");
-        }
-
-        // Dissolve landing container smoothly
+        // Dissolve landing container smoothly (pure fade into spider web)
         if (this.container) {
           this.container.classList.remove("warp-active");
-          this.container.classList.add("warp-breakthrough");
+          this.container.classList.add("warp-dissolving");
         }
 
         // Initialize celestial dive in Spider Web Universe
@@ -485,25 +482,24 @@ class LandingPortal {
           window.spiderWebInstance.triggerCelestialEntrance();
         } else if (window.spiderWebInstance) {
           const web = window.spiderWebInstance;
-          web.camera.zoom = 0.35;
-          web.camera.y = -350;
+          web.camera.zoom = 0.20;
+          web.camera.y = -400;
           web.camera.x = 0;
           web.camera.targetZoom = 1.05;
           web.camera.targetY = 0;
           web.camera.targetX = 0;
+          web.camera.isGliding = true;
           web.triggerVibration(0, 0);
-          setTimeout(() => web.triggerVibration(0, 0), 250);
+          setTimeout(() => web.triggerVibration(0, 0), 300);
         }
 
-        // Phase 4: Settle & Reveal Spider Web Universe (2600ms -> 3200ms)
+        // Phase 4: Settle & Finalize (3900ms)
         setTimeout(() => {
-          if (this.warpFlash) {
-            this.warpFlash.classList.remove("active");
-          }
+          if (hud) hud.classList.remove("active");
 
           if (this.container) {
             this.container.classList.add("hidden");
-            this.container.classList.remove("warp-breakthrough");
+            this.container.classList.remove("warp-dissolving");
             this.isActive = false;
           }
 
@@ -513,11 +509,11 @@ class LandingPortal {
             hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>➔ <strong>NEURAL NEXUS SYNCHRONIZED</strong> &bull; DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK NODES TO INSPECT</span></div>`;
             hint.style.opacity = "1";
           }
-        }, 600);
+        }, 900);
 
-      }, 1250); // 750 + 1250 = 2000ms
+      }, 2300); // 700 + 2300 = 3000ms
 
-    }, 750); // 750ms singularity phase
+    }, 700); // 700ms singularity accretion
   }
 
   reenterGateway() {
@@ -535,10 +531,6 @@ class LandingPortal {
 
     const hud = document.getElementById("warp-telemetry-hud");
     if (hud) hud.classList.remove("active");
-
-    if (this.warpFlash) {
-      this.warpFlash.classList.remove("active");
-    }
 
     // Close any active card modal
     const cardOverlay = document.getElementById("key-card-overlay");
@@ -558,9 +550,14 @@ class LandingPortal {
       this.container.classList.remove("hidden");
       this.container.classList.remove("warp-charging");
       this.container.classList.remove("warp-active");
+      this.container.classList.remove("warp-dissolving");
       this.container.classList.remove("warp-breakthrough");
       this.container.classList.remove("warping");
       this.container.classList.remove("singularity-charging");
+      this.container.classList.add("gateway-reentry");
+      setTimeout(() => {
+        if (this.container) this.container.classList.remove("gateway-reentry");
+      }, 800);
     }
 
     // Re-create particles and reset wormhole rings for fresh field
