@@ -16,9 +16,16 @@ This portfolio showcases machine learning models, statistical deployments, and f
 ### Key Features
 - **Infinite Organic Canvas**: Dynamic silk radial spokes, concentric web spirals, dew droplets, and smooth glide transit physics.
 - **Project Junctions**: Dedicated nodes with detailed key cards for featured repositories:
+  - **AWS Student Portal & Academic Intelligence**: Cloud-deployed university GPA/ICA computation engine, syllabus PDF ingestion, and grade forecasting.
+  - **Karpathy 3-Layer Prompt Architect & AI Generator**: Systematic prompt engineering environment (Spec, Verifier, Environment) with automated prompt.md synthesis and multi-LLM benchmark scoring.
+  - **MNIST Federated Learning & Neural Cyphering Engine**: Privacy-preserving decentralized neural network training utilizing Flower (flwr), PyTorch, non-IID client distributions, and encrypted gradient aggregation.
+  - **Blitzit Desktop Deep Work & Task Focus Suite**: Next.js 16 + Electron desktop productivity suite with native macOS titlebars, persistent floating pill timers, deep focus mode, and Prisma SQLite persistence.
+  - **ChangeFormer Satellite Earth Observation AI**: Bitemporal satellite change detection platform (SIH) deploying ChangeFormerV6 for optical and SAR Earth imagery with 97%+ accuracy.
   - **IPL Auction Predictive Analytics**: Machine learning regression models & squad optimization.
   - **2-Sample T-Test Inferential Suite**: Automated hypothesis testing, variance diagnostics, and normality checks.
   - **Job Track AI Platform**: AI opportunity tracking and application workflow pipelines.
+  - **Stochastic Startup Valuation Platform**: Galton-Watson branching process simulation platform computing startup valuation probability distributions under variance and churn.
+  - **LinkedIn Intelligence & Talent Pipeline Scraper**: Automated recruitment data extraction pipeline and profile parser collecting structured hiring metrics.
   - **ISP Suite & Deep Learning Tools**: Image processing, neural networks, and interactive utilities.
 - **Audio Synthesizer Engine**: Procedural Web Audio API sound effects for node hover, selection, and glide transit.
 - **Minimalist Cyber HUD**: Real-time coordinates display, zoom controls, recenter mechanism, and quick navigation pills.

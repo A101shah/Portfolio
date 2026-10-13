@@ -686,20 +686,41 @@ class SpiderWeb {
       ["nexus", "repo-isp"],
       ["nexus", "repo-iris"],
       ["nexus", "repo-dashboard"],
+      ["nexus", "repo-aws"],
+      ["nexus", "repo-promptgen"],
+      ["nexus", "repo-mnist"],
+      ["nexus", "repo-blitzit"],
+      ["nexus", "repo-changeformer"],
+      ["nexus", "repo-startupval"],
+      ["nexus", "repo-linkedin"],
       ["nexus", "skills"],
       ["nexus", "terminal"],
       ["nexus", "transmit"],
 
-      // Grand Orbital Circuit Bridge linking outer neighboring webs in a loop
-      ["repo-dashboard", "repo-ipl"],
-      ["repo-ipl", "skills"],
+      // Grand Orbital Circuit Bridge linking outer neighboring webs in a continuous loop
       ["skills", "transmit"],
       ["transmit", "repo-ttest"],
+      ["repo-ttest", "repo-promptgen"],
+      ["repo-promptgen", "repo-jobtrack"],
+      ["repo-jobtrack", "repo-blitzit"],
+      ["repo-blitzit", "repo-isp"],
+      ["repo-isp", "repo-changeformer"],
+      ["repo-changeformer", "repo-linkedin"],
+      ["repo-linkedin", "repo-iris"],
+      ["repo-iris", "repo-startupval"],
+      ["repo-startupval", "terminal"],
+      ["terminal", "repo-dashboard"],
+      ["repo-dashboard", "repo-mnist"],
+      ["repo-mnist", "repo-ipl"],
+      ["repo-ipl", "repo-aws"],
+      ["repo-aws", "skills"],
+
+      // Organic Cross-Transit Highway Bridges
+      ["repo-ipl", "repo-dashboard"],
       ["repo-ttest", "repo-jobtrack"],
-      ["repo-jobtrack", "repo-isp"],
       ["repo-isp", "repo-iris"],
-      ["repo-iris", "terminal"],
-      ["terminal", "repo-dashboard"]
+      ["repo-aws", "repo-ttest"],
+      ["repo-changeformer", "repo-blitzit"]
     ];
 
     const processedPairs = new Set();
