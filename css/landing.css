@@ -26,6 +26,10 @@
 
 #landing-page.hidden {
   display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -9999 !important;
 }
 
 /* ── Particle Field Canvas ── */
@@ -833,11 +837,14 @@
   pointer-events: none;
 }
 
-/* Phase 1: Card Gracefully Dissolves to Reveal the Living Silk Weave (GPU-Accelerated) */
+/* Phase 1, 2, 3 & Final: Card Gracefully Dissolves and Stays Strictly Invisible */
 #landing-page.warp-charging .landing-center,
-#landing-page.warp-active .landing-center {
+#landing-page.warp-active .landing-center,
+#landing-page.warp-dissolving .landing-center,
+#landing-page.hidden .landing-center {
   transform: perspective(1000px) scale(0.95) translateZ(-20px) !important;
   opacity: 0 !important;
+  visibility: hidden !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   background: transparent !important;
@@ -848,7 +855,7 @@
   pointer-events: none !important;
 }
 
-/* Brackets dissolve softly */
+/* Brackets dissolve softly and stay invisible */
 #landing-page.warp-charging .bracket-tl,
 #landing-page.warp-charging .bracket-tr,
 #landing-page.warp-charging .bracket-bl,
@@ -856,18 +863,32 @@
 #landing-page.warp-active .bracket-tl,
 #landing-page.warp-active .bracket-tr,
 #landing-page.warp-active .bracket-bl,
-#landing-page.warp-active .bracket-br {
+#landing-page.warp-active .bracket-br,
+#landing-page.warp-dissolving .bracket-tl,
+#landing-page.warp-dissolving .bracket-tr,
+#landing-page.warp-dissolving .bracket-bl,
+#landing-page.warp-dissolving .bracket-br,
+#landing-page.hidden .bracket-tl,
+#landing-page.hidden .bracket-tr,
+#landing-page.hidden .bracket-bl,
+#landing-page.hidden .bracket-br {
   opacity: 0 !important;
+  visibility: hidden !important;
   transform: scale(0.85) !important;
   transition: all 0.35s ease !important;
+  pointer-events: none !important;
 }
 
-/* Inner elements dissolve softly */
+/* Inner elements dissolve softly and stay invisible */
 #landing-page.warp-charging .landing-title,
-#landing-page.warp-active .landing-title {
+#landing-page.warp-active .landing-title,
+#landing-page.warp-dissolving .landing-title,
+#landing-page.hidden .landing-title {
   transform: scale(1.03) !important;
   opacity: 0 !important;
+  visibility: hidden !important;
   transition: all 0.4s ease !important;
+  pointer-events: none !important;
 }
 
 #landing-page.warp-charging .landing-subtitle,
@@ -877,54 +898,91 @@
 #landing-page.warp-active .landing-subtitle,
 #landing-page.warp-active .landing-status-line,
 #landing-page.warp-active .landing-skills-orbit,
-#landing-page.warp-active .landing-enter-btn {
+#landing-page.warp-active .landing-enter-btn,
+#landing-page.warp-dissolving .landing-subtitle,
+#landing-page.warp-dissolving .landing-status-line,
+#landing-page.warp-dissolving .landing-skills-orbit,
+#landing-page.warp-dissolving .landing-enter-btn,
+#landing-page.hidden .landing-subtitle,
+#landing-page.hidden .landing-status-line,
+#landing-page.hidden .landing-skills-orbit,
+#landing-page.hidden .landing-enter-btn {
   opacity: 0 !important;
+  visibility: hidden !important;
   transform: translateY(6px) !important;
   transition: all 0.35s ease !important;
+  pointer-events: none !important;
 }
 
-/* Corner telemetry clears off-screen smoothly */
+/* Corner telemetry clears off-screen smoothly and stays invisible */
 #landing-page.warp-charging .landing-corner--tl,
 #landing-page.warp-active .landing-corner--tl,
+#landing-page.warp-dissolving .landing-corner--tl,
+#landing-page.hidden .landing-corner--tl,
 #landing-page.warp-charging .landing-corner--tr,
 #landing-page.warp-active .landing-corner--tr,
+#landing-page.warp-dissolving .landing-corner--tr,
+#landing-page.hidden .landing-corner--tr,
 #landing-page.warp-charging .landing-corner--bl,
 #landing-page.warp-active .landing-corner--bl,
+#landing-page.warp-dissolving .landing-corner--bl,
+#landing-page.hidden .landing-corner--bl,
 #landing-page.warp-charging .landing-corner--br,
-#landing-page.warp-active .landing-corner--br {
+#landing-page.warp-active .landing-corner--br,
+#landing-page.warp-dissolving .landing-corner--br,
+#landing-page.hidden .landing-corner--br {
   opacity: 0 !important;
+  visibility: hidden !important;
   transition: opacity 0.35s ease !important;
+  pointer-events: none !important;
 }
 
 #landing-page.warp-charging .landing-social-row,
-#landing-page.warp-active .landing-social-row {
+#landing-page.warp-active .landing-social-row,
+#landing-page.warp-dissolving .landing-social-row,
+#landing-page.hidden .landing-social-row {
   opacity: 0 !important;
+  visibility: hidden !important;
   transition: opacity 0.35s ease !important;
+  pointer-events: none !important;
 }
 
 /* Ambient glow and orbital rings expand and vanish */
 #landing-page.warp-charging .landing-glow-orb,
-#landing-page.warp-active .landing-glow-orb {
+#landing-page.warp-active .landing-glow-orb,
+#landing-page.warp-dissolving .landing-glow-orb,
+#landing-page.hidden .landing-glow-orb {
   opacity: 0 !important;
+  visibility: hidden !important;
   transition: opacity 0.45s ease !important;
+  pointer-events: none !important;
 }
 
 #landing-page.warp-charging .orbital-ring,
-#landing-page.warp-active .orbital-ring {
+#landing-page.warp-active .orbital-ring,
+#landing-page.warp-dissolving .orbital-ring,
+#landing-page.hidden .orbital-ring {
   opacity: 0 !important;
+  visibility: hidden !important;
   transition: opacity 0.45s ease !important;
+  pointer-events: none !important;
 }
 
 /* ── Phase 3: Dissolve Landing into the Living Spider Web Canvas ── */
 #landing-page.warp-dissolving {
   opacity: 0 !important;
+  visibility: hidden !important;
   transform: none !important;
-  pointer-events: none;
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  pointer-events: none !important;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.65s !important;
 }
 
 #landing-page.hidden {
   display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -9999 !important;
 }
 
 /* ── Smooth Re-Entry into Gateway from Web Universe ── */

@@ -548,11 +548,21 @@ class LandingPortal {
     setTimeout(() => {
       if (hud) hud.classList.remove("active");
 
+      // 1. Wipe the landing particles canvas so no residual graphics remain in GPU memory
+      if (this.ctx) {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+      }
+
+      // 2. Lock container into strictly invisible hidden state (DO NOT remove warp-dissolving)
       if (this.container) {
         this.container.classList.add("hidden");
-        this.container.classList.remove("warp-charging", "warp-active", "warp-dissolving");
-        this.isActive = false;
+        this.container.style.opacity = "0";
+        this.container.style.visibility = "hidden";
+        this.container.style.pointerEvents = "none";
       }
+
+      this.isActive = false;
+      this.isWarping = false;
 
       // Cybernetic hint banner update
       const hint = document.getElementById("web-instruction-hint");
@@ -598,6 +608,11 @@ class LandingPortal {
     }
 
     if (this.container) {
+      // Clear inline safety styles
+      this.container.style.opacity = "";
+      this.container.style.visibility = "";
+      this.container.style.pointerEvents = "";
+
       this.container.classList.remove("hidden");
       this.container.classList.remove("warp-charging");
       this.container.classList.remove("warp-active");
