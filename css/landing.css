@@ -14,15 +14,13 @@
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
 }
 
 #landing-page.warp-breakthrough,
 #landing-page.warping {
   opacity: 0;
-  transform: scale(1.06);
   pointer-events: none;
 }
 
@@ -920,10 +918,9 @@
 /* ── Phase 3: Dissolve Landing into the Living Spider Web Canvas ── */
 #landing-page.warp-dissolving {
   opacity: 0 !important;
-  transform: scale(1.08);
+  transform: none !important;
   pointer-events: none;
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 #landing-page.hidden {

@@ -1221,8 +1221,8 @@ class SpiderWeb {
   }
 
   triggerCelestialEntrance() {
-    // Start camera smoothly on the central Nexus core (0, 0) - perfectly matching tunnel vanishing point!
-    this.camera.zoom = 0.40;
+    // Start camera smoothly on the central Nexus core (0, 0)
+    this.camera.zoom = 0.55;
     this.camera.x = 0;
     this.camera.y = 0;
     this.camera.targetZoom = 1.0;
@@ -1286,10 +1286,14 @@ class SpiderWeb {
 
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    // Smooth camera inertia
+    // Smooth camera inertia with cinematic glide
     this.camera.x += (this.camera.targetX - this.camera.x) * 0.085;
     this.camera.y += (this.camera.targetY - this.camera.y) * 0.085;
-    this.camera.zoom += (this.camera.targetZoom - this.camera.zoom) * 0.09;
+    const zoomEasing = this.camera.isGliding ? 0.045 : 0.09;
+    this.camera.zoom += (this.camera.targetZoom - this.camera.zoom) * zoomEasing;
+    if (this.camera.isGliding && Math.abs(this.camera.targetZoom - this.camera.zoom) < 0.01) {
+      this.camera.isGliding = false;
+    }
 
     // Elastic silk spring physics
     const spring = 0.07;

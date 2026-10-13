@@ -480,6 +480,19 @@ class LandingPortal {
       if (btnText) btnText.textContent = "WEAVING QUANTUM WEB...";
     }
 
+    // Reset centerBlock transform immediately so inline perspective/rotate doesn't glitch or clash
+    if (this.centerBlock) {
+      this.centerBlock.style.transform = "";
+    }
+
+    // Record original particle coordinates so particles smoothly morph without any jump
+    if (this.particles) {
+      for (let i = 0; i < this.particles.length; i++) {
+        this.particles[i].origX = this.particles[i].x;
+        this.particles[i].origY = this.particles[i].y;
+      }
+    }
+
     // Phase 1: Card Smoothly Dissolves to Reveal the Silk Weave
     if (this.container) {
       this.container.classList.add("warp-charging");
@@ -504,14 +517,20 @@ class LandingPortal {
       }
     }, 450);
 
-    // Phase 3: Initiate Celestial Web Alignment in Background Canvas (at 1550ms)
+    // Phase 3: Initiate Seamless Cross-fade into Spider Web Universe (at 1600ms)
+    // The silk web is ~73% woven; now dissolve landing page while camera glides into full resolution
     setTimeout(() => {
       this.isDissolving = true;
+      if (this.container) {
+        this.container.classList.remove("warp-active");
+        this.container.classList.add("warp-dissolving");
+      }
+
       if (window.spiderWebInstance && typeof window.spiderWebInstance.triggerCelestialEntrance === "function") {
         window.spiderWebInstance.triggerCelestialEntrance();
       } else if (window.spiderWebInstance) {
         const web = window.spiderWebInstance;
-        web.camera.zoom = 0.40;
+        web.camera.zoom = 0.55;
         web.camera.y = 0;
         web.camera.x = 0;
         web.camera.targetZoom = 1.0;
@@ -523,34 +542,25 @@ class LandingPortal {
           setTimeout(() => web.triggerVibration(0, 0), 240);
         }
       }
-    }, 1550);
+    }, 1600);
 
-    // Phase 4: Dissolve Landing Container smoothly into the live Spider Web (at 2100ms)
+    // Phase 4: Final Settlement after the 0.65s CSS fade is 100% complete (at 2300ms)
     setTimeout(() => {
+      if (hud) hud.classList.remove("active");
+
       if (this.container) {
-        this.container.classList.remove("warp-active");
-        this.container.classList.add("warp-dissolving");
+        this.container.classList.add("hidden");
+        this.container.classList.remove("warp-charging", "warp-active", "warp-dissolving");
+        this.isActive = false;
       }
 
-      // Phase 5: Complete Transition & Settle (at 2750ms)
-      setTimeout(() => {
-        if (hud) hud.classList.remove("active");
-
-        if (this.container) {
-          this.container.classList.add("hidden");
-          this.container.classList.remove("warp-dissolving");
-          this.isActive = false;
-        }
-
-        // Cybernetic hint banner update
-        const hint = document.getElementById("web-instruction-hint");
-        if (hint) {
-          hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>➔ <strong>NEURAL NEXUS SYNCHRONIZED</strong> &bull; DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK NODES TO INSPECT</span></div>`;
-          hint.style.opacity = "1";
-        }
-      }, 650);
-
-    }, 2100);
+      // Cybernetic hint banner update
+      const hint = document.getElementById("web-instruction-hint");
+      if (hint) {
+        hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>➔ <strong>NEURAL NEXUS SYNCHRONIZED</strong> &bull; DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK NODES TO INSPECT</span></div>`;
+        hint.style.opacity = "1";
+      }
+    }, 2300);
   }
 
   reenterGateway() {
@@ -564,6 +574,10 @@ class LandingPortal {
       this.enterBtn.classList.remove("charging");
       const btnText = this.enterBtn.querySelector("span:first-child");
       if (btnText) btnText.textContent = "INITIALIZE NEURAL UNIVERSE";
+    }
+
+    if (this.centerBlock) {
+      this.centerBlock.style.transform = "";
     }
 
     const hud = document.getElementById("warp-telemetry-hud");
@@ -786,6 +800,32 @@ class LandingPortal {
 
     ctx.save();
 
+    // 0. Smooth Fade-Out of Original Constellation Filaments (no sudden pop on frame 1)
+    if (progress < 0.35 && this.particles) {
+      const filamentFade = 1 - progress / 0.35;
+      const pts = this.particles;
+      const pLen = pts.length;
+      ctx.lineWidth = 0.65;
+      for (let i = 0; i < pLen; i++) {
+        const p1 = pts[i];
+        for (let j = i + 1; j < pLen; j++) {
+          const p2 = pts[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.hypot(dx, dy);
+
+          if (dist < this.maxConnectDist) {
+            const alpha = (1 - dist / this.maxConnectDist) * 0.22 * filamentFade;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = "rgba(160, 175, 240, " + alpha + ")";
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
     // 1. Central Luminous Nexus Pearl (Heart of the Spider Web)
     const pearlGrowth = Math.min(progress / 0.45, 1);
     const pearlR = 9 + pearlGrowth * 18 + Math.sin(now * 0.008) * 2;
@@ -889,22 +929,31 @@ class LandingPortal {
       }
     }
 
-    // 4. Magnetic Flocking of Constellation Particles into Web Dewdrops (Single Batched Fill)
-    if (this.particles && this.weaveNodes && progress > 0.12) {
-      const flockPhase = Math.min(Math.max((progress - 0.12) / 0.68, 0), 1);
+    // 4. Smooth Continuous Morphing of Constellation Stars into Web Dewdrops (Zero Pop / Zero Disappearance)
+    if (this.particles && this.weaveNodes) {
+      const flockPhase = Math.min(Math.max(progress / 0.82, 0), 1);
+      // Smooth cubic ease for organic flocking
+      const flockEase = flockPhase < 0.5
+        ? 4 * flockPhase * flockPhase * flockPhase
+        : 1 - Math.pow(-2 * flockPhase + 2, 3) / 2;
+
       ctx.beginPath();
       for (let i = 0; i < this.particles.length; i++) {
         const p = this.particles[i];
         const targetNode = this.weaveNodes[i % this.weaveNodes.length];
-        if (targetNode && flockPhase > 0) {
-          p.x += (targetNode.x - p.x) * 0.08 * flockPhase;
-          p.y += (targetNode.y - p.y) * 0.08 * flockPhase;
+        const startX = p.origX !== undefined ? p.origX : p.x;
+        const startY = p.origY !== undefined ? p.origY : p.y;
+
+        if (targetNode) {
+          p.x = startX + (targetNode.x - startX) * flockEase;
+          p.y = startY + (targetNode.y - startY) * flockEase;
         }
-        const pr = p.baseRadius * (1 + flockPhase * 0.4);
+
+        const pr = p.baseRadius * (1 + flockEase * 0.5);
         ctx.moveTo(p.x + pr, p.y);
         ctx.arc(p.x, p.y, pr, 0, Math.PI * 2);
       }
-      ctx.fillStyle = "rgba(225, 240, 255, 0.75)";
+      ctx.fillStyle = `rgba(225, 240, 255, ${0.75 + flockPhase * 0.2})`;
       ctx.fill();
     }
 
