@@ -111,11 +111,25 @@ class LandingPortal {
     this.particleCount = window.innerWidth < 768 ? 70 : 130;
     this.maxConnectDist = 115;
 
+    // 3D Spider-Silk Hyper-Tunnel Rings
+    this.tunnelRings = [];
+    this.initTunnelRings();
+
     // Scramble instances
     if (this.firstNameEl) this.firstNameScramble = new TextScramble(this.firstNameEl);
     if (this.lastNameEl) this.lastNameScramble = new TextScramble(this.lastNameEl);
 
     this.init();
+  }
+
+  initTunnelRings() {
+    this.tunnelRings = [];
+    for (let r = 0; r < 14; r++) {
+      this.tunnelRings.push({
+        z: 80 + r * 68,
+        rotation: (r * Math.PI) / 10
+      });
+    }
   }
 
   init() {
@@ -391,32 +405,32 @@ class LandingPortal {
     if (this.isWarping) return;
     this.isWarping = true;
 
-    // Phase 1: Singularity Implosion (charging energy inward)
+    // Phase 1: Singularity Gravitational Collapse (400ms duration)
     if (this.container) {
       this.container.classList.add("singularity-charging");
     }
     this.isSingularity = true;
 
-    // Phase 2: Hyperspace Blast after 300ms
+    // 1. Play synthesize cinematic warp audio (multi-harmonic rise)
+    if (window.soundEngineInstance && typeof window.soundEngineInstance.playWarpJump === "function") {
+      window.soundEngineInstance.playWarpJump();
+    } else if (window.soundEngineInstance) {
+      window.soundEngineInstance.playNodeClick();
+    }
+
+    // Phase 2: Hyperspace Wormhole Blast after 400ms
     setTimeout(() => {
       this.isSingularity = false;
-
-      // 1. Play synthesize warp audio
-      if (window.soundEngineInstance && typeof window.soundEngineInstance.playWarpJump === "function") {
-        window.soundEngineInstance.playWarpJump();
-      } else if (window.soundEngineInstance) {
-        window.soundEngineInstance.playNodeClick();
-      }
 
       // 2. Quantum Screen Flash
       if (this.warpFlash) {
         this.warpFlash.classList.add("active");
         setTimeout(() => {
           this.warpFlash.classList.remove("active");
-        }, 180);
+        }, 240);
       }
 
-      // 3. Scale and fade out the landing overlay
+      // 3. Scale and fade out the landing overlay with dramatic blur
       if (this.container) {
         this.container.classList.remove("singularity-charging");
         this.container.classList.add("warping");
@@ -429,29 +443,36 @@ class LandingPortal {
           this.isActive = false;
         }
 
-        // 5. Connect into Spider Web Universe Camera
+        // 5. Connect into Spider Web Universe Camera with celestial swooping
         if (window.spiderWebInstance) {
           const web = window.spiderWebInstance;
-          web.camera.zoom = 0.55;
+          // Cosmic altitude swooping trajectory down to central Nexus
+          web.camera.zoom = 0.35;
           web.camera.targetZoom = 1.0;
-          web.camera.x = 0;
-          web.camera.y = -70;
+          web.camera.x = 45;
+          web.camera.y = -210;
           web.camera.targetX = 0;
           web.camera.targetY = 0;
           web.camera.isGliding = true;
+
+          // Living Web Silk Resonance Pluck Waves
+          web.triggerVibration(0, 0);
+          setTimeout(() => web.triggerVibration(0, 0), 180);
+          setTimeout(() => web.triggerVibration(0, 0), 400);
 
           if (web.junctions && web.junctions[0]) {
             web.junctions[0].glowT = 1.0;
           }
         }
 
-        // 6. Highlight hint banner
+        // 6. Highlight hint banner with cybernetic arrival announcement
         const hint = document.getElementById("web-instruction-hint");
         if (hint) {
+          hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>➔ <strong>QUANTUM SYNAPSE ENTANGLED</strong> &bull; DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK NODES TO INSPECT</span></div>`;
           hint.style.opacity = "1";
         }
-      }, 850);
-    }, 320);
+      }, 900);
+    }, 400);
   }
 
   reenterGateway() {
@@ -482,8 +503,9 @@ class LandingPortal {
       });
     }
 
-    // Re-create particles for fresh field
+    // Re-create particles and reset wormhole rings for fresh field
     this.createParticles();
+    this.initTunnelRings();
     this.shockwaves = [];
     this.stardust = [];
 
@@ -667,20 +689,46 @@ class LandingPortal {
     const cx = this.width / 2;
     const cy = this.height / 2;
 
+    // Draw central gravitational accretion disk aura
+    const glowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 280);
+    glowGrad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+    glowGrad.addColorStop(0.12, "rgba(180, 210, 255, 0.75)");
+    glowGrad.addColorStop(0.35, "rgba(120, 140, 240, 0.35)");
+    glowGrad.addColorStop(1, "transparent");
+    ctx.fillStyle = glowGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 280, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pull particles into swirling vortex with high angular velocity
     for (let i = 0; i < pts.length; i++) {
       const p = pts[i];
-      const dx = cx - p.x;
-      const dy = cy - p.y;
-      p.x += dx * 0.12;
-      p.y += dy * 0.12;
+      const dx = p.x - cx;
+      const dy = p.y - cy;
+      let r = Math.hypot(dx, dy);
+      let angle = Math.atan2(dy, dx);
+
+      angle += (220 / (r + 25)) * dt * 4;
+      r = Math.max(2, r - (r * 2.8 + 90) * dt);
+
+      p.x = cx + Math.cos(angle) * r;
+      p.y = cy + Math.sin(angle) * r;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.baseRadius * 1.5, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, p.baseRadius * 1.6, 0, Math.PI * 2);
       ctx.fillStyle = "#ffffff";
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = "rgba(180, 205, 255, 0.9)";
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = "rgba(180, 210, 255, 0.9)";
       ctx.fill();
     }
+
+    // Singularity center point
+    ctx.beginPath();
+    ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowBlur = 28;
+    ctx.shadowColor = "#ffffff";
+    ctx.fill();
   }
 
   renderWarpSpeed(dt) {
@@ -690,16 +738,83 @@ class LandingPortal {
     const cx = this.width / 2;
     const cy = this.height / 2;
 
-    const speedMultiplier = 1 + Math.pow(this.warpProgress, 2.5) * 55;
+    const speedMultiplier = 1 + Math.pow(this.warpProgress, 2.8) * 65;
+
+    // Dynamic Camera Shake Jitter during Hyperspace
+    const shakeAmt = Math.pow(this.warpProgress, 2) * 5.5;
+    const shakeX = (Math.random() - 0.5) * shakeAmt;
+    const shakeY = (Math.random() - 0.5) * shakeAmt;
 
     ctx.save();
-    ctx.lineWidth = 1.6;
+    ctx.translate(shakeX, shakeY);
 
+    // 1. Draw 3D Spider-Silk Hyper-Tunnel Polygonal Rings
+    const sides = 8;
+    const baseRadius = Math.max(this.width, this.height) * 0.45;
+
+    for (let i = 0; i < this.tunnelRings.length; i++) {
+      const ring = this.tunnelRings[i];
+      ring.z -= 440 * speedMultiplier * dt;
+      ring.rotation += 0.8 * dt;
+
+      if (ring.z <= 15) {
+        ring.z = 1000;
+      }
+
+      const k = 280 / ring.z;
+      const r = baseRadius * k;
+      const alpha = Math.min(Math.max((1 - ring.z / 1000) * 0.85, 0), 0.8);
+
+      if (r > 3 && r < Math.max(this.width, this.height) * 1.8) {
+        ctx.beginPath();
+        for (let s = 0; s < sides; s++) {
+          const a = (s / sides) * Math.PI * 2 + ring.rotation;
+          const vx = cx + Math.cos(a) * r;
+          const vy = cy + Math.sin(a) * r;
+          if (s === 0) ctx.moveTo(vx, vy);
+          else ctx.lineTo(vx, vy);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `rgba(180, 205, 255, ${alpha * 0.75})`;
+        ctx.lineWidth = Math.min(k * 2.2, 4);
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = "rgba(160, 190, 255, 0.75)";
+        ctx.stroke();
+
+        // Node dewdrops on polygonal corners
+        for (let s = 0; s < sides; s++) {
+          const a = (s / sides) * Math.PI * 2 + ring.rotation;
+          const vx = cx + Math.cos(a) * r;
+          const vy = cy + Math.sin(a) * r;
+          ctx.beginPath();
+          ctx.arc(vx, vy, Math.min(k * 3, 5), 0, Math.PI * 2);
+          ctx.fillStyle = "#ffffff";
+          ctx.fill();
+        }
+      }
+    }
+
+    // 2. Longitudinal Silk Beams projecting from vanishing core
+    ctx.lineWidth = 1.2;
+    for (let s = 0; s < sides; s++) {
+      const a = (s / sides) * Math.PI * 2 + (this.tunnelRings[0] ? this.tunnelRings[0].rotation * 0.4 : 0);
+      const ex = cx + Math.cos(a) * Math.max(this.width, this.height);
+      const ey = cy + Math.sin(a) * Math.max(this.width, this.height);
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = `rgba(160, 185, 255, ${0.18 + this.warpProgress * 0.35})`;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = "rgba(160, 185, 255, 0.5)";
+      ctx.stroke();
+    }
+
+    // 3. Hyperspace Photon Streaks
     for (let i = 0; i < len; i++) {
       const p = pts[i];
-
       const prevZ = p.wz;
-      p.wz -= 320 * p.wSpeed * speedMultiplier * dt;
+      p.wz -= 380 * p.wSpeed * speedMultiplier * dt;
 
       if (p.wz <= 1) {
         p.wz = 1000;
@@ -716,21 +831,46 @@ class LandingPortal {
       const prevPx = cx + p.wx * prevK;
       const prevPy = cy + p.wy * prevK;
 
-      const alpha = Math.min((1 - p.wz / 1000) * 1.3, 1);
+      const alpha = Math.min((1 - p.wz / 1000) * 1.4, 1);
 
       ctx.beginPath();
       ctx.moveTo(prevPx, prevPy);
       ctx.lineTo(px, py);
-      ctx.strokeStyle = `rgba(180, 205, 255, ${alpha})`;
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = "rgba(160, 190, 255, 0.9)";
+      ctx.strokeStyle = `rgba(200, 220, 255, ${alpha})`;
+      ctx.lineWidth = Math.min(k * 2.5, 3.5);
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = "rgba(170, 200, 255, 0.9)";
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(px, py, Math.max(1, (1 - p.wz / 1000) * 3.5), 0, Math.PI * 2);
+      ctx.arc(px, py, Math.max(1, (1 - p.wz / 1000) * 4), 0, Math.PI * 2);
       ctx.fillStyle = "#ffffff";
       ctx.fill();
     }
+
+    // 4. Vanishing Point Super-Nova Lens Flare
+    const flareR = 25 + Math.sin(performance.now() * 0.02) * 8 + this.warpProgress * 40;
+    const flareGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, flareR);
+    flareGrad.addColorStop(0, "#ffffff");
+    flareGrad.addColorStop(0.3, "rgba(200, 225, 255, 0.9)");
+    flareGrad.addColorStop(0.7, "rgba(140, 170, 255, 0.4)");
+    flareGrad.addColorStop(1, "transparent");
+
+    ctx.fillStyle = flareGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, flareR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 4-point cross diffraction spikes
+    const spikeLen = flareR * 2.5;
+    ctx.strokeStyle = "rgba(220, 235, 255, 0.65)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - spikeLen, cy);
+    ctx.lineTo(cx + spikeLen, cy);
+    ctx.moveTo(cx, cy - spikeLen);
+    ctx.lineTo(cx, cy + spikeLen);
+    ctx.stroke();
 
     ctx.restore();
   }

@@ -20,7 +20,8 @@
 
 #landing-page.warping {
   opacity: 0;
-  transform: scale(1.15);
+  transform: scale(2.4);
+  filter: blur(22px) contrast(140%);
   pointer-events: none;
 }
 
@@ -429,19 +430,21 @@
   pointer-events: none;
 }
 
-/* ── Warp Flash Effect ── */
+/* ── Quantum Warp Flash & Chromatic Iris Blast ── */
 .warp-flash {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: white;
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, rgba(215, 230, 255, 0.95) 25%, rgba(140, 165, 255, 0.75) 55%, rgba(10, 15, 35, 0.95) 100%);
   opacity: 0;
+  transform: scale(0.4);
   pointer-events: none;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.22s ease-out, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .warp-flash.active {
-  opacity: 0.15;
+  opacity: 1;
+  transform: scale(1.6);
 }
 
 /* ── Entrance Animations (stagger) ── */
@@ -839,13 +842,35 @@
 
 /* Singularity Implosion Phase before Hyperspace Blast */
 #landing-page.singularity-charging {
-  animation: singularityPulse 0.4s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+  animation: singularityCameraJitter 0.45s infinite linear;
 }
 
-@keyframes singularityPulse {
-  0% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(0.97); filter: brightness(1.2); }
-  100% { transform: scale(0.92); filter: brightness(1.6); }
+#landing-page.singularity-charging .landing-center {
+  transition: transform 0.45s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.45s ease, filter 0.45s ease;
+  transform: scale(0.04) rotate(420deg);
+  opacity: 0.15;
+  filter: blur(10px) brightness(200%);
+}
+
+#landing-page.singularity-charging .orbital-ring {
+  transition: transform 0.45s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.45s ease;
+  transform: scale(0.02) rotate(720deg) !important;
+  opacity: 0.05;
+}
+
+#landing-page.singularity-charging .landing-corner,
+#landing-page.singularity-charging .landing-social-row {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+@keyframes singularityCameraJitter {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2px, 3px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-3px, -1px); }
+  100% { transform: translate(2px, 2px); }
 }
 
 
