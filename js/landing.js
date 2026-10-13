@@ -1,7 +1,65 @@
 /**
- * Cinematic Landing Page & Warp Gate Engine
+ * Cinematic Landing Page & Quantum Warp Gate Engine
  * Aarav Shah Portfolio — Neural Gateway → Spider Web Universe
  */
+
+class TextScramble {
+  constructor(el) {
+    this.el = el;
+    this.chars = '!<>-_\\/[]{}—=+*^?#________01αβΩ';
+    this.update = this.update.bind(this);
+  }
+
+  setText(newText) {
+    const oldText = this.el.innerText || '';
+    const length = Math.max(oldText.length, newText.length);
+    const promise = new Promise((resolve) => (this.resolve = resolve));
+    this.queue = [];
+
+    for (let i = 0; i < length; i++) {
+      const from = oldText[i] || '';
+      const to = newText[i] || '';
+      const start = Math.floor(Math.random() * 15);
+      const end = start + Math.floor(Math.random() * 15) + 6;
+      this.queue.push({ from, to, start, end });
+    }
+
+    cancelAnimationFrame(this.frameRequest);
+    this.frame = 0;
+    this.update();
+    return promise;
+  }
+
+  update() {
+    let output = '';
+    let complete = 0;
+
+    for (let i = 0, n = this.queue.length; i < n; i++) {
+      let { from, to, start, end, char } = this.queue[i];
+      if (this.frame >= end) {
+        complete++;
+        output += to;
+      } else if (this.frame >= start) {
+        if (!char || Math.random() < 0.28) {
+          char = this.chars[Math.floor(Math.random() * this.chars.length)];
+          this.queue[i].char = char;
+        }
+        output += `<span style="color:rgba(180,200,255,0.9);">${char}</span>`;
+      } else {
+        output += from;
+      }
+    }
+
+    this.el.innerHTML = output;
+
+    if (complete === this.queue.length) {
+      if (this.resolve) this.resolve();
+    } else {
+      this.frameRequest = requestAnimationFrame(this.update);
+      this.frame++;
+    }
+  }
+}
 
 class LandingPortal {
   constructor() {
@@ -11,7 +69,17 @@ class LandingPortal {
     this.warpFlash = document.getElementById("warp-flash");
     this.centerBlock = document.querySelector(".landing-center");
     this.titleElement = document.querySelector(".landing-title");
+    this.firstNameEl = document.querySelector(".landing-title .first-name");
+    this.lastNameEl = document.querySelector(".landing-title .last-name");
+    this.subtitleEl = document.querySelector(".landing-subtitle");
     this.gatewayBtn = document.getElementById("gateway-portal-btn");
+
+    // Preloader Elements
+    this.preloader = document.getElementById("system-preloader");
+    this.preloaderFill = document.getElementById("preloader-bar-fill");
+    this.preloaderPercent = document.getElementById("preloader-percent");
+    this.preloaderTerminal = document.getElementById("preloader-terminal");
+    this.preloaderStatus = document.getElementById("preloader-status-text");
 
     if (!this.container || !this.canvas) return;
 
@@ -22,6 +90,7 @@ class LandingPortal {
 
     // State
     this.isWarping = false;
+    this.isSingularity = false;
     this.isActive = true;
     this.warpProgress = 0; // 0 to 1
     this.mouse = {
@@ -35,10 +104,16 @@ class LandingPortal {
     // Parallax Tilt
     this.tilt = { x: 0, y: 0, targetX: 0, targetY: 0 };
 
-    // Particles
+    // Particles & Shockwaves & Stardust
     this.particles = [];
+    this.shockwaves = [];
+    this.stardust = [];
     this.particleCount = window.innerWidth < 768 ? 70 : 130;
     this.maxConnectDist = 115;
+
+    // Scramble instances
+    if (this.firstNameEl) this.firstNameScramble = new TextScramble(this.firstNameEl);
+    if (this.lastNameEl) this.lastNameScramble = new TextScramble(this.lastNameEl);
 
     this.init();
   }
@@ -50,16 +125,85 @@ class LandingPortal {
     this.setupMagneticButton();
     this.setupSoundHooks();
 
-    // Trigger entrance CSS animations
-    if (this.centerBlock) {
-      setTimeout(() => {
-        this.centerBlock.classList.add("animate");
-      }, 100);
-    }
+    // Run Preloader Boot Sequence
+    this.runBootSequence();
 
     // Animation Loop
     this.lastTime = performance.now();
     requestAnimationFrame((t) => this.render(t));
+  }
+
+  runBootSequence() {
+    if (!this.preloader) {
+      this.onBootComplete();
+      return;
+    }
+
+    const messages = [
+      "> INITIALIZING QUANTUM NEURAL HYPERCORE...",
+      "> COMPILING MULTI-DIMENSIONAL SPIDER TOPOLOGY... [OK]",
+      "> SYNCHRONIZING 32+ PROCEDURAL SILK TAPESTRIES... [OK]",
+      "> CALIBRATING ARACHNID KINEMATICS & DEW SENSORS... [OK]",
+      "> ALL SYSTEMS OPTIMAL // LAUNCHING GATEWAY."
+    ];
+
+    let currentMsgIdx = 0;
+    let progress = 0;
+    const duration = 1250; // ms
+    const startTime = performance.now();
+
+    const updateBoot = (now) => {
+      const elapsed = now - startTime;
+      progress = Math.min(Math.floor((elapsed / duration) * 100), 100);
+
+      if (this.preloaderFill) this.preloaderFill.style.width = `${progress}%`;
+      if (this.preloaderPercent) this.preloaderPercent.textContent = `${progress < 10 ? '0' : ''}${progress}%`;
+
+      // Update terminal line
+      const stepIdx = Math.min(Math.floor((progress / 100) * messages.length), messages.length - 1);
+      if (stepIdx !== currentMsgIdx && this.preloaderTerminal) {
+        currentMsgIdx = stepIdx;
+        this.preloaderTerminal.innerHTML = `<div class="terminal-line active">${messages[currentMsgIdx]}</div>`;
+        if (window.soundEngineInstance && typeof window.soundEngineInstance.playTerminalKey === "function") {
+          window.soundEngineInstance.playTerminalKey();
+        }
+      }
+
+      if (progress < 100) {
+        requestAnimationFrame(updateBoot);
+      } else {
+        // Boot complete!
+        if (this.preloaderStatus) this.preloaderStatus.textContent = "ONLINE // READY";
+        if (window.soundEngineInstance && typeof window.soundEngineInstance.playBootChirp === "function") {
+          window.soundEngineInstance.playBootChirp();
+        }
+
+        setTimeout(() => {
+          this.preloader.classList.add("unlocked");
+          setTimeout(() => {
+            this.preloader.classList.add("hidden");
+          }, 700);
+
+          this.onBootComplete();
+        }, 250);
+      }
+    };
+
+    requestAnimationFrame(updateBoot);
+  }
+
+  onBootComplete() {
+    if (this.centerBlock) {
+      this.centerBlock.classList.add("animate");
+    }
+
+    // Trigger Cyber Decryption Text Scramble
+    if (this.firstNameScramble) this.firstNameScramble.setText("AARAV");
+    if (this.lastNameScramble) {
+      setTimeout(() => {
+        this.lastNameScramble.setText("SHAH");
+      }, 150);
+    }
   }
 
   resize() {
@@ -88,7 +232,6 @@ class LandingPortal {
         baseRadius: Math.random() * 1.5 + 0.8,
         alpha: Math.random() * 0.6 + 0.25,
         color: Math.random() < 0.25 ? "#b0baff" : (Math.random() < 0.5 ? "#9098b8" : "#727788"),
-        // Warp coordinates (relative to center)
         wx: (Math.random() - 0.5) * this.width * 1.2,
         wy: (Math.random() - 0.5) * this.height * 1.2,
         wz: Math.random() * 1000 + 10,
@@ -100,7 +243,7 @@ class LandingPortal {
   setupEventListeners() {
     window.addEventListener("resize", () => this.resize(), { passive: true });
 
-    // Mouse tracking for parallax tilt and particle reaction
+    // Mouse tracking for parallax tilt, cursor stardust, and particle reaction
     window.addEventListener("mousemove", (e) => {
       this.mouse.targetX = e.clientX;
       this.mouse.targetY = e.clientY;
@@ -111,6 +254,20 @@ class LandingPortal {
       const normY = (e.clientY / this.height - 0.5) * 2;
       this.tilt.targetY = normX * 8; // rotateY
       this.tilt.targetX = -normY * 8; // rotateX
+
+      // Spawn stardust motes on movement
+      if (this.isActive && !this.isWarping && Math.random() < 0.4) {
+        this.stardust.push({
+          x: e.clientX + (Math.random() - 0.5) * 12,
+          y: e.clientY + (Math.random() - 0.5) * 12,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: (Math.random() - 0.5) * 0.8,
+          life: 1.0,
+          decay: 0.035 + Math.random() * 0.02,
+          size: Math.random() * 2 + 1,
+          color: Math.random() < 0.5 ? "rgba(180, 205, 255, " : "rgba(140, 160, 240, "
+        });
+      }
     }, { passive: true });
 
     // Touch support for mobile tilt
@@ -121,6 +278,16 @@ class LandingPortal {
         this.mouse.active = true;
       }
     }, { passive: true });
+
+    // Interactive Shockwave on Canvas Click
+    if (this.container) {
+      this.container.addEventListener("click", (e) => {
+        // Ignore if clicking the enter button or links
+        if (e.target.closest("#landing-enter-btn") || e.target.closest("a")) return;
+
+        this.triggerShockwave(e.clientX, e.clientY);
+      });
+    }
 
     // Enter Universe Warp Click
     if (this.enterBtn) {
@@ -144,6 +311,23 @@ class LandingPortal {
     }
   }
 
+  triggerShockwave(x, y) {
+    if (!this.isActive || this.isWarping) return;
+
+    this.shockwaves.push({
+      x,
+      y,
+      radius: 5,
+      maxRadius: Math.min(this.width, this.height) * 0.45,
+      speed: 480,
+      alpha: 0.85
+    });
+
+    if (window.soundEngineInstance && typeof window.soundEngineInstance.playShockwaveSound === "function") {
+      window.soundEngineInstance.playShockwaveSound();
+    }
+  }
+
   setupMagneticButton() {
     if (!this.enterBtn) return;
 
@@ -161,7 +345,6 @@ class LandingPortal {
   }
 
   setupSoundHooks() {
-    // Hover sounds for buttons and tags
     if (this.enterBtn) {
       this.enterBtn.addEventListener("mouseenter", () => {
         if (window.soundEngineInstance) {
@@ -170,11 +353,15 @@ class LandingPortal {
       });
     }
 
-    // Title Glitch trigger on hover
+    // Title Glitch & Re-scramble on hover
     if (this.titleElement) {
       this.titleElement.addEventListener("mouseenter", () => {
         if (window.soundEngineInstance && typeof window.soundEngineInstance.playGlitchChirp === "function") {
           window.soundEngineInstance.playGlitchChirp();
+        }
+        if (this.firstNameScramble) this.firstNameScramble.setText("AARAV");
+        if (this.lastNameScramble) {
+          setTimeout(() => this.lastNameScramble.setText("SHAH"), 120);
         }
       });
     }
@@ -204,62 +391,73 @@ class LandingPortal {
     if (this.isWarping) return;
     this.isWarping = true;
 
-    // 1. Play synthesize warp audio
-    if (window.soundEngineInstance && typeof window.soundEngineInstance.playWarpJump === "function") {
-      window.soundEngineInstance.playWarpJump();
-    } else if (window.soundEngineInstance) {
-      window.soundEngineInstance.playNodeClick();
-    }
-
-    // 2. Quantum Screen Flash
-    if (this.warpFlash) {
-      this.warpFlash.classList.add("active");
-      setTimeout(() => {
-        this.warpFlash.classList.remove("active");
-      }, 180);
-    }
-
-    // 3. Scale and fade out the landing overlay
+    // Phase 1: Singularity Implosion (charging energy inward)
     if (this.container) {
-      this.container.classList.add("warping");
+      this.container.classList.add("singularity-charging");
     }
+    this.isSingularity = true;
 
-    // 4. Animate warp particles intensely for 750ms, then transition to Spider Web
+    // Phase 2: Hyperspace Blast after 300ms
     setTimeout(() => {
+      this.isSingularity = false;
+
+      // 1. Play synthesize warp audio
+      if (window.soundEngineInstance && typeof window.soundEngineInstance.playWarpJump === "function") {
+        window.soundEngineInstance.playWarpJump();
+      } else if (window.soundEngineInstance) {
+        window.soundEngineInstance.playNodeClick();
+      }
+
+      // 2. Quantum Screen Flash
+      if (this.warpFlash) {
+        this.warpFlash.classList.add("active");
+        setTimeout(() => {
+          this.warpFlash.classList.remove("active");
+        }, 180);
+      }
+
+      // 3. Scale and fade out the landing overlay
       if (this.container) {
-        this.container.classList.add("hidden");
-        this.isActive = false;
+        this.container.classList.remove("singularity-charging");
+        this.container.classList.add("warping");
       }
 
-      // 5. Connect into Spider Web Universe Camera
-      if (window.spiderWebInstance) {
-        const web = window.spiderWebInstance;
-        // Start from high-altitude cosmic view and glide down to center Nexus
-        web.camera.zoom = 0.58;
-        web.camera.targetZoom = 1.0;
-        web.camera.x = 0;
-        web.camera.y = -60;
-        web.camera.targetX = 0;
-        web.camera.targetY = 0;
-        web.camera.isGliding = true;
-
-        // Visual ripple in spider web
-        if (web.junctions && web.junctions[0]) {
-          web.junctions[0].glowT = 1.0;
+      // 4. Animate warp particles intensely, then dissolve into Spider Web
+      setTimeout(() => {
+        if (this.container) {
+          this.container.classList.add("hidden");
+          this.isActive = false;
         }
-      }
 
-      // 6. Highlight hint banner
-      const hint = document.getElementById("web-instruction-hint");
-      if (hint) {
-        hint.style.opacity = "1";
-      }
-    }, 850);
+        // 5. Connect into Spider Web Universe Camera
+        if (window.spiderWebInstance) {
+          const web = window.spiderWebInstance;
+          web.camera.zoom = 0.55;
+          web.camera.targetZoom = 1.0;
+          web.camera.x = 0;
+          web.camera.y = -70;
+          web.camera.targetX = 0;
+          web.camera.targetY = 0;
+          web.camera.isGliding = true;
+
+          if (web.junctions && web.junctions[0]) {
+            web.junctions[0].glowT = 1.0;
+          }
+        }
+
+        // 6. Highlight hint banner
+        const hint = document.getElementById("web-instruction-hint");
+        if (hint) {
+          hint.style.opacity = "1";
+        }
+      }, 850);
+    }, 320);
   }
 
   reenterGateway() {
     this.isActive = true;
     this.isWarping = false;
+    this.isSingularity = false;
     this.warpProgress = 0;
 
     // Close any active card modal
@@ -278,14 +476,22 @@ class LandingPortal {
 
     if (this.container) {
       this.container.classList.remove("hidden");
-      // Short delay for opacity transition to trigger
       requestAnimationFrame(() => {
         this.container.classList.remove("warping");
+        this.container.classList.remove("singularity-charging");
       });
     }
 
     // Re-create particles for fresh field
     this.createParticles();
+    this.shockwaves = [];
+    this.stardust = [];
+
+    // Re-trigger text scramble
+    if (this.firstNameScramble) this.firstNameScramble.setText("AARAV");
+    if (this.lastNameScramble) {
+      setTimeout(() => this.lastNameScramble.setText("SHAH"), 120);
+    }
   }
 
   render(timestamp) {
@@ -308,7 +514,11 @@ class LandingPortal {
       this.ctx.clearRect(0, 0, this.width, this.height);
 
       if (!this.isWarping) {
-        this.renderNormalConstellation();
+        this.renderNormalConstellation(dt);
+        this.renderShockwaves(dt);
+        this.renderStardust(dt);
+      } else if (this.isSingularity) {
+        this.renderSingularityImplosion(dt);
       } else {
         this.warpProgress = Math.min(this.warpProgress + dt * 1.5, 1.0);
         this.renderWarpSpeed(dt);
@@ -318,7 +528,7 @@ class LandingPortal {
     requestAnimationFrame((t) => this.render(t));
   }
 
-  renderNormalConstellation() {
+  renderNormalConstellation(dt) {
     const ctx = this.ctx;
     const pts = this.particles;
     const len = pts.length;
@@ -329,17 +539,15 @@ class LandingPortal {
     for (let i = 0; i < len; i++) {
       const p = pts[i];
 
-      // Natural Drift
       p.x += p.vx;
       p.y += p.vy;
 
-      // Wrap-around boundaries
       if (p.x < -20) p.x = this.width + 20;
       else if (p.x > this.width + 20) p.x = -20;
       if (p.y < -20) p.y = this.height + 20;
       else if (p.y > this.height + 20) p.y = -20;
 
-      // Mouse repulsion / gentle swirl
+      // Mouse repulsion
       if (this.mouse.active) {
         const dx = p.x - mx;
         const dy = p.y - my;
@@ -382,6 +590,99 @@ class LandingPortal {
     }
   }
 
+  renderShockwaves(dt) {
+    const ctx = this.ctx;
+    const pts = this.particles;
+
+    for (let i = this.shockwaves.length - 1; i >= 0; i--) {
+      const sw = this.shockwaves[i];
+      sw.radius += sw.speed * dt;
+      sw.alpha = Math.max(0, 1 - sw.radius / sw.maxRadius);
+
+      if (sw.radius >= sw.maxRadius) {
+        this.shockwaves.splice(i, 1);
+        continue;
+      }
+
+      // Shockwave push on particles
+      for (let j = 0; j < pts.length; j++) {
+        const p = pts[j];
+        const dist = Math.hypot(p.x - sw.x, p.y - sw.y);
+        const diff = Math.abs(dist - sw.radius);
+        if (diff < 32 && dist > 1) {
+          const push = ((32 - diff) / 32) * 5 * sw.alpha;
+          p.x += ((p.x - sw.x) / dist) * push;
+          p.y += ((p.y - sw.y) / dist) * push;
+        }
+      }
+
+      // Draw shockwave ring
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(180, 205, 255, ${sw.alpha * 0.75})`;
+      ctx.lineWidth = 2.5 * sw.alpha;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = "rgba(160, 190, 255, 0.8)";
+      ctx.stroke();
+
+      // Secondary inner ring
+      ctx.beginPath();
+      ctx.arc(sw.x, sw.y, Math.max(0, sw.radius - 8), 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(140, 170, 255, ${sw.alpha * 0.35})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  renderStardust(dt) {
+    const ctx = this.ctx;
+
+    for (let i = this.stardust.length - 1; i >= 0; i--) {
+      const s = this.stardust[i];
+      s.x += s.vx;
+      s.y += s.vy;
+      s.life -= s.decay;
+
+      if (s.life <= 0) {
+        this.stardust.splice(i, 1);
+        continue;
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size * s.life, 0, Math.PI * 2);
+      ctx.fillStyle = `${s.color}${s.life * 0.75})`;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = "rgba(180, 200, 255, 0.7)";
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  renderSingularityImplosion(dt) {
+    const ctx = this.ctx;
+    const pts = this.particles;
+    const cx = this.width / 2;
+    const cy = this.height / 2;
+
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      const dx = cx - p.x;
+      const dy = cy - p.y;
+      p.x += dx * 0.12;
+      p.y += dy * 0.12;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.baseRadius * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffffff";
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "rgba(180, 205, 255, 0.9)";
+      ctx.fill();
+    }
+  }
+
   renderWarpSpeed(dt) {
     const ctx = this.ctx;
     const pts = this.particles;
@@ -389,20 +690,17 @@ class LandingPortal {
     const cx = this.width / 2;
     const cy = this.height / 2;
 
-    // Acceleration curve
-    const speedMultiplier = 1 + Math.pow(this.warpProgress, 2.5) * 45;
+    const speedMultiplier = 1 + Math.pow(this.warpProgress, 2.5) * 55;
 
     ctx.save();
-    ctx.lineWidth = 1.4;
+    ctx.lineWidth = 1.6;
 
     for (let i = 0; i < len; i++) {
       const p = pts[i];
 
-      // Move particle along its 3D ray towards viewer (decreasing wz)
       const prevZ = p.wz;
-      p.wz -= 280 * p.wSpeed * speedMultiplier * dt;
+      p.wz -= 320 * p.wSpeed * speedMultiplier * dt;
 
-      // If particle passed the camera, recycle deep back
       if (p.wz <= 1) {
         p.wz = 1000;
         p.wx = (Math.random() - 0.5) * this.width * 1.5;
@@ -410,7 +708,6 @@ class LandingPortal {
         continue;
       }
 
-      // Project 3D to 2D
       const k = 280 / p.wz;
       const px = cx + p.wx * k;
       const py = cy + p.wy * k;
@@ -419,20 +716,18 @@ class LandingPortal {
       const prevPx = cx + p.wx * prevK;
       const prevPy = cy + p.wy * prevK;
 
-      // Stretch into luminous hyperspace streak
-      const alpha = Math.min((1 - p.wz / 1000) * 1.2, 1);
+      const alpha = Math.min((1 - p.wz / 1000) * 1.3, 1);
 
       ctx.beginPath();
       ctx.moveTo(prevPx, prevPy);
       ctx.lineTo(px, py);
-      ctx.strokeStyle = `rgba(180, 200, 255, ${alpha})`;
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = "rgba(160, 185, 255, 0.8)";
+      ctx.strokeStyle = `rgba(180, 205, 255, ${alpha})`;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "rgba(160, 190, 255, 0.9)";
       ctx.stroke();
 
-      // Head bright spot
       ctx.beginPath();
-      ctx.arc(px, py, Math.max(1, (1 - p.wz / 1000) * 3), 0, Math.PI * 2);
+      ctx.arc(px, py, Math.max(1, (1 - p.wz / 1000) * 3.5), 0, Math.PI * 2);
       ctx.fillStyle = "#ffffff";
       ctx.fill();
     }

@@ -22,6 +22,38 @@
 </head>
 <body class="web-only-mode">
 
+  <!-- ======================================================================
+       CRAZY SYSTEM PRELOADER & QUANTUM BOOT SEQUENCE
+       ====================================================================== -->
+  <aside id="system-preloader" aria-label="System Initializing">
+    <div class="preloader-grid" aria-hidden="true"></div>
+
+    <!-- Quantum Gyroscope Spinner -->
+    <div class="quantum-gyro" aria-hidden="true">
+      <div class="gyro-ring gyro-ring--outer"></div>
+      <div class="gyro-ring gyro-ring--middle"></div>
+      <div class="gyro-ring gyro-ring--inner"></div>
+      <svg class="gyro-hex" viewBox="0 0 100 100">
+        <polygon points="50,5 93,27 93,73 50,95 7,73 7,27" />
+      </svg>
+      <div class="gyro-core-dot"></div>
+    </div>
+
+    <!-- Preloader Progress & Terminal Output -->
+    <div class="preloader-content">
+      <div class="preloader-terminal" id="preloader-terminal" aria-live="polite">
+        <div class="terminal-line active">&gt; INITIALIZING QUANTUM NEURAL HYPERCORE...</div>
+      </div>
+      <div class="preloader-bar-track">
+        <div class="preloader-bar-fill" id="preloader-bar-fill"></div>
+      </div>
+      <div class="preloader-stats">
+        <span class="preloader-status-text" id="preloader-status-text">INITIALIZING</span>
+        <span class="preloader-percent" id="preloader-percent">00%</span>
+      </div>
+    </div>
+  </aside>
+
   <!-- Quantum Hyperspace Flash Overlay -->
   <div class="warp-flash" id="warp-flash" aria-hidden="true"></div>
 
@@ -47,12 +79,17 @@
 
     <!-- Futuristic Corner Telemetry Readouts -->
     <div class="landing-corner landing-corner--tl" aria-hidden="true">
-      <div>SYS: QUANTUM_NEXUS // v2.6.4</div>
+      <div class="radar-ping-wrap">
+        <span class="radar-ping-dot"></span>
+        <span>SYS: QUANTUM_NEXUS // v2.6.4</span>
+      </div>
       <div>COORD: 19.0760° N, 72.8777° E</div>
     </div>
     <div class="landing-corner landing-corner--tr" aria-hidden="true">
       <div>NMIMS MPSTME // DATA SCIENCE</div>
-      <div>STATUS: ONLINE // READY</div>
+      <div class="hud-equalizer" title="Neural Activity">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
     </div>
     <div class="landing-corner landing-corner--bl" aria-hidden="true">
       <div>DEV_CORE: AARAV SHAH</div>
@@ -65,6 +102,11 @@
 
     <!-- Center Hero Card with 3D Tilt -->
     <div class="landing-center">
+      <span class="card-corner-bracket bracket-tl" aria-hidden="true"></span>
+      <span class="card-corner-bracket bracket-tr" aria-hidden="true"></span>
+      <span class="card-corner-bracket bracket-bl" aria-hidden="true"></span>
+      <span class="card-corner-bracket bracket-br" aria-hidden="true"></span>
+
       <!-- Top Status Code Line -->
       <div class="landing-status-line">
         <span>// NEURAL INTERFACE ONLINE &bull; ACCESS AUTHORIZED</span>

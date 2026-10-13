@@ -517,3 +517,335 @@
   transform: rotate(180deg) scale(1.1);
 }
 
+/* ==========================================================================
+   CRAZY SYSTEM PRELOADER & QUANTUM BOOT SEQUENCE
+   ========================================================================== */
+#system-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: #040407;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.75s ease;
+}
+
+#system-preloader.unlocked {
+  opacity: 0;
+  transform: scale(1.12);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+#system-preloader.hidden {
+  display: none;
+}
+
+/* Background 3D Perspective Matrix Grid */
+.preloader-grid {
+  position: absolute;
+  inset: -60%;
+  width: 220%;
+  height: 220%;
+  background-image: 
+    linear-gradient(rgba(140, 160, 240, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 160, 240, 0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  transform: perspective(500px) rotateX(48deg);
+  animation: gridDrift 18s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes gridDrift {
+  0% { transform: perspective(500px) rotateX(48deg) translateY(0); }
+  100% { transform: perspective(500px) rotateX(48deg) translateY(42px); }
+}
+
+/* Quantum Gyroscope Spinner */
+.quantum-gyro {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.gyro-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.gyro-ring--outer {
+  width: 130px;
+  height: 130px;
+  border: 1px dashed rgba(160, 175, 255, 0.28);
+  animation: gyroSpinOuter 8s linear infinite;
+}
+
+.gyro-ring--middle {
+  width: 96px;
+  height: 96px;
+  border: 2px solid transparent;
+  border-top-color: rgba(190, 210, 255, 0.75);
+  border-bottom-color: rgba(140, 160, 240, 0.5);
+  animation: gyroSpinMid 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
+}
+
+.gyro-ring--inner {
+  width: 66px;
+  height: 66px;
+  border: 1px dotted rgba(200, 220, 255, 0.65);
+  animation: gyroSpinInner 4.5s linear infinite;
+}
+
+.gyro-hex {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  animation: gyroPulseCore 2s ease-in-out infinite;
+}
+
+.gyro-hex polygon {
+  fill: rgba(140, 160, 255, 0.08);
+  stroke: rgba(190, 215, 255, 0.9);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 8px rgba(160, 185, 255, 0.7));
+}
+
+.gyro-core-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 16px #ffffff, 0 0 32px rgba(160, 185, 255, 0.9);
+  animation: coreBlink 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes gyroSpinOuter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gyroSpinMid {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gyroSpinInner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes gyroPulseCore {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes coreBlink {
+  0% { transform: scale(0.85); opacity: 0.6; }
+  100% { transform: scale(1.3); opacity: 1; }
+}
+
+/* Preloader Content Block */
+.preloader-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 440px;
+  width: 88%;
+}
+
+/* Terminal diagnostics stream */
+.preloader-terminal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: rgba(160, 175, 205, 0.7);
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+  text-align: left;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 1.4rem;
+  overflow: hidden;
+  position: relative;
+  border-left: 2px solid rgba(160, 175, 255, 0.35);
+  padding-left: 0.75rem;
+}
+
+.terminal-line {
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: termLineFade 0.25s ease forwards;
+}
+
+.terminal-line.active {
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(180, 200, 255, 0.6);
+}
+
+.terminal-line .accent {
+  color: rgba(150, 210, 255, 0.95);
+}
+
+@keyframes termLineFade {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress bar container */
+.preloader-bar-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 0.85rem;
+}
+
+.preloader-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, rgba(120, 140, 255, 0.4), rgba(190, 215, 255, 1));
+  box-shadow: 0 0 14px rgba(160, 185, 255, 0.85);
+  transition: width 0.1s ease-out;
+  position: relative;
+}
+
+.preloader-bar-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  bottom: -2px;
+  width: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ffffff;
+}
+
+/* Telemetry status and percent counter */
+.preloader-stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: rgba(160, 170, 195, 0.6);
+}
+
+.preloader-status-text {
+  text-transform: uppercase;
+}
+
+.preloader-percent {
+  font-weight: 700;
+  color: #e4e8f7;
+  text-shadow: 0 0 10px rgba(180, 200, 255, 0.45);
+}
+
+/* ==========================================================================
+   DYNAMIC CORNER TELEMETRY EQUALIZER & RADAR SWEEP
+   ========================================================================== */
+.hud-equalizer {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 12px;
+  margin-top: 0.35rem;
+}
+
+.hud-equalizer span {
+  width: 2.5px;
+  background: rgba(160, 180, 255, 0.65);
+  border-radius: 1px;
+  animation: eqBounce 1.4s ease-in-out infinite alternate;
+}
+
+.hud-equalizer span:nth-child(1) { height: 40%; animation-delay: 0.1s; }
+.hud-equalizer span:nth-child(2) { height: 80%; animation-delay: 0.35s; }
+.hud-equalizer span:nth-child(3) { height: 100%; animation-delay: 0.15s; }
+.hud-equalizer span:nth-child(4) { height: 60%; animation-delay: 0.5s; }
+.hud-equalizer span:nth-child(5) { height: 90%; animation-delay: 0.25s; }
+.hud-equalizer span:nth-child(6) { height: 50%; animation-delay: 0.4s; }
+
+@keyframes eqBounce {
+  0% { transform: scaleY(0.3); opacity: 0.4; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+.radar-ping-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.25rem;
+}
+
+.radar-ping-dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(160, 190, 255, 0.9);
+  box-shadow: 0 0 8px rgba(160, 190, 255, 0.8);
+}
+
+.radar-ping-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(160, 190, 255, 0.6);
+  animation: radarWave 2s ease-out infinite;
+}
+
+@keyframes radarWave {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* ==========================================================================
+   CYBERNETIC BRACKETS & LASER SCAN OVERLAY FOR LANDING CARD
+   ========================================================================== */
+.card-corner-bracket {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(160, 180, 255, 0.35);
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+.landing-center:hover .card-corner-bracket {
+  border-color: rgba(180, 205, 255, 0.8);
+  filter: drop-shadow(0 0 6px rgba(160, 190, 255, 0.5));
+}
+
+.bracket-tl { top: -20px; left: -20px; border-top: 1.5px solid; border-left: 1.5px solid; }
+.bracket-tr { top: -20px; right: -20px; border-top: 1.5px solid; border-right: 1.5px solid; }
+.bracket-bl { bottom: -20px; left: -20px; border-bottom: 1.5px solid; border-left: 1.5px solid; }
+.bracket-br { bottom: -20px; right: -20px; border-bottom: 1.5px solid; border-right: 1.5px solid; }
+
+/* Singularity Implosion Phase before Hyperspace Blast */
+#landing-page.singularity-charging {
+  animation: singularityPulse 0.4s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+}
+
+@keyframes singularityPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(0.97); filter: brightness(1.2); }
+  100% { transform: scale(0.92); filter: brightness(1.6); }
+}
+
+
