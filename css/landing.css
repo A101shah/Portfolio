@@ -835,20 +835,18 @@
   pointer-events: none;
 }
 
-/* Phase 1: Card Gracefully Dissolves to Reveal the Living Silk Weave */
+/* Phase 1: Card Gracefully Dissolves to Reveal the Living Silk Weave (GPU-Accelerated) */
 #landing-page.warp-charging .landing-center,
 #landing-page.warp-active .landing-center {
-  transform: perspective(1000px) scale(0.93) translateZ(-30px) !important;
+  transform: perspective(1000px) scale(0.95) translateZ(-20px) !important;
   opacity: 0 !important;
-  filter: blur(12px) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   background: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
-              opacity 0.55s ease,
-              filter 0.55s ease !important;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              opacity 0.45s ease !important;
   pointer-events: none !important;
 }
 
@@ -862,19 +860,16 @@
 #landing-page.warp-active .bracket-bl,
 #landing-page.warp-active .bracket-br {
   opacity: 0 !important;
-  transform: scale(0.8) !important;
-  filter: blur(4px) !important;
-  transition: all 0.45s ease !important;
+  transform: scale(0.85) !important;
+  transition: all 0.35s ease !important;
 }
 
 /* Inner elements dissolve softly */
 #landing-page.warp-charging .landing-title,
 #landing-page.warp-active .landing-title {
-  transform: scale(1.06) !important;
-  filter: blur(8px) !important;
+  transform: scale(1.03) !important;
   opacity: 0 !important;
-  text-shadow: 0 0 25px rgba(160, 210, 255, 0.8) !important;
-  transition: all 0.5s ease !important;
+  transition: all 0.4s ease !important;
 }
 
 #landing-page.warp-charging .landing-subtitle,
@@ -886,56 +881,40 @@
 #landing-page.warp-active .landing-skills-orbit,
 #landing-page.warp-active .landing-enter-btn {
   opacity: 0 !important;
-  transform: scale(0.92) translateY(8px) !important;
-  filter: blur(6px) !important;
-  transition: all 0.45s ease !important;
+  transform: translateY(6px) !important;
+  transition: all 0.35s ease !important;
 }
 
 /* Corner telemetry clears off-screen smoothly */
 #landing-page.warp-charging .landing-corner--tl,
-#landing-page.warp-active .landing-corner--tl {
-  transform: translate(-55px, -55px) scale(0.7) !important;
-  opacity: 0 !important;
-  transition: all 0.45s ease !important;
-}
+#landing-page.warp-active .landing-corner--tl,
 #landing-page.warp-charging .landing-corner--tr,
-#landing-page.warp-active .landing-corner--tr {
-  transform: translate(55px, -55px) scale(0.7) !important;
-  opacity: 0 !important;
-  transition: all 0.45s ease !important;
-}
+#landing-page.warp-active .landing-corner--tr,
 #landing-page.warp-charging .landing-corner--bl,
-#landing-page.warp-active .landing-corner--bl {
-  transform: translate(-55px, 55px) scale(0.7) !important;
-  opacity: 0 !important;
-  transition: all 0.45s ease !important;
-}
+#landing-page.warp-active .landing-corner--bl,
 #landing-page.warp-charging .landing-corner--br,
 #landing-page.warp-active .landing-corner--br {
-  transform: translate(55px, 55px) scale(0.7) !important;
   opacity: 0 !important;
-  transition: all 0.45s ease !important;
+  transition: opacity 0.35s ease !important;
 }
+
 #landing-page.warp-charging .landing-social-row,
 #landing-page.warp-active .landing-social-row {
-  transform: translateY(45px) scale(0.85) !important;
   opacity: 0 !important;
-  transition: all 0.45s ease !important;
+  transition: opacity 0.35s ease !important;
 }
 
 /* Ambient glow and orbital rings expand and vanish */
 #landing-page.warp-charging .landing-glow-orb,
 #landing-page.warp-active .landing-glow-orb {
-  transform: scale(0.1) !important;
   opacity: 0 !important;
-  transition: all 0.6s ease !important;
+  transition: opacity 0.45s ease !important;
 }
 
 #landing-page.warp-charging .orbital-ring,
 #landing-page.warp-active .orbital-ring {
-  transform: scale(3.2) rotate(160deg) !important;
   opacity: 0 !important;
-  transition: all 0.75s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: opacity 0.45s ease !important;
 }
 
 /* ── Phase 3: Dissolve Landing into the Living Spider Web Canvas ── */

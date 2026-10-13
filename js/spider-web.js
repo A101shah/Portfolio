@@ -1277,6 +1277,13 @@ class SpiderWeb {
   }
 
   animate() {
+    // If the landing portal is active and hasn't started dissolving, pause background rendering to free GPU
+    const landing = window.landingPortalInstance;
+    if (landing && landing.isActive && !landing.isDissolving) {
+      requestAnimationFrame(this.animate);
+      return;
+    }
+
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     // Smooth camera inertia

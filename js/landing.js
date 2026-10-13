@@ -90,7 +90,7 @@ class LandingPortal {
 
     // State
     this.isWarping = false;
-    this.isSingularity = false;
+    this.isDissolving = false;
     this.isActive = true;
     this.warpProgress = 0; // 0 to 1
     this.mouse = {
@@ -114,6 +114,7 @@ class LandingPortal {
     // Living Spider Web Weave Geometry
     this.weaveSpokes = [];
     this.weaveRings = [];
+    this.ringSegments = [];
     this.weaveNodes = [];
     this.silkPulses = [];
     this.initWebWeaveData();
@@ -137,44 +138,59 @@ class LandingPortal {
       const angle = (s / spokeCount) * Math.PI * 2;
       this.weaveSpokes.push({
         angle,
+        cos: Math.cos(angle),
+        sin: Math.sin(angle),
         length: maxRadius * (0.88 + (s % 4) * 0.04),
         sagFactor: 0.13 + (s % 2) * 0.02
       });
     }
 
     this.weaveRings = [];
-    for (let r = 1; r <= ringCount; r++) {
-      const radius = Math.pow(r / ringCount, 1.25) * (maxRadius * 0.75);
-      this.weaveRings.push({
-        radius,
-        sagFactor: 0.14
-      });
-    }
-
-    // Pre-calculate target grid nodes for particle crystallization
+    this.ringSegments = [];
     this.weaveNodes = [];
-    for (let r = 0; r < this.weaveRings.length; r++) {
-      const ring = this.weaveRings[r];
+
+    for (let r = 0; r < ringCount; r++) {
+      const radius = Math.pow((r + 1) / ringCount, 1.25) * (maxRadius * 0.75);
+      const sagFactor = 0.14;
+      this.weaveRings.push({ radius, sagFactor });
+
+      const segs = [];
       for (let s = 0; s < spokeCount; s++) {
-        const spoke = this.weaveSpokes[s];
+        const nextS = (s + 1) % spokeCount;
+        const spk1 = this.weaveSpokes[s];
+        const spk2 = this.weaveSpokes[nextS];
+
+        const p1x = cx + spk1.cos * radius;
+        const p1y = cy + spk1.sin * radius;
+        const p2x = cx + spk2.cos * radius;
+        const p2y = cy + spk2.sin * radius;
+
+        const midAngle = (spk1.angle + spk2.angle) * 0.5;
+        const sagR = radius * (1 - sagFactor);
+        const ctrlX = cx + Math.cos(midAngle) * sagR;
+        const ctrlY = cy + Math.sin(midAngle) * sagR;
+
+        segs.push({ p1x, p1y, p2x, p2y, ctrlX, ctrlY });
+
         this.weaveNodes.push({
-          x: cx + Math.cos(spoke.angle) * ring.radius,
-          y: cy + Math.sin(spoke.angle) * ring.radius,
-          radius: ring.radius,
+          x: p1x,
+          y: p1y,
+          radius,
           spokeIndex: s,
           ringIndex: r
         });
       }
+      this.ringSegments.push(segs);
     }
 
-    // Luminous traveling silk energy pulses
+    // Luminous traveling silk energy pulses (10 pulses for optimal performance)
     this.silkPulses = [];
-    for (let p = 0; p < 16; p++) {
+    for (let p = 0; p < 10; p++) {
       this.silkPulses.push({
         spokeIndex: Math.floor(Math.random() * spokeCount),
         progress: Math.random(),
-        speed: 0.8 + Math.random() * 0.8,
-        size: 2.6 + Math.random() * 1.6
+        speed: 0.9 + Math.random() * 0.7,
+        size: 2.2 + Math.random() * 1.2
       });
     }
   }
@@ -452,6 +468,7 @@ class LandingPortal {
   triggerWarpEntrance() {
     if (this.isWarping) return;
     this.isWarping = true;
+    this.isDissolving = false;
     this.warpProgress = 0;
     this.warpStartTime = performance.now();
     this.warpDuration = 2200; // 2.2s total smooth organic weave
@@ -477,43 +494,7 @@ class LandingPortal {
 
     // Reveal top flight telemetry HUD
     const hud = document.getElementById("warp-telemetry-hud");
-    const statusText = document.getElementById("warp-status-text");
-    const velText = document.getElementById("warp-velocity-text");
-    const velFill = document.getElementById("warp-velocity-fill");
     if (hud) hud.classList.add("active");
-    if (statusText) statusText.textContent = "QUANTUM SILK RESONANCE // WEAVING RADIALS";
-    if (velText) velText.textContent = "1.0x";
-    if (velFill) velFill.style.width = "4%";
-
-    // Track silk weave progress smoothly through the top HUD bar
-    if (this.velInterval) clearInterval(this.velInterval);
-    this.velInterval = setInterval(() => {
-      const elapsed = performance.now() - this.warpStartTime;
-      const p = Math.min(Math.max(elapsed / this.warpDuration, 0), 1.0);
-
-      if (p < 0.28) {
-        if (statusText) statusText.textContent = "WEAVING RADIAL ANCHORS // 16 SPOKES";
-      } else if (p < 0.65) {
-        if (statusText) statusText.textContent = "SPINNING CAPTURE SPIRALS // ELASTIC TENSION";
-      } else if (p < 0.88) {
-        if (statusText) statusText.textContent = "CRYSTALLIZING NEURAL DEWDROPS // LOCKING COORD";
-      } else {
-        if (statusText) statusText.textContent = "NEXUS SYNCHRONIZED // ENTERING WEB UNIVERSE";
-      }
-
-      if (velText) {
-        const tension = (1.0 + p * 8.9).toFixed(1);
-        velText.textContent = `${tension}x`;
-      }
-      if (velFill) {
-        velFill.style.width = `${Math.round(p * 100)}%`;
-      }
-
-      if (p >= 1.0) {
-        clearInterval(this.velInterval);
-        this.velInterval = null;
-      }
-    }, 40);
 
     // Phase 2: Card into active weave
     setTimeout(() => {
@@ -523,8 +504,9 @@ class LandingPortal {
       }
     }, 450);
 
-    // Phase 3: Initiate Celestial Web Alignment in Background Canvas (at 1550ms, harmonic silver ripples expanding)
+    // Phase 3: Initiate Celestial Web Alignment in Background Canvas (at 1550ms)
     setTimeout(() => {
+      this.isDissolving = true;
       if (window.spiderWebInstance && typeof window.spiderWebInstance.triggerCelestialEntrance === "function") {
         window.spiderWebInstance.triggerCelestialEntrance();
       } else if (window.spiderWebInstance) {
@@ -574,11 +556,8 @@ class LandingPortal {
   reenterGateway() {
     this.isActive = true;
     this.isWarping = false;
+    this.isDissolving = false;
     this.warpProgress = 0;
-    if (this.velInterval) {
-      clearInterval(this.velInterval);
-      this.velInterval = null;
-    }
 
     // Reset button
     if (this.enterBtn) {
@@ -803,13 +782,13 @@ class LandingPortal {
     const cy = this.height / 2;
     const maxRadius = Math.max(this.width, this.height) * 0.72;
     const progress = this.warpProgress;
+    const now = performance.now();
 
     ctx.save();
-    ctx.globalCompositeOperation = "lighter";
 
     // 1. Central Luminous Nexus Pearl (Heart of the Spider Web)
     const pearlGrowth = Math.min(progress / 0.45, 1);
-    const pearlR = 9 + pearlGrowth * 18 + Math.sin(Date.now() * 0.008) * 2;
+    const pearlR = 9 + pearlGrowth * 18 + Math.sin(now * 0.008) * 2;
     const pearlGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pearlR * 3.2);
     pearlGrad.addColorStop(0, "#ffffff");
     pearlGrad.addColorStop(0.28, "rgba(225, 240, 255, 0.92)");
@@ -824,108 +803,96 @@ class LandingPortal {
     ctx.beginPath();
     ctx.arc(cx, cy, pearlR * 0.55, 0, Math.PI * 2);
     ctx.fillStyle = "#ffffff";
-    ctx.shadowBlur = 18;
-    ctx.shadowColor = "#93c5fd";
     ctx.fill();
-    ctx.shadowBlur = 0;
 
-    // 2. The 16 Silk Radial Spokes Spreading Outward Across the Screen
+    // 2. The 16 Silk Radial Spokes (Single Batched Stroke + Single Batched Beads Fill)
     const spokeCount = this.weaveSpokes ? this.weaveSpokes.length : 16;
     const spokePhase = Math.min(Math.max(progress / 0.65, 0), 1);
 
-    if (this.weaveSpokes) {
+    if (this.weaveSpokes && spokePhase > 0) {
+      ctx.beginPath();
       for (let s = 0; s < spokeCount; s++) {
         const spoke = this.weaveSpokes[s];
         const stagger = (s / spokeCount) * 0.12;
         const sProg = Math.min(Math.max((spokePhase - stagger) / (1 - stagger), 0), 1);
         if (sProg <= 0) continue;
 
-        // Smooth cubic ease-out unfurl
         const eased = 1 - Math.pow(1 - sProg, 3);
         const curLen = spoke.length * eased;
 
-        const ex = cx + Math.cos(spoke.angle) * curLen;
-        const ey = cy + Math.sin(spoke.angle) * curLen;
+        const ex = cx + spoke.cos * curLen;
+        const ey = cy + spoke.sin * curLen;
 
-        // Subtle elastic harmonic sine wave along silk thread
-        const wave = Math.sin(Date.now() * 0.006 + s * 1.8) * 2.8 * (1 - progress * 0.5);
-        const perp = spoke.angle + Math.PI / 2;
-        const midX = (cx + ex) * 0.5 + Math.cos(perp) * wave;
-        const midY = (cy + ey) * 0.5 + Math.sin(perp) * wave;
+        const wave = Math.sin(now * 0.006 + s * 1.8) * 2.8 * (1 - progress * 0.5);
+        const midX = (cx + ex) * 0.5 - spoke.sin * wave;
+        const midY = (cy + ey) * 0.5 + spoke.cos * wave;
 
-        ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.quadraticCurveTo(midX, midY, ex, ey);
-        ctx.strokeStyle = `rgba(205, 222, 245, ${sProg * 0.78})`;
-        ctx.lineWidth = 1.25;
-        ctx.stroke();
-
-        // Luminous anchor dewdrop bead at the advancing spoke tip
-        ctx.beginPath();
-        ctx.arc(ex, ey, 2.4, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(240, 248, 255, 0.95)";
-        ctx.fill();
       }
+      ctx.strokeStyle = `rgba(205, 222, 245, ${Math.min(spokePhase * 1.2, 0.82)})`;
+      ctx.lineWidth = 1.25;
+      ctx.stroke();
+
+      // Advancing spoke tip beads (single batched fill)
+      ctx.beginPath();
+      for (let s = 0; s < spokeCount; s++) {
+        const spoke = this.weaveSpokes[s];
+        const stagger = (s / spokeCount) * 0.12;
+        const sProg = Math.min(Math.max((spokePhase - stagger) / (1 - stagger), 0), 1);
+        if (sProg <= 0) continue;
+        const eased = 1 - Math.pow(1 - sProg, 3);
+        const curLen = spoke.length * eased;
+        const ex = cx + spoke.cos * curLen;
+        const ey = cy + spoke.sin * curLen;
+        ctx.moveTo(ex + 2.4, ey);
+        ctx.arc(ex, ey, 2.4, 0, Math.PI * 2);
+      }
+      ctx.fillStyle = "rgba(240, 248, 255, 0.95)";
+      ctx.fill();
     }
 
-    // 3. The 8 Concentric Capture Spirals Weaving In Real-Time
-    if (this.weaveRings && this.weaveSpokes) {
+    // 3. The 8 Concentric Capture Spirals (Precalculated Segments + Batched Dewdrops)
+    if (this.ringSegments && progress > 0.18) {
       const ringPhase = Math.min(Math.max((progress - 0.18) / 0.64, 0), 1);
 
-      for (let r = 0; r < this.weaveRings.length; r++) {
-        const ring = this.weaveRings[r];
-        const ringStagger = (r / this.weaveRings.length) * 0.42;
+      for (let r = 0; r < this.ringSegments.length; r++) {
+        const ringStagger = (r / this.ringSegments.length) * 0.42;
         const rProg = Math.min(Math.max((ringPhase - ringStagger) / (1 - ringStagger), 0), 1);
         if (rProg <= 0) continue;
 
-        const ringAlpha = Math.min(rProg * 1.4, 1) * 0.62;
-
+        const segs = this.ringSegments[r];
         ctx.beginPath();
-        for (let s = 0; s < spokeCount; s++) {
-          const nextS = (s + 1) % spokeCount;
-          const a1 = this.weaveSpokes[s].angle;
-          const a2 = this.weaveSpokes[nextS].angle;
-
-          const p1x = cx + Math.cos(a1) * ring.radius;
-          const p1y = cy + Math.sin(a1) * ring.radius;
-          const p2x = cx + Math.cos(a2) * ring.radius;
-          const p2y = cy + Math.sin(a2) * ring.radius;
-
-          // Natural organic catenary sag toward center
-          const midAngle = (a1 + a2) * 0.5;
-          const sagR = ring.radius * (1 - ring.sagFactor);
-          const ctrlX = cx + Math.cos(midAngle) * sagR;
-          const ctrlY = cy + Math.sin(midAngle) * sagR;
-
-          if (s === 0) ctx.moveTo(p1x, p1y);
-          ctx.quadraticCurveTo(ctrlX, ctrlY, p2x, p2y);
+        for (let s = 0; s < segs.length; s++) {
+          const seg = segs[s];
+          if (s === 0) ctx.moveTo(seg.p1x, seg.p1y);
+          ctx.quadraticCurveTo(seg.ctrlX, seg.ctrlY, seg.p2x, seg.p2y);
         }
         ctx.closePath();
-
-        ctx.strokeStyle = `rgba(188, 210, 240, ${ringAlpha})`;
+        ctx.strokeStyle = `rgba(188, 210, 240, ${Math.min(rProg * 1.4, 1) * 0.62})`;
         ctx.lineWidth = 1.1;
         ctx.stroke();
 
-        // Glistening beaded dewdrops on each spoke intersection
+        // Glistening beaded dewdrops on each spoke intersection (Single Batched Fill per Ring)
         if (rProg > 0.35) {
           const dewAlpha = Math.min((rProg - 0.35) / 0.65, 1);
-          for (let s = 0; s < spokeCount; s++) {
-            const a = this.weaveSpokes[s].angle;
-            const nx = cx + Math.cos(a) * ring.radius;
-            const ny = cy + Math.sin(a) * ring.radius;
-
-            ctx.beginPath();
-            ctx.arc(nx, ny, 2.3 * dewAlpha, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${dewAlpha * 0.95})`;
-            ctx.fill();
+          const dewR = 2.2 * dewAlpha;
+          ctx.beginPath();
+          for (let s = 0; s < segs.length; s++) {
+            const seg = segs[s];
+            ctx.moveTo(seg.p1x + dewR, seg.p1y);
+            ctx.arc(seg.p1x, seg.p1y, dewR, 0, Math.PI * 2);
           }
+          ctx.fillStyle = `rgba(255, 255, 255, ${dewAlpha * 0.92})`;
+          ctx.fill();
         }
       }
     }
 
-    // 4. Magnetic Flocking of Constellation Particles into Web Dewdrops
-    if (this.particles && this.weaveNodes) {
+    // 4. Magnetic Flocking of Constellation Particles into Web Dewdrops (Single Batched Fill)
+    if (this.particles && this.weaveNodes && progress > 0.12) {
       const flockPhase = Math.min(Math.max((progress - 0.12) / 0.68, 0), 1);
+      ctx.beginPath();
       for (let i = 0; i < this.particles.length; i++) {
         const p = this.particles[i];
         const targetNode = this.weaveNodes[i % this.weaveNodes.length];
@@ -933,16 +900,17 @@ class LandingPortal {
           p.x += (targetNode.x - p.x) * 0.08 * flockPhase;
           p.y += (targetNode.y - p.y) * 0.08 * flockPhase;
         }
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.baseRadius * (1 + flockPhase * 0.4), 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(225, 240, 255, " + Math.min(p.alpha * 1.4, 0.95) + ")";
-        ctx.fill();
+        const pr = p.baseRadius * (1 + flockPhase * 0.4);
+        ctx.moveTo(p.x + pr, p.y);
+        ctx.arc(p.x, p.y, pr, 0, Math.PI * 2);
       }
+      ctx.fillStyle = "rgba(225, 240, 255, 0.75)";
+      ctx.fill();
     }
 
-    // 5. Bio-Electric Traveling Silk Energy Pulses
+    // 5. Bio-Electric Traveling Silk Energy Pulses (Batched Halo + Core, Zero shadowBlur)
     if (this.silkPulses && progress > 0.2) {
+      ctx.beginPath();
       for (let p = 0; p < this.silkPulses.length; p++) {
         const pulse = this.silkPulses[p];
         pulse.progress += pulse.speed * dt * 0.85;
@@ -954,50 +922,88 @@ class LandingPortal {
         const spoke = this.weaveSpokes[pulse.spokeIndex];
         if (!spoke) continue;
         const dist = Math.pow(pulse.progress, 1.25) * (maxRadius * 0.72);
-        const px = cx + Math.cos(spoke.angle) * dist;
-        const py = cy + Math.sin(spoke.angle) * dist;
+        const px = cx + spoke.cos * dist;
+        const py = cy + spoke.sin * dist;
+        pulse.px = px;
+        pulse.py = py;
 
-        ctx.beginPath();
-        ctx.arc(px, py, pulse.size, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = "#93c5fd";
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        const haloR = pulse.size * 2.2;
+        ctx.moveTo(px + haloR, py);
+        ctx.arc(px, py, haloR, 0, Math.PI * 2);
       }
+      ctx.fillStyle = "rgba(147, 197, 253, 0.35)";
+      ctx.fill();
+
+      ctx.beginPath();
+      for (let p = 0; p < this.silkPulses.length; p++) {
+        const pulse = this.silkPulses[p];
+        if (pulse.px === undefined) continue;
+        ctx.moveTo(pulse.px + pulse.size, pulse.py);
+        ctx.arc(pulse.px, pulse.py, pulse.size, 0, Math.PI * 2);
+      }
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
     }
 
-    // 6. Resonant Harmonic Shockwaves & Emergence Bloom (progress > 0.76)
+    // 6. Resonant Harmonic Silver Shockwaves (Single Batched Stroke)
     if (progress > 0.76) {
       const wavePhase = (progress - 0.76) / 0.24;
+      ctx.beginPath();
       for (let w = 0; w < 3; w++) {
         const wOffset = w * 0.25;
         const wProg = Math.max(0, Math.min(1, (wavePhase - wOffset) / (1 - wOffset)));
         if (wProg <= 0) continue;
-
-        const waveR = wProg * maxRadius * 1.4;
-        const waveAlpha = (1 - wProg) * 0.85;
-
-        ctx.beginPath();
+        const waveR = wProg * maxRadius * 1.35;
+        ctx.moveTo(cx + waveR, cy);
         ctx.arc(cx, cy, waveR, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(220, 238, 255, ${waveAlpha})`;
-        ctx.lineWidth = 2.6 * (1 - wProg);
-        ctx.stroke();
       }
-
-      // Luminous center radiance
-      const bloomR = wavePhase * maxRadius * 0.75;
-      const bloomGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, bloomR);
-      bloomGrad.addColorStop(0, `rgba(255, 255, 255, ${(1 - wavePhase) * 0.32})`);
-      bloomGrad.addColorStop(0.45, `rgba(180, 215, 255, ${(1 - wavePhase) * 0.12})`);
-      bloomGrad.addColorStop(1, "transparent");
-      ctx.fillStyle = bloomGrad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, bloomR, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.strokeStyle = `rgba(220, 238, 255, ${(1 - wavePhase) * 0.75})`;
+      ctx.lineWidth = 2.0;
+      ctx.stroke();
     }
 
     ctx.restore();
+
+    // 7. Update HUD Telemetry smoothly in sync with requestAnimationFrame
+    this.updateWarpHUD(progress);
+  }
+
+  updateWarpHUD(p) {
+    if (!this.hudStatusText || !this.hudVelText || !this.hudVelFill) {
+      this.hudStatusText = document.getElementById("warp-status-text");
+      this.hudVelText = document.getElementById("warp-velocity-text");
+      this.hudVelFill = document.getElementById("warp-velocity-fill");
+    }
+
+    if (this.hudVelFill) {
+      this.hudVelFill.style.width = `${Math.round(p * 100)}%`;
+    }
+
+    if (this.hudVelText) {
+      const tension = (1.0 + p * 8.9).toFixed(1);
+      if (this.lastTension !== tension) {
+        this.lastTension = tension;
+        this.hudVelText.textContent = `${tension}x`;
+      }
+    }
+
+    if (this.hudStatusText) {
+      let statusStr = "";
+      if (p < 0.28) {
+        statusStr = "WEAVING RADIAL ANCHORS // 16 SPOKES";
+      } else if (p < 0.65) {
+        statusStr = "SPINNING CAPTURE SPIRALS // ELASTIC TENSION";
+      } else if (p < 0.88) {
+        statusStr = "CRYSTALLIZING NEURAL DEWDROPS // LOCKING COORD";
+      } else {
+        statusStr = "NEXUS SYNCHRONIZED // ENTERING WEB UNIVERSE";
+      }
+
+      if (this.lastStatusStr !== statusStr) {
+        this.lastStatusStr = statusStr;
+        this.hudStatusText.textContent = statusStr;
+      }
+    }
   }
 }
 
