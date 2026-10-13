@@ -141,71 +141,56 @@ class SoundEngine {
       const ctx = this.audioCtx;
       const now = ctx.currentTime;
 
-      // 0. Silk Elastic Thread Tension Pluck (0.0s - 0.35s)
+      // 1. Initial Silk Thread Elastic Pluck (0.0s - 0.25s)
       const pluckOsc = ctx.createOscillator();
       const pluckGain = ctx.createGain();
       pluckOsc.type = "triangle";
-      pluckOsc.frequency.setValueAtTime(420, now);
-      pluckOsc.frequency.exponentialRampToValueAtTime(75, now + 0.32);
-      pluckGain.gain.setValueAtTime(0.09, now);
-      pluckGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+      pluckOsc.frequency.setValueAtTime(360, now);
+      pluckOsc.frequency.exponentialRampToValueAtTime(70, now + 0.22);
+      pluckGain.gain.setValueAtTime(0.08, now);
+      pluckGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
       pluckOsc.connect(pluckGain);
       pluckGain.connect(ctx.destination);
       pluckOsc.start(now);
-      pluckOsc.stop(now + 0.32);
+      pluckOsc.stop(now + 0.22);
 
-      // 1. Phase 1: Gravitational Sub-Bass Implosion & Resonance (0.0s - 0.9s)
+      // 2. Warm Sub-Bass Anchor Pulse (0.0s - 0.8s)
       const subOsc = ctx.createOscillator();
       const subGain = ctx.createGain();
       subOsc.type = "sine";
-      subOsc.frequency.setValueAtTime(140, now);
-      subOsc.frequency.exponentialRampToValueAtTime(32, now + 0.75);
-      subOsc.frequency.linearRampToValueAtTime(50, now + 2.0);
-
-      subGain.gain.setValueAtTime(0.18, now);
-      subGain.gain.linearRampToValueAtTime(0.32, now + 0.7);
-      subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
-
+      subOsc.frequency.setValueAtTime(95, now);
+      subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.7);
+      subGain.gain.setValueAtTime(0.12, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
       subOsc.connect(subGain);
       subGain.connect(ctx.destination);
       subOsc.start(now);
-      subOsc.stop(now + 2.2);
+      subOsc.stop(now + 0.75);
 
-      // 2. Phase 2: Dual-Sawtooth Silk Vortex Accelerator & Turbine Rise (0.7s - 2.8s)
-      const riseOsc1 = ctx.createOscillator();
-      const riseOsc2 = ctx.createOscillator();
-      const riseFilter = ctx.createBiquadFilter();
-      const riseGain = ctx.createGain();
+      // 3. Crystalline Silk Weave Arpeggio (0.2s - 1.4s) — Spinning the Capture Spirals
+      const arpeggioFreqs = [392.0, 493.88, 587.33, 739.99, 880.0, 1174.66]; // G-maj9 ascending weave
+      arpeggioFreqs.forEach((freq, idx) => {
+        const arpOsc = ctx.createOscillator();
+        const arpGain = ctx.createGain();
+        const startTime = now + 0.2 + idx * 0.16;
 
-      riseOsc1.type = "sawtooth";
-      riseOsc2.type = "sawtooth";
-      riseOsc1.frequency.setValueAtTime(140, now + 0.7);
-      riseOsc1.frequency.exponentialRampToValueAtTime(2600, now + 2.7);
-      riseOsc2.frequency.setValueAtTime(144, now + 0.7); // Detuned for chorus
-      riseOsc2.frequency.exponentialRampToValueAtTime(2620, now + 2.7);
+        arpOsc.type = "sine";
+        arpOsc.frequency.setValueAtTime(freq, startTime);
+        arpOsc.frequency.exponentialRampToValueAtTime(freq * 1.05, startTime + 0.35);
 
-      riseFilter.type = "bandpass";
-      riseFilter.frequency.setValueAtTime(280, now + 0.7);
-      riseFilter.frequency.exponentialRampToValueAtTime(5400, now + 2.6);
-      riseFilter.Q.setValueAtTime(6.0, now);
+        arpGain.gain.setValueAtTime(0.0001, now);
+        arpGain.gain.setValueAtTime(0.035 / (1 + idx * 0.15), startTime);
+        arpGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.45);
 
-      riseGain.gain.setValueAtTime(0.0001, now);
-      riseGain.gain.setValueAtTime(0.02, now + 0.7);
-      riseGain.gain.linearRampToValueAtTime(0.12, now + 2.2);
-      riseGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.0);
+        arpOsc.connect(arpGain);
+        arpGain.connect(ctx.destination);
+        arpOsc.start(startTime);
+        arpOsc.stop(startTime + 0.45);
+      });
 
-      riseOsc1.connect(riseFilter);
-      riseOsc2.connect(riseFilter);
-      riseFilter.connect(riseGain);
-      riseGain.connect(ctx.destination);
-      riseOsc1.start(now + 0.7);
-      riseOsc2.start(now + 0.7);
-      riseOsc1.stop(now + 3.0);
-      riseOsc2.stop(now + 3.0);
-
-      // 3. Phase 3: Relativistic Slipstream White Noise Whoosh (1.5s - 3.2s)
+      // 4. Soft Silk Flutter Whisper (Filtered gentle breath, 0.4s - 1.6s)
       try {
-        const bufferSize = ctx.sampleRate * 1.8;
+        const bufferSize = ctx.sampleRate * 1.2;
         const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const output = noiseBuffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
@@ -216,43 +201,45 @@ class SoundEngine {
         whiteNoise.buffer = noiseBuffer;
 
         const noiseFilter = ctx.createBiquadFilter();
-        noiseFilter.type = "lowpass";
-        noiseFilter.frequency.setValueAtTime(320, now + 1.5);
-        noiseFilter.frequency.exponentialRampToValueAtTime(5600, now + 2.6);
-        noiseFilter.frequency.exponentialRampToValueAtTime(220, now + 3.2);
+        noiseFilter.type = "bandpass";
+        noiseFilter.frequency.setValueAtTime(450, now + 0.3);
+        noiseFilter.frequency.linearRampToValueAtTime(1200, now + 1.1);
+        noiseFilter.frequency.linearRampToValueAtTime(300, now + 1.5);
+        noiseFilter.Q.setValueAtTime(3.0, now);
 
         const noiseGain = ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.001, now + 1.5);
-        noiseGain.gain.linearRampToValueAtTime(0.08, now + 2.5);
-        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+        noiseGain.gain.setValueAtTime(0.0001, now);
+        noiseGain.gain.setValueAtTime(0.02, now + 0.3);
+        noiseGain.gain.linearRampToValueAtTime(0.045, now + 0.9);
+        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
 
         whiteNoise.connect(noiseFilter);
         noiseFilter.connect(noiseGain);
         noiseGain.connect(ctx.destination);
-        whiteNoise.start(now + 1.5);
-        whiteNoise.stop(now + 3.2);
+        whiteNoise.start(now + 0.3);
+        whiteNoise.stop(now + 1.6);
       } catch (ne) {}
 
-      // 4. Phase 4: Nexus Arrival Harmonic Triad Chime (2.8s - 3.9s)
-      const chordFreqs = [587.33, 739.99, 880.0, 1174.66]; // D-maj9 luminous silk chord
+      // 5. Harmonic Nexus Emergence Chime (1.4s - 2.5s) — Harmonious synchronization
+      const chordFreqs = [587.33, 739.99, 880.0, 1174.66]; // D-maj9 luminous arrival chord
       chordFreqs.forEach((freq, idx) => {
         const chimeOsc = ctx.createOscillator();
         const chimeGain = ctx.createGain();
-        chimeOsc.type = "sine";
-        chimeOsc.frequency.setValueAtTime(freq, now + 2.8 + idx * 0.08);
-        chimeOsc.frequency.exponentialRampToValueAtTime(freq * 1.12, now + 3.4);
+        const startTime = now + 1.4 + idx * 0.05;
 
+        chimeOsc.type = "sine";
+        chimeOsc.frequency.setValueAtTime(freq, startTime);
         chimeGain.gain.setValueAtTime(0.0001, now);
-        chimeGain.gain.setValueAtTime(0.045 / (idx + 1), now + 2.8 + idx * 0.08);
-        chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.9);
+        chimeGain.gain.setValueAtTime(0.04 / (idx + 1), startTime);
+        chimeGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 1.1);
 
         chimeOsc.connect(chimeGain);
         chimeGain.connect(ctx.destination);
-        chimeOsc.start(now + 2.8 + idx * 0.08);
-        chimeOsc.stop(now + 3.9);
+        chimeOsc.start(startTime);
+        chimeOsc.stop(startTime + 1.1);
       });
     } catch (e) {
-      console.warn("Warp sound synthesis error", e);
+      console.warn("Silk weave sound error", e);
     }
   }
 

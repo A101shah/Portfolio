@@ -111,9 +111,12 @@ class LandingPortal {
     this.particleCount = window.innerWidth < 768 ? 70 : 130;
     this.maxConnectDist = 115;
 
-    // 3D Spider-Silk Hyper-Tunnel Rings
-    this.tunnelRings = [];
-    this.initTunnelRings();
+    // Living Spider Web Weave Geometry
+    this.weaveSpokes = [];
+    this.weaveRings = [];
+    this.weaveNodes = [];
+    this.silkPulses = [];
+    this.initWebWeaveData();
 
     // Scramble instances
     if (this.firstNameEl) this.firstNameScramble = new TextScramble(this.firstNameEl);
@@ -122,39 +125,56 @@ class LandingPortal {
     this.init();
   }
 
-  initTunnelRings() {
-    this.tunnelRings = [];
-    const webCount = 14;
-    for (let r = 0; r < webCount; r++) {
-      this.tunnelRings.push({
-        z: 80 + r * 68,
-        rotation: (r * Math.PI) / 8,
-        wobblePhase: r * 0.45,
-        sagFactor: 0.14 + (r % 3) * 0.03
+  initWebWeaveData() {
+    const cx = this.width / 2;
+    const cy = this.height / 2;
+    const maxRadius = Math.max(this.width, this.height) * 0.72;
+    const spokeCount = 16;
+    const ringCount = 8;
+
+    this.weaveSpokes = [];
+    for (let s = 0; s < spokeCount; s++) {
+      const angle = (s / spokeCount) * Math.PI * 2;
+      this.weaveSpokes.push({
+        angle,
+        length: maxRadius * (0.88 + (s % 4) * 0.04),
+        sagFactor: 0.13 + (s % 2) * 0.02
       });
     }
 
-    // High-speed radial silk pulses traveling along the 16 spokes
+    this.weaveRings = [];
+    for (let r = 1; r <= ringCount; r++) {
+      const radius = Math.pow(r / ringCount, 1.25) * (maxRadius * 0.75);
+      this.weaveRings.push({
+        radius,
+        sagFactor: 0.14
+      });
+    }
+
+    // Pre-calculate target grid nodes for particle crystallization
+    this.weaveNodes = [];
+    for (let r = 0; r < this.weaveRings.length; r++) {
+      const ring = this.weaveRings[r];
+      for (let s = 0; s < spokeCount; s++) {
+        const spoke = this.weaveSpokes[s];
+        this.weaveNodes.push({
+          x: cx + Math.cos(spoke.angle) * ring.radius,
+          y: cy + Math.sin(spoke.angle) * ring.radius,
+          radius: ring.radius,
+          spokeIndex: s,
+          ringIndex: r
+        });
+      }
+    }
+
+    // Luminous traveling silk energy pulses
     this.silkPulses = [];
-    for (let p = 0; p < 18; p++) {
+    for (let p = 0; p < 16; p++) {
       this.silkPulses.push({
-        spokeIndex: Math.floor(Math.random() * 16),
+        spokeIndex: Math.floor(Math.random() * spokeCount),
         progress: Math.random(),
-        speed: 0.7 + Math.random() * 0.8,
-        size: 3 + Math.random() * 2.5
-      });
-    }
-
-    // Floating dewdrifts (3D moisture particles glistening in the slipstream)
-    this.dewdrifts = [];
-    for (let d = 0; d < 80; d++) {
-      this.dewdrifts.push({
-        x: (Math.random() - 0.5) * this.width * 1.6,
-        y: (Math.random() - 0.5) * this.height * 1.6,
-        z: Math.random() * 1000 + 20,
-        speed: Math.random() * 1.2 + 0.8,
-        size: Math.random() * 2.5 + 1.2,
-        alpha: Math.random() * 0.6 + 0.3
+        speed: 0.8 + Math.random() * 0.8,
+        size: 2.6 + Math.random() * 1.6
       });
     }
   }
@@ -257,6 +277,7 @@ class LandingPortal {
     if (this.particles.length === 0) {
       this.createParticles();
     }
+    this.initWebWeaveData();
   }
 
   createParticles() {
@@ -432,21 +453,22 @@ class LandingPortal {
     if (this.isWarping) return;
     this.isWarping = true;
     this.warpProgress = 0;
+    this.warpStartTime = performance.now();
+    this.warpDuration = 2200; // 2.2s total smooth organic weave
 
     // Change button status
     if (this.enterBtn) {
       this.enterBtn.classList.add("charging");
       const btnText = this.enterBtn.querySelector("span:first-child");
-      if (btnText) btnText.textContent = "CALIBRATING QUANTUM LINK...";
+      if (btnText) btnText.textContent = "WEAVING QUANTUM WEB...";
     }
 
-    // Phase 1: Singularity Accretion & Card Dissolve (0ms -> 700ms)
+    // Phase 1: Card Smoothly Dissolves to Reveal the Silk Weave
     if (this.container) {
       this.container.classList.add("warp-charging");
     }
-    this.isSingularity = true;
 
-    // Trigger synthetic procedural audio
+    // Trigger synthetic organic silk audio soundscape
     if (window.soundEngineInstance && typeof window.soundEngineInstance.playWarpJump === "function") {
       window.soundEngineInstance.playWarpJump();
     } else if (window.soundEngineInstance) {
@@ -459,98 +481,99 @@ class LandingPortal {
     const velText = document.getElementById("warp-velocity-text");
     const velFill = document.getElementById("warp-velocity-fill");
     if (hud) hud.classList.add("active");
-    if (statusText) statusText.textContent = "QUANTUM SILK WEAVE: ENGAGED";
-    if (velText) velText.textContent = "0.2c";
-    if (velFill) velFill.style.width = "10%";
+    if (statusText) statusText.textContent = "QUANTUM SILK RESONANCE // WEAVING RADIALS";
+    if (velText) velText.textContent = "1.0x";
+    if (velFill) velFill.style.width = "4%";
 
-    // Phase 2: Relativistic Hyperspace Wormhole Tunnel (700ms -> 3000ms)
+    // Track silk weave progress smoothly through the top HUD bar
+    if (this.velInterval) clearInterval(this.velInterval);
+    this.velInterval = setInterval(() => {
+      const elapsed = performance.now() - this.warpStartTime;
+      const p = Math.min(Math.max(elapsed / this.warpDuration, 0), 1.0);
+
+      if (p < 0.28) {
+        if (statusText) statusText.textContent = "WEAVING RADIAL ANCHORS // 16 SPOKES";
+      } else if (p < 0.65) {
+        if (statusText) statusText.textContent = "SPINNING CAPTURE SPIRALS // ELASTIC TENSION";
+      } else if (p < 0.88) {
+        if (statusText) statusText.textContent = "CRYSTALLIZING NEURAL DEWDROPS // LOCKING COORD";
+      } else {
+        if (statusText) statusText.textContent = "NEXUS SYNCHRONIZED // ENTERING WEB UNIVERSE";
+      }
+
+      if (velText) {
+        const tension = (1.0 + p * 8.9).toFixed(1);
+        velText.textContent = `${tension}x`;
+      }
+      if (velFill) {
+        velFill.style.width = `${Math.round(p * 100)}%`;
+      }
+
+      if (p >= 1.0) {
+        clearInterval(this.velInterval);
+        this.velInterval = null;
+      }
+    }, 40);
+
+    // Phase 2: Card into active weave
     setTimeout(() => {
-      this.isSingularity = false;
-
       if (this.container) {
         this.container.classList.remove("warp-charging");
         this.container.classList.add("warp-active");
       }
+    }, 450);
 
-      if (statusText) statusText.textContent = "RELATIVISTIC SILK VORTEX // ACCELERATING";
+    // Phase 3: Initiate Celestial Web Alignment in Background Canvas (at 1550ms, harmonic silver ripples expanding)
+    setTimeout(() => {
+      if (window.spiderWebInstance && typeof window.spiderWebInstance.triggerCelestialEntrance === "function") {
+        window.spiderWebInstance.triggerCelestialEntrance();
+      } else if (window.spiderWebInstance) {
+        const web = window.spiderWebInstance;
+        web.camera.zoom = 0.40;
+        web.camera.y = 0;
+        web.camera.x = 0;
+        web.camera.targetZoom = 1.0;
+        web.camera.targetY = 0;
+        web.camera.targetX = 0;
+        web.camera.isGliding = true;
+        if (typeof web.triggerVibration === "function") {
+          web.triggerVibration(0, 0);
+          setTimeout(() => web.triggerVibration(0, 0), 240);
+        }
+      }
+    }, 1550);
 
-      // Animate velocity bar smoothly through hyperspace
-      if (this.velInterval) clearInterval(this.velInterval);
-      let vProgress = 0.15;
-      this.velInterval = setInterval(() => {
-        vProgress += 0.038;
-        if (vProgress >= 0.55 && vProgress < 0.85) {
-          if (statusText) statusText.textContent = "HARMONIC SILK RESONANCE // APPROACHING CORE NEXUS";
-        } else if (vProgress >= 0.85 && vProgress < 0.99) {
-          if (statusText) statusText.textContent = "CRITICAL TENSION: 9.9c // SYNCHRONIZING NEURAL WEAVE";
-        } else if (vProgress >= 0.99) {
-          vProgress = 1.0;
-          clearInterval(this.velInterval);
-          this.velInterval = null;
-          if (statusText) statusText.textContent = "MAX WARP: 9.9c // NEXUS ARRIVAL CONFIRMED";
-        }
-        if (velText) {
-          const c = (vProgress * 9.9).toFixed(1);
-          velText.textContent = `${c}c`;
-        }
-        if (velFill) {
-          velFill.style.width = `${Math.round(vProgress * 100)}%`;
-        }
-      }, 85);
+    // Phase 4: Dissolve Landing Container smoothly into the live Spider Web (at 2100ms)
+    setTimeout(() => {
+      if (this.container) {
+        this.container.classList.remove("warp-active");
+        this.container.classList.add("warp-dissolving");
+      }
 
-      // Phase 3: Relativistic Emergence & Seamless Blend into Web Universe (3000ms -> 3900ms)
+      // Phase 5: Complete Transition & Settle (at 2750ms)
       setTimeout(() => {
-        // Dissolve landing container smoothly (pure fade into spider web)
+        if (hud) hud.classList.remove("active");
+
         if (this.container) {
-          this.container.classList.remove("warp-active");
-          this.container.classList.add("warp-dissolving");
+          this.container.classList.add("hidden");
+          this.container.classList.remove("warp-dissolving");
+          this.isActive = false;
         }
 
-        // Initialize celestial dive in Spider Web Universe (aligned right on center Nexus (0, 0)!)
-        if (window.spiderWebInstance && typeof window.spiderWebInstance.triggerCelestialEntrance === "function") {
-          window.spiderWebInstance.triggerCelestialEntrance();
-        } else if (window.spiderWebInstance) {
-          const web = window.spiderWebInstance;
-          web.camera.zoom = 0.40;
-          web.camera.y = 0;
-          web.camera.x = 0;
-          web.camera.targetZoom = 1.0;
-          web.camera.targetY = 0;
-          web.camera.targetX = 0;
-          web.camera.isGliding = true;
-          if (typeof web.triggerVibration === "function") {
-            web.triggerVibration(0, 0);
-            setTimeout(() => web.triggerVibration(0, 0), 250);
-          }
+        // Cybernetic hint banner update
+        const hint = document.getElementById("web-instruction-hint");
+        if (hint) {
+          hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>➔ <strong>NEURAL NEXUS SYNCHRONIZED</strong> &bull; DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK NODES TO INSPECT</span></div>`;
+          hint.style.opacity = "1";
         }
+      }, 650);
 
-        // Phase 4: Settle & Finalize (3900ms)
-        setTimeout(() => {
-          if (hud) hud.classList.remove("active");
-
-          if (this.container) {
-            this.container.classList.add("hidden");
-            this.container.classList.remove("warp-dissolving");
-            this.isActive = false;
-          }
-
-          // Cybernetic hint banner update
-          const hint = document.getElementById("web-instruction-hint");
-          if (hint) {
-            hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>➔ <strong>NEURAL NEXUS SYNCHRONIZED</strong> &bull; DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK NODES TO INSPECT</span></div>`;
-            hint.style.opacity = "1";
-          }
-        }, 900);
-
-      }, 2300); // 700 + 2300 = 3000ms
-
-    }, 700); // 700ms singularity accretion
+    }, 2100);
   }
 
   reenterGateway() {
     this.isActive = true;
     this.isWarping = false;
-    this.isSingularity = false;
     this.warpProgress = 0;
     if (this.velInterval) {
       clearInterval(this.velInterval);
@@ -595,9 +618,9 @@ class LandingPortal {
       }, 800);
     }
 
-    // Re-create particles and reset wormhole rings for fresh field
+    // Re-create particles and reset web weave data
     this.createParticles();
-    this.initTunnelRings();
+    this.initWebWeaveData();
     this.shockwaves = [];
     this.stardust = [];
 
@@ -631,11 +654,10 @@ class LandingPortal {
         this.renderNormalConstellation(dt);
         this.renderShockwaves(dt);
         this.renderStardust(dt);
-      } else if (this.isSingularity) {
-        this.renderSingularityImplosion(dt);
       } else {
-        this.warpProgress = Math.min(this.warpProgress + dt * 0.44, 1.0);
-        this.renderWarpSpeed(dt);
+        const elapsed = (timestamp - this.warpStartTime) / 1000;
+        this.warpProgress = Math.min(Math.max(elapsed / (this.warpDuration / 1000), 0), 1.0);
+        this.renderWebWeave(dt);
       }
     }
 
@@ -775,267 +797,28 @@ class LandingPortal {
     }
   }
 
-  renderSingularityImplosion(dt) {
+  renderWebWeave(dt) {
     const ctx = this.ctx;
-    const pts = this.particles;
     const cx = this.width / 2;
     const cy = this.height / 2;
+    const maxRadius = Math.max(this.width, this.height) * 0.72;
+    const progress = this.warpProgress;
 
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
 
-    // 1. Draw 16 converging silken anchor threads shooting inward from screen perimeter
-    const spokeCount = 16;
-    const maxR = Math.max(this.width, this.height) * 0.85;
-    for (let s = 0; s < spokeCount; s++) {
-      const angle = (s / spokeCount) * Math.PI * 2;
-      const ex = cx + Math.cos(angle) * maxR;
-      const ey = cy + Math.sin(angle) * maxR;
-
-      // Elastic tension wave along the thread
-      const wave = Math.sin(Date.now() * 0.02 + s * 2.2) * 5;
-      const perpAngle = angle + Math.PI / 2;
-      const midX = (cx + ex) / 2 + Math.cos(perpAngle) * wave;
-      const midY = (cy + ey) / 2 + Math.sin(perpAngle) * wave;
-
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.quadraticCurveTo(midX, midY, ex, ey);
-      ctx.strokeStyle = "rgba(180, 205, 245, 0.45)";
-      ctx.lineWidth = 1.3;
-      ctx.stroke();
-
-      // Glistening dewdrops along converging spoke
-      for (let d = 1; d <= 4; d++) {
-        const t = d / 5;
-        const dx = cx + (ex - cx) * t;
-        const dy = cy + (ey - cy) * t;
-        ctx.beginPath();
-        ctx.arc(dx, dy, 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(225, 240, 255, 0.9)";
-        ctx.fill();
-      }
-    }
-
-    // 2. Cosmic inward spiral of particles into the core
-    for (let i = 0; i < pts.length; i++) {
-      const p = pts[i];
-      const dx = p.x - cx;
-      const dy = p.y - cy;
-      let r = Math.hypot(dx, dy);
-      let angle = Math.atan2(dy, dx);
-
-      angle += (160 / (r + 30)) * dt * 3.2;
-      r = Math.max(4, r - (r * 2.8 + 80) * dt);
-
-      p.x = cx + Math.cos(angle) * r;
-      p.y = cy + Math.sin(angle) * r;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.baseRadius * 1.4, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(200, 225, 255, 0.9)";
-      ctx.fill();
-    }
-
-    // 3. Central Nexus Pearl Swelling (matching the main web's central pearl)
-    const pearlR = 12 + Math.sin(Date.now() * 0.015) * 3;
-    const pearlGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pearlR * 3);
+    // 1. Central Luminous Nexus Pearl (Heart of the Spider Web)
+    const pearlGrowth = Math.min(progress / 0.45, 1);
+    const pearlR = 9 + pearlGrowth * 18 + Math.sin(Date.now() * 0.008) * 2;
+    const pearlGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pearlR * 3.2);
     pearlGrad.addColorStop(0, "#ffffff");
-    pearlGrad.addColorStop(0.25, "rgba(215, 235, 255, 0.9)");
-    pearlGrad.addColorStop(0.6, "rgba(140, 185, 255, 0.3)");
+    pearlGrad.addColorStop(0.28, "rgba(225, 240, 255, 0.92)");
+    pearlGrad.addColorStop(0.65, "rgba(147, 197, 253, 0.35)");
     pearlGrad.addColorStop(1, "transparent");
 
     ctx.fillStyle = pearlGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, pearlR * 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, pearlR, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffffff";
-    ctx.shadowBlur = 24;
-    ctx.shadowColor = "#38bdf8";
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    ctx.restore();
-  }
-
-  renderWarpSpeed(dt) {
-    const ctx = this.ctx;
-    const cx = this.width / 2;
-    const cy = this.height / 2;
-
-    // Silky, non-strobe relativistic acceleration (velvety smooth forward velocity)
-    const speedMultiplier = 1 + Math.pow(this.warpProgress, 1.6) * 7.5;
-
-    ctx.save();
-    ctx.globalCompositeOperation = "lighter";
-
-    const baseRadius = Math.max(this.width, this.height) * 0.52;
-    const sides = 16; // 16 radial spokes aligning perfectly with the Spider Web Nexus Hub!
-
-    // 1. Draw 16 Longitudinal Silk Highway Spokes radiating from vanishing point
-    for (let s = 0; s < sides; s++) {
-      const spokeAngle = (s / sides) * Math.PI * 2 + (this.tunnelRings[0] ? this.tunnelRings[0].rotation * 0.2 : 0);
-      const ex = cx + Math.cos(spokeAngle) * Math.max(this.width, this.height) * 1.3;
-      const ey = cy + Math.sin(spokeAngle) * Math.max(this.width, this.height) * 1.3;
-
-      // Delicate elastic sine wave in silk thread
-      const wave = Math.sin(Date.now() * 0.006 + s * 1.6) * 2.8;
-      const perp = spokeAngle + Math.PI / 2;
-      const midX = (cx + ex) * 0.5 + Math.cos(perp) * wave;
-      const midY = (cy + ey) * 0.5 + Math.sin(perp) * wave;
-
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.quadraticCurveTo(midX, midY, ex, ey);
-      ctx.strokeStyle = `rgba(200, 218, 240, ${0.16 + this.warpProgress * 0.35})`;
-      ctx.lineWidth = 1.25;
-      ctx.stroke();
-    }
-
-    // 2. High-Speed Traveling Silk Energy Pulses racing down the 16 spokes
-    if (this.silkPulses) {
-      for (let p = 0; p < this.silkPulses.length; p++) {
-        const pulse = this.silkPulses[p];
-        pulse.progress += pulse.speed * speedMultiplier * dt * 0.42;
-        if (pulse.progress >= 1.0) {
-          pulse.progress = 0;
-          pulse.spokeIndex = Math.floor(Math.random() * sides);
-        }
-
-        const angle = (pulse.spokeIndex / sides) * Math.PI * 2 + (this.tunnelRings[0] ? this.tunnelRings[0].rotation * 0.2 : 0);
-        const dist = Math.pow(pulse.progress, 1.35) * Math.max(this.width, this.height) * 1.05;
-        const px = cx + Math.cos(angle) * dist;
-        const py = cy + Math.sin(angle) * dist;
-
-        ctx.beginPath();
-        ctx.arc(px, py, pulse.size * (0.6 + pulse.progress * 0.8), 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(235, 248, 255, 0.95)";
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = "#93c5fd";
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-    }
-
-    // 3. Draw 3D Nested Spider Webs in Relativistic Perspective
-    for (let i = 0; i < this.tunnelRings.length; i++) {
-      const ring = this.tunnelRings[i];
-      ring.z -= 280 * speedMultiplier * dt;
-      ring.rotation += (0.28 + (1000 - ring.z) * 0.00035) * dt;
-
-      if (ring.z <= 20) {
-        ring.z = 1000;
-      }
-
-      const k = 270 / ring.z;
-      const webR = baseRadius * k;
-      const distFade = Math.min(Math.max((1 - ring.z / 1000) * 0.88, 0), 0.88);
-      const nearFade = ring.z < 120 ? Math.max(0, (ring.z - 20) / 100) : 1;
-      const alpha = distFade * nearFade;
-
-      if (webR > 8 && webR < Math.max(this.width, this.height) * 2.8 && alpha > 0.01) {
-        const angles = [];
-        for (let s = 0; s < sides; s++) {
-          angles[s] = (s / sides) * Math.PI * 2 + ring.rotation;
-        }
-
-        const ringLevels = 4;
-        for (let lvl = 1; lvl <= ringLevels; lvl++) {
-          const spiralR = webR * (lvl / (ringLevels + 0.3));
-
-          ctx.beginPath();
-          for (let s = 0; s < sides; s++) {
-            const a1 = angles[s];
-            const a2 = angles[(s + 1) % sides];
-
-            const p1x = cx + Math.cos(a1) * spiralR;
-            const p1y = cy + Math.sin(a1) * spiralR;
-            const p2x = cx + Math.cos(a2) * spiralR;
-            const p2y = cy + Math.sin(a2) * spiralR;
-
-            const midAngle = (a1 + a2) * 0.5;
-            const sagR = spiralR * (1 - ring.sagFactor);
-            const ctrlX = cx + Math.cos(midAngle) * sagR;
-            const ctrlY = cy + Math.sin(midAngle) * sagR;
-
-            if (s === 0) ctx.moveTo(p1x, p1y);
-            ctx.quadraticCurveTo(ctrlX, ctrlY, p2x, p2y);
-          }
-          ctx.closePath();
-
-          ctx.strokeStyle = `rgba(195, 215, 242, ${alpha * (lvl === ringLevels ? 0.65 : 0.36)})`;
-          ctx.lineWidth = Math.min(k * 1.5, 2.2);
-          ctx.stroke();
-
-          if (lvl >= 2) {
-            for (let s = 0; s < sides; s++) {
-              const a = angles[s];
-              const dx = cx + Math.cos(a) * spiralR;
-              const dy = cy + Math.sin(a) * spiralR;
-
-              ctx.beginPath();
-              ctx.arc(dx, dy, Math.min(k * 1.9, 3.4), 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(240, 248, 255, ${alpha * 0.95})`;
-              ctx.fill();
-            }
-          }
-        }
-      }
-    }
-
-    // 4. Floating 3D Dewdrifts (Glistening moisture motes in relativistic slipstream)
-    if (this.dewdrifts) {
-      for (let d = 0; d < this.dewdrifts.length; d++) {
-        const drop = this.dewdrifts[d];
-        const prevZ = drop.z;
-        drop.z -= 320 * drop.speed * speedMultiplier * dt;
-
-        if (drop.z <= 10) {
-          drop.z = 1000;
-          drop.x = (Math.random() - 0.5) * this.width * 1.5;
-          drop.y = (Math.random() - 0.5) * this.height * 1.5;
-          continue;
-        }
-
-        const k = 270 / drop.z;
-        const px = cx + drop.x * k;
-        const py = cy + drop.y * k;
-
-        const prevK = 270 / Math.min(prevZ, 1000);
-        const prevPx = cx + drop.x * prevK;
-        const prevPy = cy + drop.y * prevK;
-
-        const dropFade = drop.z < 100 ? (drop.z - 10) / 90 : 1;
-        const dropAlpha = Math.min((1 - drop.z / 1000) * 1.1, 1) * drop.alpha * dropFade;
-
-        ctx.beginPath();
-        ctx.moveTo(prevPx, prevPy);
-        ctx.lineTo(px, py);
-        ctx.strokeStyle = `rgba(210, 228, 255, ${dropAlpha * 0.65})`;
-        ctx.lineWidth = Math.min(k * 2.0, 2.5);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(px, py, Math.max(1, (1 - drop.z / 1000) * drop.size * 1.8), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${dropAlpha})`;
-        ctx.fill();
-      }
-    }
-
-    // 5. Center Nexus Pearl (The focal destination of the Spider Web universe)
-    const pearlR = 14 + this.warpProgress * 26;
-    const pearlGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pearlR * 2.8);
-    pearlGrad.addColorStop(0, "#ffffff");
-    pearlGrad.addColorStop(0.28, "rgba(220, 238, 255, 0.9)");
-    pearlGrad.addColorStop(0.65, "rgba(147, 197, 253, 0.38)");
-    pearlGrad.addColorStop(1, "transparent");
-
-    ctx.fillStyle = pearlGrad;
-    ctx.beginPath();
-    ctx.arc(cx, cy, pearlR * 2.8, 0, Math.PI * 2);
+    ctx.arc(cx, cy, pearlR * 3.2, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.beginPath();
@@ -1046,31 +829,171 @@ class LandingPortal {
     ctx.fill();
     ctx.shadowBlur = 0;
 
-    // 6. Climax Expanding Silk Shockwaves & Emergence Bloom (Emergence wavefront)
-    if (this.warpProgress > 0.82) {
-      const waveProgress = (this.warpProgress - 0.82) / 0.18;
-      const waveR = waveProgress * Math.max(this.width, this.height) * 1.4;
-      const waveAlpha = (1 - waveProgress) * 0.85;
+    // 2. The 16 Silk Radial Spokes Spreading Outward Across the Screen
+    const spokeCount = this.weaveSpokes ? this.weaveSpokes.length : 16;
+    const spokePhase = Math.min(Math.max(progress / 0.65, 0), 1);
 
-      ctx.beginPath();
-      ctx.arc(cx, cy, waveR, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(225, 240, 255, ${waveAlpha})`;
-      ctx.lineWidth = 3.2 * (1 - waveProgress);
-      ctx.stroke();
+    if (this.weaveSpokes) {
+      for (let s = 0; s < spokeCount; s++) {
+        const spoke = this.weaveSpokes[s];
+        const stagger = (s / spokeCount) * 0.12;
+        const sProg = Math.min(Math.max((spokePhase - stagger) / (1 - stagger), 0), 1);
+        if (sProg <= 0) continue;
 
-      ctx.beginPath();
-      ctx.arc(cx, cy, Math.max(0, waveR - 40), 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(147, 197, 253, ${waveAlpha * 0.5})`;
-      ctx.lineWidth = 2.0 * (1 - waveProgress);
-      ctx.stroke();
+        // Smooth cubic ease-out unfurl
+        const eased = 1 - Math.pow(1 - sProg, 3);
+        const curLen = spoke.length * eased;
 
-      const bloomGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, waveR * 0.7);
-      bloomGrad.addColorStop(0, `rgba(255, 255, 255, ${waveAlpha * 0.3})`);
-      bloomGrad.addColorStop(0.5, `rgba(180, 215, 255, ${waveAlpha * 0.12})`);
+        const ex = cx + Math.cos(spoke.angle) * curLen;
+        const ey = cy + Math.sin(spoke.angle) * curLen;
+
+        // Subtle elastic harmonic sine wave along silk thread
+        const wave = Math.sin(Date.now() * 0.006 + s * 1.8) * 2.8 * (1 - progress * 0.5);
+        const perp = spoke.angle + Math.PI / 2;
+        const midX = (cx + ex) * 0.5 + Math.cos(perp) * wave;
+        const midY = (cy + ey) * 0.5 + Math.sin(perp) * wave;
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.quadraticCurveTo(midX, midY, ex, ey);
+        ctx.strokeStyle = `rgba(205, 222, 245, ${sProg * 0.78})`;
+        ctx.lineWidth = 1.25;
+        ctx.stroke();
+
+        // Luminous anchor dewdrop bead at the advancing spoke tip
+        ctx.beginPath();
+        ctx.arc(ex, ey, 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(240, 248, 255, 0.95)";
+        ctx.fill();
+      }
+    }
+
+    // 3. The 8 Concentric Capture Spirals Weaving In Real-Time
+    if (this.weaveRings && this.weaveSpokes) {
+      const ringPhase = Math.min(Math.max((progress - 0.18) / 0.64, 0), 1);
+
+      for (let r = 0; r < this.weaveRings.length; r++) {
+        const ring = this.weaveRings[r];
+        const ringStagger = (r / this.weaveRings.length) * 0.42;
+        const rProg = Math.min(Math.max((ringPhase - ringStagger) / (1 - ringStagger), 0), 1);
+        if (rProg <= 0) continue;
+
+        const ringAlpha = Math.min(rProg * 1.4, 1) * 0.62;
+
+        ctx.beginPath();
+        for (let s = 0; s < spokeCount; s++) {
+          const nextS = (s + 1) % spokeCount;
+          const a1 = this.weaveSpokes[s].angle;
+          const a2 = this.weaveSpokes[nextS].angle;
+
+          const p1x = cx + Math.cos(a1) * ring.radius;
+          const p1y = cy + Math.sin(a1) * ring.radius;
+          const p2x = cx + Math.cos(a2) * ring.radius;
+          const p2y = cy + Math.sin(a2) * ring.radius;
+
+          // Natural organic catenary sag toward center
+          const midAngle = (a1 + a2) * 0.5;
+          const sagR = ring.radius * (1 - ring.sagFactor);
+          const ctrlX = cx + Math.cos(midAngle) * sagR;
+          const ctrlY = cy + Math.sin(midAngle) * sagR;
+
+          if (s === 0) ctx.moveTo(p1x, p1y);
+          ctx.quadraticCurveTo(ctrlX, ctrlY, p2x, p2y);
+        }
+        ctx.closePath();
+
+        ctx.strokeStyle = `rgba(188, 210, 240, ${ringAlpha})`;
+        ctx.lineWidth = 1.1;
+        ctx.stroke();
+
+        // Glistening beaded dewdrops on each spoke intersection
+        if (rProg > 0.35) {
+          const dewAlpha = Math.min((rProg - 0.35) / 0.65, 1);
+          for (let s = 0; s < spokeCount; s++) {
+            const a = this.weaveSpokes[s].angle;
+            const nx = cx + Math.cos(a) * ring.radius;
+            const ny = cy + Math.sin(a) * ring.radius;
+
+            ctx.beginPath();
+            ctx.arc(nx, ny, 2.3 * dewAlpha, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${dewAlpha * 0.95})`;
+            ctx.fill();
+          }
+        }
+      }
+    }
+
+    // 4. Magnetic Flocking of Constellation Particles into Web Dewdrops
+    if (this.particles && this.weaveNodes) {
+      const flockPhase = Math.min(Math.max((progress - 0.12) / 0.68, 0), 1);
+      for (let i = 0; i < this.particles.length; i++) {
+        const p = this.particles[i];
+        const targetNode = this.weaveNodes[i % this.weaveNodes.length];
+        if (targetNode && flockPhase > 0) {
+          p.x += (targetNode.x - p.x) * 0.08 * flockPhase;
+          p.y += (targetNode.y - p.y) * 0.08 * flockPhase;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.baseRadius * (1 + flockPhase * 0.4), 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(225, 240, 255, " + Math.min(p.alpha * 1.4, 0.95) + ")";
+        ctx.fill();
+      }
+    }
+
+    // 5. Bio-Electric Traveling Silk Energy Pulses
+    if (this.silkPulses && progress > 0.2) {
+      for (let p = 0; p < this.silkPulses.length; p++) {
+        const pulse = this.silkPulses[p];
+        pulse.progress += pulse.speed * dt * 0.85;
+        if (pulse.progress >= 1.0) {
+          pulse.progress = 0;
+          pulse.spokeIndex = Math.floor(Math.random() * spokeCount);
+        }
+
+        const spoke = this.weaveSpokes[pulse.spokeIndex];
+        if (!spoke) continue;
+        const dist = Math.pow(pulse.progress, 1.25) * (maxRadius * 0.72);
+        const px = cx + Math.cos(spoke.angle) * dist;
+        const py = cy + Math.sin(spoke.angle) * dist;
+
+        ctx.beginPath();
+        ctx.arc(px, py, pulse.size, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = "#93c5fd";
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    // 6. Resonant Harmonic Shockwaves & Emergence Bloom (progress > 0.76)
+    if (progress > 0.76) {
+      const wavePhase = (progress - 0.76) / 0.24;
+      for (let w = 0; w < 3; w++) {
+        const wOffset = w * 0.25;
+        const wProg = Math.max(0, Math.min(1, (wavePhase - wOffset) / (1 - wOffset)));
+        if (wProg <= 0) continue;
+
+        const waveR = wProg * maxRadius * 1.4;
+        const waveAlpha = (1 - wProg) * 0.85;
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, waveR, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(220, 238, 255, ${waveAlpha})`;
+        ctx.lineWidth = 2.6 * (1 - wProg);
+        ctx.stroke();
+      }
+
+      // Luminous center radiance
+      const bloomR = wavePhase * maxRadius * 0.75;
+      const bloomGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, bloomR);
+      bloomGrad.addColorStop(0, `rgba(255, 255, 255, ${(1 - wavePhase) * 0.32})`);
+      bloomGrad.addColorStop(0.45, `rgba(180, 215, 255, ${(1 - wavePhase) * 0.12})`);
       bloomGrad.addColorStop(1, "transparent");
       ctx.fillStyle = bloomGrad;
       ctx.beginPath();
-      ctx.arc(cx, cy, waveR * 0.7, 0, Math.PI * 2);
+      ctx.arc(cx, cy, bloomR, 0, Math.PI * 2);
       ctx.fill();
     }
 

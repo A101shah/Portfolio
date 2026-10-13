@@ -835,56 +835,45 @@
   pointer-events: none;
 }
 
-/* Phase 1: Card Cleanly Collapses into Central Singularity Node */
+/* Phase 1: Card Gracefully Dissolves to Reveal the Living Silk Weave */
 #landing-page.warp-charging .landing-center,
 #landing-page.warp-active .landing-center {
-  transform: perspective(1000px) scale(0.04) translateZ(-80px) !important;
+  transform: perspective(1000px) scale(0.93) translateZ(-30px) !important;
   opacity: 0 !important;
-  filter: blur(16px) !important;
+  filter: blur(12px) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   background: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
   transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
-              opacity 0.5s ease,
-              filter 0.5s ease !important;
+              opacity 0.55s ease,
+              filter 0.55s ease !important;
   pointer-events: none !important;
 }
 
-/* Brackets fling outward as explosive pneumatic clamps detach */
+/* Brackets dissolve softly */
 #landing-page.warp-charging .bracket-tl,
-#landing-page.warp-active .bracket-tl {
-  transform: translate(-70px, -70px) scale(0.2) !important;
-  opacity: 0 !important;
-  transition: all 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
 #landing-page.warp-charging .bracket-tr,
-#landing-page.warp-active .bracket-tr {
-  transform: translate(70px, -70px) scale(0.2) !important;
-  opacity: 0 !important;
-  transition: all 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
 #landing-page.warp-charging .bracket-bl,
-#landing-page.warp-active .bracket-bl {
-  transform: translate(-70px, 70px) scale(0.2) !important;
-  opacity: 0 !important;
-  transition: all 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
 #landing-page.warp-charging .bracket-br,
+#landing-page.warp-active .bracket-tl,
+#landing-page.warp-active .bracket-tr,
+#landing-page.warp-active .bracket-bl,
 #landing-page.warp-active .bracket-br {
-  transform: translate(70px, 70px) scale(0.2) !important;
   opacity: 0 !important;
-  transition: all 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transform: scale(0.8) !important;
+  filter: blur(4px) !important;
+  transition: all 0.45s ease !important;
 }
 
-/* Inner elements dissolve radially */
+/* Inner elements dissolve softly */
 #landing-page.warp-charging .landing-title,
 #landing-page.warp-active .landing-title {
-  transform: scale(1.15) !important;
-  filter: blur(10px) !important;
+  transform: scale(1.06) !important;
+  filter: blur(8px) !important;
   opacity: 0 !important;
-  text-shadow: 0 0 35px rgba(160, 210, 255, 0.9) !important;
+  text-shadow: 0 0 25px rgba(160, 210, 255, 0.8) !important;
   transition: all 0.5s ease !important;
 }
 
@@ -897,7 +886,7 @@
 #landing-page.warp-active .landing-skills-orbit,
 #landing-page.warp-active .landing-enter-btn {
   opacity: 0 !important;
-  transform: scale(0.85) translateY(12px) !important;
+  transform: scale(0.92) translateY(8px) !important;
   filter: blur(6px) !important;
   transition: all 0.45s ease !important;
 }
