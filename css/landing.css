@@ -19,14 +19,15 @@
   will-change: opacity, transform;
 }
 
+#landing-page.warp-breakthrough,
 #landing-page.warping {
   opacity: 0;
-  transform: scale(1.12);
+  transform: scale(1.06);
   pointer-events: none;
 }
 
 #landing-page.hidden {
-  display: none;
+  display: none !important;
 }
 
 /* ── Particle Field Canvas ── */
@@ -839,36 +840,187 @@
 .bracket-bl { bottom: -20px; left: -20px; border-bottom: 1.5px solid; border-left: 1.5px solid; }
 .bracket-br { bottom: -20px; right: -20px; border-bottom: 1.5px solid; border-right: 1.5px solid; }
 
-/* Ethereal Harmonic Lift before Hyperspace Glide */
-#landing-page.singularity-charging .landing-center {
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s ease;
-  transform: scale(1.06) translateZ(0);
-  opacity: 0.85;
+/* ── Multi-Stage Cinematic Warp States ── */
+#landing-page.singularity-charging,
+#landing-page.warp-charging {
+  pointer-events: none;
 }
 
-#landing-page.singularity-charging .orbital-ring--1 {
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
-  transform: scale(1.5) !important;
+#landing-page.singularity-charging .landing-center,
+#landing-page.warp-charging .landing-center {
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease;
+  transform: perspective(1000px) scale(0.94) translateZ(-50px);
+  opacity: 0.82;
+}
+
+#landing-page.singularity-charging .orbital-ring--1,
+#landing-page.warp-charging .orbital-ring--1 {
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease;
+  transform: scale(1.4) !important;
   opacity: 0.35;
 }
 
-#landing-page.singularity-charging .orbital-ring--2 {
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
-  transform: scale(1.8) !important;
+#landing-page.singularity-charging .orbital-ring--2,
+#landing-page.warp-charging .orbital-ring--2 {
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease;
+  transform: scale(1.75) !important;
   opacity: 0.25;
 }
 
-#landing-page.singularity-charging .orbital-ring--3 {
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+#landing-page.singularity-charging .orbital-ring--3,
+#landing-page.warp-charging .orbital-ring--3 {
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease;
   transform: scale(2.1) !important;
   opacity: 0.15;
 }
 
 #landing-page.singularity-charging .landing-corner,
-#landing-page.singularity-charging .landing-social-row {
-  transition: opacity 0.35s ease, transform 0.35s ease;
+#landing-page.singularity-charging .landing-social-row,
+#landing-page.warp-charging .landing-corner,
+#landing-page.warp-charging .landing-social-row {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0.3;
+  transform: scale(0.98);
+}
+
+/* ── Phase 2: Relativistic Hyperspace Tunnel (Container stays solid, UI fades away) ── */
+#landing-page.warp-active {
+  pointer-events: none;
+}
+
+#landing-page.warp-active .landing-center,
+#landing-page.warp-active .landing-corner,
+#landing-page.warp-active .landing-social-row,
+#landing-page.warp-active .orbital-ring,
+#landing-page.warp-active .landing-glow-orb,
+#landing-page.warp-active .landing-vignette,
+#landing-page.warp-active .landing-scanline {
+  opacity: 0 !important;
+  pointer-events: none;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  transform: scale(0.88) !important;
+}
+
+/* ── Holographic Relativistic Warp Telemetry HUD ── */
+.warp-telemetry-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
   opacity: 0;
-  transform: scale(0.95);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.warp-telemetry-hud.active {
+  opacity: 1;
+}
+
+.warp-reticle {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.reticle-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.reticle-ring--outer {
+  width: 130px;
+  height: 130px;
+  border: 1px dashed rgba(180, 210, 255, 0.55);
+  animation: reticleSpinOuter 8s linear infinite;
+}
+
+.reticle-ring--inner {
+  width: 74px;
+  height: 74px;
+  border: 1px solid rgba(220, 235, 255, 0.7);
+  box-shadow: 0 0 12px rgba(160, 200, 255, 0.35), inset 0 0 12px rgba(160, 200, 255, 0.2);
+  animation: reticleSpinInner 4s linear infinite reverse;
+}
+
+.reticle-crosshair-h {
+  position: absolute;
+  width: 160px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 225, 255, 0.75), transparent);
+}
+
+.reticle-crosshair-v {
+  position: absolute;
+  height: 160px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(200, 225, 255, 0.75), transparent);
+}
+
+@keyframes reticleSpinOuter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes reticleSpinInner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.warp-telemetry-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: rgba(8, 12, 24, 0.65);
+  border: 1px solid rgba(160, 190, 255, 0.28);
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 24px rgba(100, 150, 255, 0.15);
+  font-family: var(--font-mono, monospace);
+}
+
+.warp-telemetry-status {
+  font-size: 0.75rem;
+  letter-spacing: 2.2px;
+  color: #dce7ff;
+  text-shadow: 0 0 8px rgba(180, 210, 255, 0.6);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.warp-velocity-bar {
+  width: 240px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 0.5px solid rgba(180, 205, 255, 0.2);
+}
+
+.warp-velocity-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #60a5fa, #a5b4fc, #ffffff);
+  box-shadow: 0 0 10px rgba(180, 220, 255, 0.9);
+  transition: width 0.08s linear;
+}
+
+.warp-velocity-stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.68rem;
+  color: #93b2e6;
+  letter-spacing: 1.2px;
 }
 
 

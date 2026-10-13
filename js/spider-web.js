@@ -1220,6 +1220,31 @@ class SpiderWeb {
     }
   }
 
+  triggerCelestialEntrance() {
+    // Start camera far out in the celestial void
+    this.camera.zoom = 0.35;
+    this.camera.y = -360;
+    this.camera.x = 0;
+    this.camera.targetZoom = 1.05;
+    this.camera.targetY = 0;
+    this.camera.targetX = 0;
+    this.camera.isGliding = true;
+
+    // Resonant shockwaves rippling through living silk threads
+    this.triggerVibration(0, 0);
+    setTimeout(() => {
+      this.triggerVibration(0, 0);
+    }, 280);
+    setTimeout(() => {
+      this.triggerVibration(0, 0);
+    }, 620);
+
+    // Ignite the primary Nexus core
+    if (this.junctions && this.junctions[0]) {
+      this.activeJunctionId = this.junctions[0].id;
+    }
+  }
+
   selectJunction(junctionId) {
     this.activeJunctionId = junctionId;
     const target = this.junctions.find(j => j.id === junctionId);
