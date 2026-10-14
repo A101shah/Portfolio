@@ -17,8 +17,8 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0b0e'/><polygon points='50,15 85,32 85,68 50,85 15,68 15,32' fill='none' stroke='%2300f0ff' stroke-width='4'/><polygon points='50,28 72,40 72,60 50,72 28,60 28,40' fill='none' stroke='%2300f0ff' stroke-width='3'/><line x1='50' y1='15' x2='50' y2='85' stroke='%2300f0ff' stroke-width='2'/><line x1='15' y1='32' x2='85' y2='68' stroke='%2300f0ff' stroke-width='2'/><line x1='15' y1='68' x2='85' y2='32' stroke='%2300f0ff' stroke-width='2'/><circle cx='50' cy='50' r='5' fill='%2300f0ff'/></svg>">
 
   <!-- Core Stylesheet & Landing Page Styles -->
-  <link rel="stylesheet" href="css/style.css?v=18">
-  <link rel="stylesheet" href="css/landing.css?v=18">
+  <link rel="stylesheet" href="css/style.css?v=28">
+  <link rel="stylesheet" href="css/landing.css?v=28">
 </head>
 <body class="web-only-mode">
 
@@ -80,7 +80,7 @@
         <span class="radar-ping-dot"></span>
         <span>SYS: QUANTUM_NEXUS // v2.6.4</span>
       </div>
-      <div>COORD: 19.0760° N, 72.8777° E</div>
+      <div id="landing-telemetry-clock">MUMBAI [19.0760° N, 72.8777° E] // --:--:-- IST</div>
     </div>
     <div class="landing-corner landing-corner--tr" aria-hidden="true">
       <div>NMIMS MPSTME // DATA SCIENCE</div>
@@ -93,8 +93,11 @@
       <div>ARCHITECT // ML RESEARCH</div>
     </div>
     <div class="landing-corner landing-corner--br" aria-hidden="true">
-      <div>QUANTUM STATE: ENTANGLED</div>
-      <div>INITIALIZATION: STANDBY</div>
+      <div class="landing-status-badge">
+        <span class="status-pulse-emerald"></span>
+        <span>STATUS: READY FOR ROLES &amp; RESEARCH</span>
+      </div>
+      <div>INITIALIZATION: ONLINE</div>
     </div>
 
     <!-- Holographic Relativistic Warp Telemetry HUD (Sleek Top Flight Banner) -->
@@ -150,16 +153,23 @@
         <span class="skill-tag-float" style="animation-delay: 0.6s">Autonomous Agents</span>
       </div>
 
-      <!-- Magnetic Warp Gate Enter Button -->
-      <button class="landing-enter-btn" id="landing-enter-btn" aria-label="Enter Neural Spider Web Universe">
-        <span>INITIALIZE NEURAL UNIVERSE</span>
-        <span class="enter-arrow">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </span>
-      </button>
+      <!-- Executive Action Button Group -->
+      <div class="landing-actions-dual">
+        <button class="landing-enter-btn" id="landing-enter-btn" aria-label="Enter Neural Spider Web Universe">
+          <span>INITIALIZE NEURAL UNIVERSE</span>
+          <span class="enter-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </button>
+        <button class="landing-dossier-direct-btn" id="landing-dossier-direct-btn" aria-label="Open 60-Second Executive Dossier">
+          <span class="bolt-icon">⚡</span>
+          <span>60-SEC EXECUTIVE DOSSIER</span>
+          <span class="dossier-pill-tag">BRIEF</span>
+        </button>
+      </div>
     </div>
 
     <!-- Bottom Social Links Bar -->
@@ -179,11 +189,129 @@
     </nav>
   </section>
 
+  <!-- 3D Three.js WebGL Hologram & Universe Canvas -->
+  <canvas id="three-universe-canvas" aria-label="3D Quantum Universe WebGL Canvas"></canvas>
+
   <!-- Background Living Infinite Organic Spider Web Canvas -->
   <canvas id="spider-web-canvas" aria-label="Interactive Infinite Spider Web Network"></canvas>
 
   <!-- Cybernetic Grid & Vignette Overlay -->
   <div class="web-vignette-overlay" aria-hidden="true"></div>
+
+  <!-- ======================================================================
+       BESPOKE MAGNETIC PRECISION RETICLE CURSOR
+       Tactile silver bracket ring with ice-cyan laser dot & distance telemetry
+       ====================================================================== -->
+  <div class="cyber-reticle" id="cyber-reticle" aria-hidden="true">
+    <div class="reticle-dot"></div>
+    <div class="reticle-ring"></div>
+    <div class="reticle-bracket bracket-tl"></div>
+    <div class="reticle-bracket bracket-tr"></div>
+    <div class="reticle-bracket bracket-bl"></div>
+    <div class="reticle-bracket bracket-br"></div>
+    <div class="reticle-lock-badge" id="reticle-lock-badge"></div>
+  </div>
+
+  <!-- ======================================================================
+       EXECUTIVE COMMAND DOCK & DOMAIN FILTER
+       Engineered for high-level evaluators, engineering leads & portfolio angels
+       ====================================================================== -->
+  <header class="executive-dock" id="executive-dock" aria-label="Executive Navigation & Filter Dock">
+    <div class="dock-actions-group">
+      <button class="dock-btn dock-btn--gold" id="btn-executive-reel" title="Start Guided Executive Reel (Hotkey: G)" aria-label="Start Guided Executive Reel">
+        <span class="dock-btn-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </span>
+        <span class="dock-btn-label">EXECUTIVE REEL</span>
+        <span class="dock-btn-badge">AUTO</span>
+        <kbd class="dock-kbd">G</kbd>
+      </button>
+
+      <button class="dock-btn" id="btn-executive-dossier" title="Open Candidate Brief & Credentials (Hotkey: P)" aria-label="Open Candidate Brief">
+        <span class="dock-btn-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span>
+        <span class="dock-btn-label">DOSSIER</span>
+        <kbd class="dock-kbd">P</kbd>
+      </button>
+
+      <button class="dock-btn" id="btn-linkedin-posts" title="View LinkedIn Writing, Philosophy & Hobbies (Hotkey: L)" aria-label="Open LinkedIn and About Hub">
+        <span class="dock-btn-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </span>
+        <span class="dock-btn-label">LINKEDIN &amp; ABOUT</span>
+        <kbd class="dock-kbd">L</kbd>
+      </button>
+    </div>
+
+    <div class="dock-divider" aria-hidden="true"></div>
+
+    <!-- Curated Domain Filters -->
+    <nav class="dock-filter-nav" aria-label="Project Domain Filters">
+      <button class="dock-filter-pill active" data-filter="all" title="View All 17 Hubs">ALL</button>
+      <button class="dock-filter-pill" data-filter="ai" title="Machine Learning & Generative AI">AI &amp; ML</button>
+      <button class="dock-filter-pill" data-filter="stats" title="Statistical Inference & Modeling">STATISTICS</button>
+      <button class="dock-filter-pill" data-filter="systems" title="Full-Stack, Cloud & Desktop Systems">SYSTEMS &amp; CLOUD</button>
+    </nav>
+
+    <div class="dock-divider" aria-hidden="true"></div>
+
+    <!-- Ambient Soundscape Toggle & Equalizer -->
+    <div class="dock-audio-group">
+      <button class="dock-audio-btn" id="dock-audio-btn" title="Toggle Celestial Soundscape (Hotkey: M)" aria-label="Toggle Audio">
+        <span class="dock-audio-bars" id="dock-audio-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </span>
+        <span class="dock-audio-label" id="dock-audio-label">AUDIO: OFF</span>
+        <kbd class="dock-kbd">M</kbd>
+      </button>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       CINEMATIC EXECUTIVE REEL TELEPROMPTER HUD
+       Seamless floating presenter console for executive evaluators
+       ====================================================================== -->
+  <aside class="executive-reel-hud" id="executive-reel-hud" aria-hidden="true">
+    <div class="reel-hud-card glass-card">
+      <div class="reel-hud-header">
+        <div class="reel-step-badge">
+          <span class="reel-pulse-dot"></span>
+          <span id="reel-step-text">FLAGSHIP 01 / 05</span>
+        </div>
+        <div class="reel-timer-track">
+          <div class="reel-timer-fill" id="reel-timer-fill"></div>
+        </div>
+        <div class="reel-controls">
+          <button class="reel-icon-btn" id="reel-pause-btn" title="Pause / Play (Space)">
+            <svg id="reel-pause-icon" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <button class="reel-icon-btn" id="reel-next-btn" title="Next Flagship (N)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="reel-icon-btn reel-icon-btn--close" id="reel-exit-btn" title="Exit Reel (Esc)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="reel-hud-body">
+        <h3 class="reel-hub-title" id="reel-hub-title">AARAV SHAH // NEXUS CORE</h3>
+        <p class="reel-hub-desc" id="reel-hub-desc">Data Science and Software Developer at NMIMS MPSTME engineering reproducible machine learning, privacy architectures, and high-performance full-stack systems.</p>
+        <div class="reel-hub-action-row">
+          <button class="btn btn-primary btn-xs" id="reel-inspect-btn">
+            <span>INSPECT KEY CARD</span>
+          </button>
+          <span class="reel-shortcut-hint">[G] TOUR &bull; [SPACE] PAUSE &bull; [ESC] EXIT</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Floating Toast Notification for Clone / Link Clipboard Actions -->
+  <div class="cyber-toast" id="cyber-toast" role="status" aria-live="polite">
+    <span class="toast-dot"></span>
+    <span class="toast-message" id="toast-message">COPIED TO BUFFER</span>
+  </div>
 
   <!-- Floating Infinite Canvas Navigation Controls (Zoom, Recenter & Gateway Return) -->
   <aside class="infinite-canvas-controls" aria-label="Canvas Pan and Zoom Controls">
@@ -215,7 +343,7 @@
   <div class="web-instruction-hint" id="web-instruction-hint">
     <div class="hint-pill">
       <span class="hint-pulse-dot"></span>
-      <span>DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK SILK GUIDES TO GLIDE BETWEEN WEBS &bull; CLICK CENTER GLOW TO OPEN KEY CARD</span>
+      <span>[TAB / ARROWS] GLIDE CABLES &bull; [SPACE] INSPECT &bull; [G] EXECUTIVE REEL &bull; [P] DOSSIER &bull; [ESC] RECENTER</span>
     </div>
   </div>
 
@@ -282,12 +410,252 @@
     </article>
   </div>
 
+  <!-- ======================================================================
+       EXECUTIVE DOSSIER / CANDIDATE BRIEF MODAL
+       High-density professional brief for engineering directors, leads & recruiters
+       ====================================================================== -->
+  <div class="dossier-overlay" id="dossier-overlay" role="dialog" aria-modal="true" aria-label="Aarav Shah Executive Dossier">
+    <div class="dossier-backdrop" id="dossier-backdrop"></div>
+    <article class="dossier-container glass-card" id="dossier-container">
+      <header class="dossier-header">
+        <div class="dossier-title-wrap">
+          <div class="dossier-badge-row">
+            <span class="badge-tag">EXECUTIVE CANDIDATE BRIEF</span>
+            <span class="badge-tag badge-tag--accent">STATUS: READY FOR PRODUCTION</span>
+          </div>
+          <h2 class="dossier-name">AARAV SHAH</h2>
+          <p class="dossier-subtitle">B.Tech Data Science &bull; NMIMS MPSTME &bull; Mumbai, India</p>
+        </div>
+        <button class="dossier-close-btn" id="dossier-close-btn" aria-label="Close Dossier">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </header>
+
+      <div class="dossier-body">
+        <!-- 4 Key Impact Metric Callouts -->
+        <div class="dossier-metrics-grid">
+          <div class="dossier-metric-card">
+            <span class="metric-val">13+</span>
+            <span class="metric-lbl">Production &amp; Research Repos</span>
+          </div>
+          <div class="dossier-metric-card">
+            <span class="metric-val">97.8%</span>
+            <span class="metric-lbl">Peak CV Transformer Accuracy (SIH)</span>
+          </div>
+          <div class="dossier-metric-card">
+            <span class="metric-val">25 FedAvg</span>
+            <span class="metric-lbl">Decentralized Privacy Training Rounds</span>
+          </div>
+          <div class="dossier-metric-card">
+            <span class="metric-val">10,000+</span>
+            <span class="metric-lbl">Monte Carlo Stochastic Sim Paths</span>
+          </div>
+        </div>
+
+        <!-- Executive Summary -->
+        <div class="dossier-section">
+          <h4 class="dossier-sec-title">// EXECUTIVE OVERVIEW</h4>
+          <p class="dossier-text">
+            Data Science &amp; Full-Stack Architect with a rigorous mathematical foundation from NMIMS MPSTME. Specializing in bridging state-of-the-art machine learning research (Vision Transformers, Federated Learning, Prompt Engineering) with scalable, production-grade cloud and desktop applications (React 19, Next.js 16, Electron, AWS Cloud).
+          </p>
+        </div>
+
+        <!-- 4 Core Pillars Matrix -->
+        <div class="dossier-section">
+          <h4 class="dossier-sec-title">// CORE TECHNICAL PILLARS</h4>
+          <div class="dossier-pillars-grid">
+            <div class="pillar-box">
+              <div class="pillar-header">
+                <span class="pillar-dot"></span>
+                <strong>Deep Learning &amp; Computer Vision</strong>
+              </div>
+              <p>PyTorch, Vision Transformers (ChangeFormerV6), Siamese difference modules, OpenCV, GeoTIFF bitemporal satellite inference.</p>
+            </div>
+            <div class="pillar-box">
+              <div class="pillar-header">
+                <span class="pillar-dot"></span>
+                <strong>Generative AI &amp; Prompt Systems</strong>
+              </div>
+              <p>Andrej Karpathy 3-layer architecture (Spec, Verifier, Environment), automated benchmark evaluation across multi-LLM matrices.</p>
+            </div>
+            <div class="pillar-box">
+              <div class="pillar-header">
+                <span class="pillar-dot"></span>
+                <strong>Decentralized Privacy &amp; Modeling</strong>
+              </div>
+              <p>Flower (flwr), FedAvg encrypted gradient aggregation on non-IID partitions, ResNet-20 &amp; MLP cipher architectures.</p>
+            </div>
+            <div class="pillar-box">
+              <div class="pillar-header">
+                <span class="pillar-dot"></span>
+                <strong>Production Full-Stack &amp; Cloud</strong>
+              </div>
+              <p>React 19, Next.js 16, TypeScript, Electron, Prisma ORM, SQLite, AWS Cloud deployments, high-frequency Web Audio/WebGL.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flagship Deployments Matrix -->
+        <div class="dossier-section">
+          <h4 class="dossier-sec-title">// FLAGSHIP RESEARCH &amp; PRODUCTION DEPLOYMENTS</h4>
+          <div class="dossier-projects-table">
+            <div class="dossier-project-row" data-glide="repo-changeformer">
+              <div class="dp-info">
+                <span class="dp-code">R11</span>
+                <strong>ChangeFormer Satellite Earth Observation AI</strong>
+                <span class="dp-badge">SIH Hackathon</span>
+              </div>
+              <span class="dp-metric">97.8% Peak Accuracy</span>
+              <button class="btn btn-secondary btn-xs dp-jump-btn" data-target="repo-changeformer">Inspect</button>
+            </div>
+            <div class="dossier-project-row" data-glide="repo-mnist">
+              <div class="dp-info">
+                <span class="dp-code">R9</span>
+                <strong>MNIST Federated Learning &amp; Neural Cypher</strong>
+                <span class="dp-badge">Privacy ML</span>
+              </div>
+              <span class="dp-metric">25 FedAvg Rounds</span>
+              <button class="btn btn-secondary btn-xs dp-jump-btn" data-target="repo-mnist">Inspect</button>
+            </div>
+            <div class="dossier-project-row" data-glide="repo-startupval">
+              <div class="dp-info">
+                <span class="dp-code">R12</span>
+                <strong>Galton-Watson Stochastic Startup Valuation</strong>
+                <span class="dp-badge">Financial Math</span>
+              </div>
+              <span class="dp-metric">10k Monte Carlo Paths</span>
+              <button class="btn btn-secondary btn-xs dp-jump-btn" data-target="repo-startupval">Inspect</button>
+            </div>
+            <div class="dossier-project-row" data-glide="repo-promptgen">
+              <div class="dp-info">
+                <span class="dp-code">R8</span>
+                <strong>Karpathy 3-Layer Prompt Architect</strong>
+                <span class="dp-badge">GenAI Bench</span>
+              </div>
+              <span class="dp-metric">&lt; 650ms Latency</span>
+              <button class="btn btn-secondary btn-xs dp-jump-btn" data-target="repo-promptgen">Inspect</button>
+            </div>
+            <div class="dossier-project-row" data-glide="repo-blitzit">
+              <div class="dp-info">
+                <span class="dp-code">R10</span>
+                <strong>Blitzit Desktop Focus &amp; Deep Work Suite</strong>
+                <span class="dp-badge">Next.js 16 + Electron</span>
+              </div>
+              <span class="dp-metric">Prisma SQLite</span>
+              <button class="btn btn-secondary btn-xs dp-jump-btn" data-target="repo-blitzit">Inspect</button>
+            </div>
+          </div>
+        </div>
+        <!-- Verified Technology Competencies Matrix -->
+        <div class="dossier-section">
+          <h4 class="dossier-sec-title">// VERIFIED CORE COMPETENCY MATRIX</h4>
+          <div class="dossier-skills-matrix">
+            <div class="dossier-skill-category">
+              <span class="dsc-label">AI &amp; DEEP LEARNING</span>
+              <div class="dsc-chips">
+                <span class="dsc-chip">PyTorch</span>
+                <span class="dsc-chip">Vision Transformers</span>
+                <span class="dsc-chip">Flower (flwr)</span>
+                <span class="dsc-chip">HuggingFace</span>
+                <span class="dsc-chip">OpenCV</span>
+                <span class="dsc-chip">Scikit-Learn</span>
+              </div>
+            </div>
+            <div class="dossier-skill-category">
+              <span class="dsc-label">FULL-STACK &amp; SYSTEMS</span>
+              <div class="dsc-chips">
+                <span class="dsc-chip">React 19</span>
+                <span class="dsc-chip">Next.js 16</span>
+                <span class="dsc-chip">TypeScript</span>
+                <span class="dsc-chip">Electron</span>
+                <span class="dsc-chip">Prisma ORM</span>
+                <span class="dsc-chip">SQLite / PostgreSQL</span>
+              </div>
+            </div>
+            <div class="dossier-skill-category">
+              <span class="dsc-label">STATISTICS &amp; MATHEMATICS</span>
+              <div class="dsc-chips">
+                <span class="dsc-chip">Galton-Watson Branching</span>
+                <span class="dsc-chip">Merton Jump-Diffusion</span>
+                <span class="dsc-chip">Monte Carlo (10k+ Paths)</span>
+                <span class="dsc-chip">Hypothesis Testing</span>
+                <span class="dsc-chip">NumPy / SciPy</span>
+              </div>
+            </div>
+            <div class="dossier-skill-category">
+              <span class="dsc-label">CLOUD &amp; ARCHITECTURE</span>
+              <div class="dsc-chips">
+                <span class="dsc-chip">AWS Cloud</span>
+                <span class="dsc-chip">Docker</span>
+                <span class="dsc-chip">Three.js / WebGL</span>
+                <span class="dsc-chip">Web Audio API</span>
+                <span class="dsc-chip">CI/CD &amp; Git</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Human Dimension, Hobbies & Thought Leadership -->
+        <div class="dossier-section">
+          <h3 class="dossier-sec-title">// HUMAN DIMENSION, HOBBIES &amp; THOUGHT LEADERSHIP</h3>
+          <p class="dossier-text" style="margin-bottom: 0.85rem;">
+            Balanced between high-rigor engineering and authentic personal pursuits. Aarav authors technical architecture essays, plays competitive chess, builds modular audio synthesizers, and maintains daily physical discipline.
+          </p>
+          <div class="dossier-skills-matrix">
+            <div class="dossier-skill-category">
+              <span class="dsc-label">CORE PURSUITS &amp; HOBBIES</span>
+              <div class="dsc-chips">
+                <span class="dsc-chip">♟️ Chess (1500+ Elo)</span>
+                <span class="dsc-chip">🎧 Modular Synth &amp; Audio DSP</span>
+                <span class="dsc-chip">📚 arXiv Deep Tech Reading</span>
+                <span class="dsc-chip">🏋️‍♂️ Calisthenics</span>
+                <span class="dsc-chip">☕ 5:30 AM Deep Work</span>
+                <span class="dsc-chip">🌌 Astrophysics &amp; Orbital Sim</span>
+              </div>
+            </div>
+            <div class="dossier-skill-category">
+              <span class="dsc-label">FEATURED LINKEDIN POSTS</span>
+              <div class="dsc-chips">
+                <span class="dsc-chip">Federated Learning (FedAvg)</span>
+                <span class="dsc-chip">Karpathy 3-Layer Prompt Spec</span>
+                <span class="dsc-chip">SIH ChangeFormer Earth Observation</span>
+                <span class="dsc-chip">Inferential Stats vs Pure ML</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Action Toolbar -->
+      <footer class="dossier-footer">
+        <div class="dossier-footer-actions">
+          <a href="mailto:shahaarav602@gmail.com" class="btn btn-primary btn-sm" id="dossier-email-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>shahaarav602@gmail.com</span>
+          </a>
+          <button class="btn btn-secondary btn-sm" id="dossier-copy-email-btn">
+            <span>Copy Email</span>
+          </button>
+          <a href="https://github.com/A101shah" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+            <span>GitHub</span>
+          </a>
+          <a href="https://www.linkedin.com/in/aarav-shah-681641275/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+            <span>LinkedIn</span>
+          </a>
+        </div>
+        <span class="mono text-xs text-muted">AARAV SHAH &bull; HIGH-INTEGRITY ENGINEERING &bull; 2026</span>
+      </footer>
+    </article>
+  </div>
+
   <!-- Scripts -->
-  <script src="js/portfolio-data.js?v=18"></script>
-  <script src="js/audio-effects.js?v=18"></script>
-  <script src="js/spider-web.js?v=18"></script>
-  <script src="js/landing.js?v=18"></script>
-  <script src="js/interactive-terminal.js?v=18"></script>
-  <script src="js/main.js?v=18"></script>
+  <script src="js/portfolio-data.js?v=28"></script>
+  <script src="js/audio-effects.js?v=28"></script>
+  <script src="js/three.min.js"></script>
+  <script src="js/three-universe.js?v=28"></script>
+  <script src="js/spider-web.js?v=28"></script>
+  <script src="js/landing.js?v=28"></script>
+  <script src="js/interactive-terminal.js?v=28"></script>
+  <script src="js/main.js?v=28"></script>
 </body>
 </html>

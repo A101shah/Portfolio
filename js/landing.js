@@ -201,6 +201,7 @@ class LandingPortal {
     this.setupEventListeners();
     this.setupMagneticButton();
     this.setupSoundHooks();
+    this.startTelemetryClock();
 
     // Run Preloader Boot Sequence
     this.runBootSequence();
@@ -208,6 +209,23 @@ class LandingPortal {
     // Animation Loop
     this.lastTime = performance.now();
     requestAnimationFrame((t) => this.render(t));
+  }
+
+  startTelemetryClock() {
+    const clockEl = document.getElementById("landing-telemetry-clock");
+    if (!clockEl) return;
+    const update = () => {
+      const now = new Date();
+      // Indian Standard Time (UTC + 5:30)
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const ist = new Date(utc + (3600000 * 5.5));
+      const hh = String(ist.getHours()).padStart(2, '0');
+      const mm = String(ist.getMinutes()).padStart(2, '0');
+      const ss = String(ist.getSeconds()).padStart(2, '0');
+      clockEl.textContent = `MUMBAI [19.0760° N, 72.8777° E] // ${hh}:${mm}:${ss} IST`;
+    };
+    update();
+    setInterval(update, 1000);
   }
 
   runBootSequence() {
@@ -374,6 +392,18 @@ class LandingPortal {
       });
     }
 
+    // Direct 60-Sec Executive Dossier button from landing
+    const directDossierBtn = document.getElementById("landing-dossier-direct-btn");
+    if (directDossierBtn) {
+      directDossierBtn.addEventListener("click", () => {
+        if (window.soundEngineInstance) window.soundEngineInstance.playNodeClick();
+        window.dispatchEvent(new CustomEvent("toggle-executive-dossier"));
+      });
+      directDossierBtn.addEventListener("mouseenter", () => {
+        if (window.soundEngineInstance) window.soundEngineInstance.playNodeHover();
+      });
+    }
+
     // Keyboard support: Enter key initiates warp if landing page is active
     window.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && this.isActive && !this.isWarping) {
@@ -498,6 +528,11 @@ class LandingPortal {
       this.container.classList.add("warp-charging");
     }
 
+    // Trigger 3D Relativistic Hyperspace Wormhole in Three.js
+    if (window.threeUniverseInstance && typeof window.threeUniverseInstance.triggerHyperspaceWarp === "function") {
+      window.threeUniverseInstance.triggerHyperspaceWarp();
+    }
+
     // Trigger synthetic organic silk audio soundscape
     if (window.soundEngineInstance && typeof window.soundEngineInstance.playWarpJump === "function") {
       window.soundEngineInstance.playWarpJump();
@@ -563,6 +598,7 @@ class LandingPortal {
 
       this.isActive = false;
       this.isWarping = false;
+      document.body.classList.add("web-mode-active");
 
       // Cybernetic hint banner update
       const hint = document.getElementById("web-instruction-hint");
@@ -578,6 +614,12 @@ class LandingPortal {
     this.isWarping = false;
     this.isDissolving = false;
     this.warpProgress = 0;
+    document.body.classList.remove("web-mode-active");
+
+    // Reset Three.js Universe to Landing Quantum Core
+    if (window.threeUniverseInstance && typeof window.threeUniverseInstance.setMode === "function") {
+      window.threeUniverseInstance.setMode("landing");
+    }
 
     // Reset button
     if (this.enterBtn) {

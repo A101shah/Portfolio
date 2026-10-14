@@ -482,6 +482,7 @@ class SpiderWeb {
     this.vibrations = [];
     this.floatingDust = [];
     this.spiders = [];
+    this.categoryFilter = "all";
 
     this.init();
   }
@@ -787,21 +788,8 @@ class SpiderWeb {
   }
 
   buildLongAnchorFilaments() {
+    // Decluttered: No stray anchor strings floating into empty void
     this.longAnchors = [];
-    this.junctions.forEach((j, jIdx) => {
-      // 2 delicate outer anchor lines per web reaching gently outward
-      const anchorAngles = [jIdx * 0.65 + 0.4, jIdx * 0.65 + Math.PI + 0.7];
-      anchorAngles.forEach(angle => {
-        const length = 1100 + Math.sin(jIdx) * 250;
-        this.longAnchors.push({
-          startX: j.worldX + Math.cos(angle) * (j.radius || 250) * 0.85,
-          startY: j.worldY + Math.sin(angle) * (j.radius || 250) * 0.85,
-          endX: j.worldX + Math.cos(angle) * length,
-          endY: j.worldY + Math.sin(angle) * length,
-          alpha: 0.12
-        });
-      });
-    });
   }
 
   buildChalkSplatters() {
@@ -1043,6 +1031,104 @@ class SpiderWeb {
       }
       touchStartDist = 0;
     });
+
+    // Keyboard Navigation Suite: Arrow keys, Tab, 1..6, Space, Escape
+    window.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+      const overlay = document.getElementById("key-card-overlay");
+      const isCardOpen = overlay && overlay.classList.contains("active");
+
+      // ESC: Close modal or recenter web
+      if (e.key === "Escape") {
+        if (isCardOpen) {
+          const closeBtn = document.getElementById("card-close-btn");
+          if (closeBtn) closeBtn.click();
+        } else {
+          this.recenter();
+        }
+        return;
+      }
+
+      if (isCardOpen) return;
+
+      // G: Toggle Executive Reel Tour
+      if (e.key === "g" || e.key === "G") {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("toggle-executive-reel"));
+        return;
+      }
+
+      // P or E: Toggle Executive Dossier Modal
+      if (e.key === "p" || e.key === "P" || e.key === "e" || e.key === "E") {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("toggle-executive-dossier"));
+        return;
+      }
+
+      // M: Toggle Ambient Audio
+      if (e.key === "m" || e.key === "M") {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("toggle-audio"));
+        return;
+      }
+
+      // L: Open LinkedIn Thought Leadership & Personal Hub
+      if (e.key === "l" || e.key === "L") {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("toggle-linkedin-hub"));
+        return;
+      }
+
+      // Space / Enter: Open Key Card for hovered or active junction
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        const target = this.mouse.hoverJunction || this.junctions.find(j => j.id === this.activeJunctionId) || this.junctions[0];
+        if (target) {
+          this.selectJunction(target.id);
+        }
+        return;
+      }
+
+      // Numbers 1..6: Direct glide jump to project hubs
+      if (e.key >= "1" && e.key <= "6") {
+        const idx = parseInt(e.key, 10);
+        if (this.junctions[idx]) {
+          this.selectJunction(this.junctions[idx].id);
+          if (this.soundEngine && typeof this.soundEngine.playNodeLock === "function") {
+            this.soundEngine.playNodeLock();
+          }
+        }
+        return;
+      }
+
+      if (e.key === "0") {
+        this.selectJunction("nexus");
+        return;
+      }
+
+      // Arrows / Tab: Cycle through junctions along silk network
+      if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "Tab") {
+        e.preventDefault();
+        this.cycleJunction(1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        this.cycleJunction(-1);
+      }
+    });
+  }
+
+  cycleJunction(dir = 1) {
+    if (!this.junctions || !this.junctions.length) return;
+    const currentId = this.activeJunctionId || (this.mouse.hoverJunction ? this.mouse.hoverJunction.id : "nexus");
+    let curIdx = this.junctions.findIndex(j => j.id === currentId);
+    if (curIdx === -1) curIdx = 0;
+    const nextIdx = (curIdx + dir + this.junctions.length) % this.junctions.length;
+    const target = this.junctions[nextIdx];
+    this.selectJunction(target.id);
+    if (this.soundEngine && typeof this.soundEngine.playNodeLock === "function") {
+      this.soundEngine.playNodeLock();
+    }
   }
 
   zoomAtScreen(sx, sy, factor) {
@@ -1197,6 +1283,67 @@ class SpiderWeb {
         this.canvas.style.cursor = "default";
       }
     }
+
+    this.updateMagneticReticle();
+  }
+
+  updateMagneticReticle() {
+    const reticle = document.getElementById("cyber-reticle");
+    const badge = document.getElementById("reticle-lock-badge");
+    if (!reticle) return;
+
+    // Completely dismiss reticle and lock badge if card or dossier is open
+    const overlay = document.getElementById("key-card-overlay");
+    const dossier = document.getElementById("dossier-overlay");
+    const isCardOpen = (overlay && overlay.classList.contains("active")) ||
+                       (dossier && dossier.classList.contains("active")) ||
+                       document.body.classList.contains("card-open");
+
+    if (isCardOpen) {
+      reticle.classList.remove("is-locked");
+      reticle.style.opacity = "0";
+      reticle.style.visibility = "hidden";
+      reticle.style.display = "none";
+      return;
+    } else {
+      reticle.style.display = "";
+      reticle.style.visibility = "";
+    }
+
+    let targetScreenX = this.mouse.screenX;
+    let targetScreenY = this.mouse.screenY;
+
+    // Check closest junction in world space
+    let closestJunc = null;
+    let closestDist = Infinity;
+
+    this.junctions.forEach(j => {
+      const dx = this.mouse.worldX - j.worldX;
+      const dy = this.mouse.worldY - j.worldY;
+      const d = Math.hypot(dx, dy);
+      if (d < closestDist) {
+        closestDist = d;
+        closestJunc = j;
+      }
+    });
+
+    const lockThreshold = 140;
+    if (closestJunc && closestDist < lockThreshold) {
+      const screenPos = this.worldToScreen(closestJunc.worldX, closestJunc.worldY);
+      const pull = 1 - (closestDist / lockThreshold);
+      targetScreenX = this.mouse.screenX + (screenPos.x - this.mouse.screenX) * (pull * 0.42);
+      targetScreenY = this.mouse.screenY + (screenPos.y - this.mouse.screenY) * (pull * 0.42);
+
+      reticle.classList.add("is-locked");
+      if (badge) {
+        badge.textContent = `LOCK: ${Math.round(closestDist)}px // ${closestJunc.label || closestJunc.id.toUpperCase()}`;
+      }
+    } else {
+      reticle.classList.remove("is-locked");
+    }
+
+    reticle.style.left = `${targetScreenX}px`;
+    reticle.style.top = `${targetScreenY}px`;
   }
 
   interactPluck() {
@@ -1206,16 +1353,30 @@ class SpiderWeb {
 
     if (mSpeed < 2) return;
 
+    let pluckSoundPlayed = false;
+
     this.junctions.forEach(j => {
       j.nodes.forEach(node => {
         const dx = this.mouse.worldX - node.x;
         const dy = this.mouse.worldY - node.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < 42 && dist > 1) {
-          const force = (1 - dist / 42) * Math.min(mSpeed * 0.16, 4.5);
+        if (dist < 44 && dist > 1) {
+          const force = (1 - dist / 44) * Math.min(mSpeed * 0.18, 5.0);
           node.vx += (mdx / mSpeed) * force;
           node.vy += (mdy / mSpeed) * force;
+
+          // Acoustic Silk Pluck Feedback & 3D Optics Flare
+          if (!pluckSoundPlayed && dist < 24 && mSpeed > 3.5) {
+            pluckSoundPlayed = true;
+            if (this.soundEngine && typeof this.soundEngine.playSilkPluck === "function") {
+              const pitch = (node.rIndex || 1) * 2 + (node.sIndex || 0);
+              this.soundEngine.playSilkPluck(pitch);
+            }
+            if (window.threeUniverseInstance && typeof window.threeUniverseInstance.pulseSilkAt === "function") {
+              window.threeUniverseInstance.pulseSilkAt(node.x, node.y);
+            }
+          }
         }
       });
     });
@@ -1227,9 +1388,14 @@ class SpiderWeb {
       y: wy,
       radius: 0,
       maxRadius: 1300,
-      speed: 10,
+      speed: 12,
       alpha: 0.95
     });
+
+    // Propagate into 3D dewdrop field
+    if (window.threeUniverseInstance && typeof window.threeUniverseInstance.pulseSilkAt === "function") {
+      window.threeUniverseInstance.pulseSilkAt(wx, wy);
+    }
 
     if (this.spiders) {
       this.spiders.forEach(sp => {
@@ -1271,7 +1437,25 @@ class SpiderWeb {
     const target = this.junctions.find(j => j.id === junctionId);
     if (!target) return;
 
-    this.warpToWorld(target.worldX, target.worldY, 1.25);
+    // Immediately dismiss magnetic reticle cursor lock on node select
+    const reticle = document.getElementById("cyber-reticle");
+    if (reticle) {
+      reticle.classList.remove("is-locked");
+      reticle.style.opacity = "0";
+      reticle.style.visibility = "hidden";
+      reticle.style.display = "none";
+    }
+
+    let targetX = target.worldX;
+    if (window.innerWidth > 768) {
+      // With the card opened as a 540px right-side workstation drawer,
+      // offset camera target horizontally so the selected hub sits framed
+      // directly in the visible left portion of the spider web universe!
+      const offsetPx = 250;
+      targetX = target.worldX + (offsetPx / 1.25);
+    }
+
+    this.warpToWorld(targetX, target.worldY, 1.25);
 
     if (this.onJunctionClickCallback) {
       this.onJunctionClickCallback(junctionId);
@@ -1285,6 +1469,32 @@ class SpiderWeb {
   resetActiveNode() {
     this.activeJunctionId = null;
     this.recenter();
+  }
+
+  setCategoryFilter(filter) {
+    this.categoryFilter = filter || "all";
+    if (this.categoryFilter !== "all") {
+      const match = this.junctions.find(j => j.id !== "nexus" && this.isJunctionMatchingFilter(j));
+      if (match) {
+        this.warpToWorld(match.worldX, match.worldY, 1.15);
+        this.activeJunctionId = match.id;
+      }
+    }
+  }
+
+  isJunctionMatchingFilter(j) {
+    if (!this.categoryFilter || this.categoryFilter === "all") return true;
+    if (j.id === "nexus") return true;
+    if (this.categoryFilter === "ai") {
+      return ["repo-changeformer", "repo-mnist", "repo-promptgen", "repo-ipl", "repo-iris", "repo-jobtrack"].includes(j.id);
+    }
+    if (this.categoryFilter === "stats") {
+      return ["repo-ttest", "repo-startupval", "repo-ipl"].includes(j.id);
+    }
+    if (this.categoryFilter === "systems") {
+      return ["repo-aws", "repo-blitzit", "repo-dashboard", "repo-linkedin", "skills", "terminal"].includes(j.id);
+    }
+    return true;
   }
 
   updateHudCoords() {
@@ -1346,6 +1556,11 @@ class SpiderWeb {
     this.ctx.scale(this.camera.zoom, this.camera.zoom);
     this.ctx.translate(-this.camera.x, -this.camera.y);
 
+    // Sync 3D WebGL camera and crystals
+    if (window.threeUniverseInstance && typeof window.threeUniverseInstance.updateCameraSync === "function") {
+      window.threeUniverseInstance.updateCameraSync(this.camera.x, this.camera.y, this.camera.zoom);
+    }
+
     // 1. Draw Long Infinite Anchor Filaments
     this.drawLongAnchorFilaments();
 
@@ -1389,14 +1604,7 @@ class SpiderWeb {
    * 1. Draw Subtle Organic Outer Anchor Filaments
    */
   drawLongAnchorFilaments() {
-    this.ctx.lineWidth = 0.75;
-    this.longAnchors.forEach(a => {
-      this.ctx.beginPath();
-      this.ctx.moveTo(a.startX, a.startY);
-      this.ctx.lineTo(a.endX, a.endY);
-      this.ctx.strokeStyle = `rgba(135, 138, 142, ${a.alpha})`;
-      this.ctx.stroke();
-    });
+    // Decluttered: No stray anchor strings in the void
   }
 
   /**
@@ -1552,6 +1760,11 @@ class SpiderWeb {
     const time = Date.now() * 0.003;
 
     this.junctions.forEach(j => {
+      const isMatching = this.isJunctionMatchingFilter(j);
+      this.ctx.save();
+      if (!isMatching) {
+        this.ctx.globalAlpha = 0.14;
+      }
       const isHovered = this.mouse.hoverJunction && this.mouse.hoverJunction.id === j.id;
 
       // 1. Delicate Central Hub Webbing Loops
@@ -1672,6 +1885,8 @@ class SpiderWeb {
         this.ctx.fillStyle = `rgba(205, 208, 214, ${drop.alpha + glint * 0.3})`;
         this.ctx.fill();
       });
+
+      this.ctx.restore();
     });
   }
 
@@ -1685,6 +1900,7 @@ class SpiderWeb {
    */
   drawJunctionPearls() {
     this.junctions.forEach(j => {
+      const isMatching = this.isJunctionMatchingFilter(j);
       const isActive = this.activeJunctionId === j.id;
       const isHovered = this.mouse.hoverJunction && this.mouse.hoverJunction.id === j.id;
       const isNexus = j.id === "nexus";
@@ -1694,7 +1910,19 @@ class SpiderWeb {
       const pulse = Math.sin(j.pulsePhase * 2.2);
 
       this.ctx.save();
+      if (!isMatching) {
+        this.ctx.globalAlpha = 0.15;
+      }
       this.ctx.translate(j.worldX, j.worldY);
+
+      // Targeted Filter Halo
+      if (isMatching && this.categoryFilter !== "all" && !isNexus) {
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, coreR + 10 + pulse * 2, 0, Math.PI * 2);
+        this.ctx.strokeStyle = "rgba(0, 240, 255, 0.75)";
+        this.ctx.lineWidth = 1.2 / this.camera.zoom;
+        this.ctx.stroke();
+      }
 
       // 1. Broad Ethereal White Atmospheric Bloom
       const bloomRadius = (isNexus ? 58 : 38) * (1 + j.hoverT * 0.3 + pulse * 0.05);
@@ -1824,6 +2052,7 @@ class SpiderWeb {
   }
 
   drawJunctionBadge(j, isHovered, isActive, coreR) {
+    if (!document.body.classList.contains("web-mode-active")) return;
     const isNexus = j.id === "nexus";
     const labelText = j.label;
     const titleText = j.title;
@@ -1898,6 +2127,156 @@ class SpiderWeb {
     this.ctx.font = isNexus ? "700 13px 'Space Grotesk', sans-serif" : "600 12px 'Space Grotesk', sans-serif";
     this.ctx.fillStyle = isActive || isHovered ? "#ffffff" : "#e2e4e6";
     this.ctx.fillText(titleText, boxX + 24, boxY + (isNexus ? 31 : 28));
+
+    // 6. Holographic Data Science Inspection Card (On Hover)
+    if (isHovered) {
+      this.drawHolographicNodePreview(j, boxX, boxY, boxWidth, boxHeight);
+    }
+
+    this.ctx.restore();
+  }
+
+  /**
+   * Cybernetic Holographic Node Inspection Preview Card
+   * Renders real-time animated Data Science statistical distributions and model metrics.
+   */
+  drawHolographicNodePreview(j, boxX, boxY, boxWidth, boxHeight) {
+    const time = Date.now() * 0.003;
+    const cardW = 210;
+    const cardH = 94;
+
+    // Position: offset to right of badge, or left if near boundary
+    let hx = boxX + boxWidth + 14;
+    let hy = boxY - 32;
+    if (hx + cardW > this.camera.x + this.width / (2 * this.camera.zoom)) {
+      hx = boxX - cardW - 14;
+    }
+
+    this.ctx.save();
+
+    // 1. Cyber connector hairline
+    this.ctx.beginPath();
+    this.ctx.moveTo(boxX + boxWidth, boxY + boxHeight / 2);
+    this.ctx.lineTo(hx, hy + cardH / 2);
+    this.ctx.strokeStyle = "rgba(0, 240, 255, 0.4)";
+    this.ctx.lineWidth = 0.8;
+    this.ctx.setLineDash([3, 3]);
+    this.ctx.stroke();
+    this.ctx.setLineDash([]);
+
+    // 2. Translucent Cyber Card Glass
+    this.ctx.beginPath();
+    this.ctx.roundRect(hx, hy, cardW, cardH, 6);
+    this.ctx.fillStyle = "rgba(10, 12, 17, 0.94)";
+    this.ctx.fill();
+
+    this.ctx.strokeStyle = "rgba(56, 189, 248, 0.55)";
+    this.ctx.lineWidth = 1.0;
+    this.ctx.shadowBlur = 10;
+    this.ctx.shadowColor = "rgba(0, 240, 255, 0.25)";
+    this.ctx.stroke();
+    this.ctx.shadowBlur = 0;
+
+    // 3. Cyber Corner Brackets
+    const tick = 6;
+    this.ctx.strokeStyle = "#00f0ff";
+    this.ctx.lineWidth = 1.5;
+    // Top-left
+    this.ctx.beginPath();
+    this.ctx.moveTo(hx, hy + tick);
+    this.ctx.lineTo(hx, hy);
+    this.ctx.lineTo(hx + tick, hy);
+    this.ctx.stroke();
+    // Bottom-right
+    this.ctx.beginPath();
+    this.ctx.moveTo(hx + cardW, hy + cardH - tick);
+    this.ctx.lineTo(hx + cardW, hy + cardH);
+    this.ctx.lineTo(hx + cardW - tick, hy + cardH);
+    this.ctx.stroke();
+
+    // 4. Header Bar
+    this.ctx.font = "700 8.5px 'JetBrains Mono', monospace";
+    this.ctx.fillStyle = "#38bdf8";
+    this.ctx.fillText(`// TELEMETRY: ${j.id.toUpperCase()}`, hx + 10, hy + 14);
+
+    // Glowing Dot
+    this.ctx.beginPath();
+    this.ctx.arc(hx + cardW - 12, hy + 11, 2.5, 0, Math.PI * 2);
+    this.ctx.fillStyle = "#00f0ff";
+    this.ctx.shadowBlur = 6;
+    this.ctx.shadowColor = "#00f0ff";
+    this.ctx.fill();
+    this.ctx.shadowBlur = 0;
+
+    // 5. Live Animated Data Science Sparkline Waveform
+    const sparkX = hx + 10;
+    const sparkY = hy + 46;
+    const sparkW = cardW - 20;
+    const sparkH = 24;
+
+    // Sparkline grid background
+    this.ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+    this.ctx.lineWidth = 0.5;
+    this.ctx.beginPath();
+    this.ctx.moveTo(sparkX, sparkY);
+    this.ctx.lineTo(sparkX + sparkW, sparkY);
+    this.ctx.moveTo(sparkX, sparkY - sparkH / 2);
+    this.ctx.lineTo(sparkX + sparkW, sparkY - sparkH / 2);
+    this.ctx.stroke();
+
+    // Draw live waveform based on project type
+    this.ctx.beginPath();
+    for (let p = 0; p <= sparkW; p += 2) {
+      const norm = p / sparkW;
+      let val = 0;
+
+      if (j.id.includes("ipl")) {
+        // Sigmoid probability wave with real-time oscillating match factor
+        const matchPhase = Math.sin(time * 1.5);
+        val = 1 / (1 + Math.exp(-((norm - 0.5) * 8 + matchPhase * 1.2)));
+      } else if (j.id.includes("ttest")) {
+        // Gaussian probability density bell curve with alpha rejection threshold
+        const z = (norm - 0.5) * 6;
+        val = Math.exp(-z * z / 2);
+      } else if (j.id.includes("jobtrack")) {
+        // Multi-frequency neural loss convergence wave
+        val = Math.exp(-norm * 2) * (0.8 + 0.2 * Math.sin(norm * 14 + time * 3));
+      } else if (j.id.includes("isp")) {
+        // Fourier signal harmonics
+        val = 0.5 + 0.25 * Math.sin(norm * 18 + time * 4) + 0.15 * Math.sin(norm * 32 - time * 2);
+      } else {
+        // Core bio-pulse wave
+        val = 0.5 + 0.35 * Math.sin(norm * 8 + time * 2.5);
+      }
+
+      const py = sparkY - val * (sparkH - 4);
+      if (p === 0) this.ctx.moveTo(sparkX + p, py);
+      else this.ctx.lineTo(sparkX + p, py);
+    }
+
+    this.ctx.strokeStyle = "#e2e8f0";
+    this.ctx.lineWidth = 1.3;
+    this.ctx.shadowBlur = 6;
+    this.ctx.shadowColor = "rgba(0, 240, 255, 0.4)";
+    this.ctx.stroke();
+    this.ctx.shadowBlur = 0;
+
+    // 6. Metrics Key Readout
+    let metricText = "STATUS: SYNCHRONIZED";
+    if (j.metrics) {
+      const entries = Object.entries(j.metrics);
+      if (entries.length > 0) {
+        metricText = `${entries[0][0].toUpperCase()}: ${entries[0][1]}`;
+      }
+    }
+    this.ctx.font = "600 8.5px 'JetBrains Mono', monospace";
+    this.ctx.fillStyle = "#94a3b8";
+    this.ctx.fillText(metricText, hx + 10, hy + cardH - 18);
+
+    // 7. Interactive action prompt
+    this.ctx.font = "600 8px 'JetBrains Mono', monospace";
+    this.ctx.fillStyle = "rgba(0, 240, 255, 0.85)";
+    this.ctx.fillText("SPACE / CLICK TO OPEN KEY CARD", hx + 10, hy + cardH - 6);
 
     this.ctx.restore();
   }

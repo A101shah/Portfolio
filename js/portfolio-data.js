@@ -405,7 +405,132 @@ const PortfolioData = {
       { name: "Jupyter Notebooks", category: "Tools & Platforms", level: 96, icon: "🪐", exp: "Research & Analysis" },
       { name: "Git & GitHub", category: "Tools & Platforms", level: 93, icon: "🐙", exp: "Version Control" }
     ]
-  }
+  },
+
+  personality: {
+    philosophy: "Pragmatic Builder & First-Principles Grounder — Mathematical rigor makes software resilient, while high-standard intuitive design makes intelligent models genuinely useful to humans.",
+    workingStyle: [
+      {
+        title: "Deterministic Reproducibility",
+        icon: "🎯",
+        desc: "From seed-fixed stochastic simulations to pinned virtual environments, every model and application pipeline is engineered to execute identically anywhere."
+      },
+      {
+        title: "Full-Spectrum Architecture",
+        icon: "⚡",
+        desc: "Bridging the gap between heavy computational models (PyTorch, Transformers, Federated Nodes) and responsive, high-framerate client applications."
+      },
+      {
+        title: "Iterative Feedback Loops",
+        icon: "🔄",
+        desc: "Fast build cycles backed by hypothesis testing, statistical power benchmarks, and continuous peer code reviews."
+      }
+    ],
+    traits: [
+      {
+        title: "Intellectual Curiosity",
+        icon: "🔬",
+        desc: "Not content treating models as black boxes; I reverse-engineer papers from scratch to internalize their mathematical core."
+      },
+      {
+        title: "Craftsmanship & Aesthetics",
+        icon: "✨",
+        desc: "Clean modular code, crisp typography, and 60fps WebGL/Canvas graphics receive equal attention to algorithmic precision."
+      },
+      {
+        title: "Relentless Discipline",
+        icon: "⚔️",
+        desc: "Consistency over intensity. Daily deep work rituals and continuous technical writing to solidify complex learnings."
+      },
+      {
+        title: "Collaborative Velocity",
+        icon: "🤝",
+        desc: "Active hackathon builder (SIH), pair programmer, and open-source contributor who elevates team velocity and clarity."
+      }
+    ]
+  },
+
+  hobbies: [
+    {
+      title: "Competitive Chess & Game Theory",
+      icon: "♟️",
+      category: "Strategy & Heuristics",
+      desc: "1500+ Elo on chess platforms. Analyzing dynamic position trees, minimax branching, and evaluating positional tension under clock pressure directly sharpens my algorithmic problem-solving."
+    },
+    {
+      title: "Electronic Sound Design & Modular Synths",
+      icon: "🎧",
+      category: "Acoustics & Signal Processing",
+      desc: "Fascinated by Fourier transforms, envelope oscillators, and acoustic feedback. Personally engineered the procedural Web Audio synthesizer powering this portfolio's cybernetic sonics."
+    },
+    {
+      title: "Deep Tech Paper Dissections",
+      icon: "📚",
+      category: "Research & Reading",
+      desc: "Reading arXiv preprints across transformer backbones, decentralized federated learning, and branching processes. Writing annotated summaries and building minimal reproduction repos."
+    },
+    {
+      title: "Calisthenics & Progressive Strength",
+      icon: "🏋️‍♂️",
+      category: "Physical Discipline",
+      desc: "Daily discipline and bodyweight control. Progressive overload serves as my physical metaphor for iterative model training — gradual, compounding improvements lead to breakthrough performance."
+    },
+    {
+      title: "Specialty Coffee & Morning Deep Work",
+      icon: "☕",
+      category: "Focus Rituals",
+      desc: "Aeropress dialing-in, zero-distraction 5:30 AM coding blocks, and ambient synthwave playlists to enter uninterrupted flow state."
+    },
+    {
+      title: "Astrophysics & Orbital Mechanics",
+      icon: "🌌",
+      category: "Cosmic Systems",
+      desc: "Captivated by N-body gravity simulations, orbital trajectories, and cosmic coordinate systems — the primary inspiration behind this portfolio's 3D universe."
+    }
+  ],
+
+  linkedInPosts: [
+    {
+      id: "post-1",
+      date: "October 2024",
+      topic: "Decentralized AI & Privacy",
+      title: "Demystifying Federated Learning: Training Neural Networks Without Exposing Private Data",
+      excerpt: "Why transfer raw patient records or private mobile data to a centralized cloud when you can train locally on edge devices and aggregate only weight differentials? In this deep dive, I break down FedAvg with PyTorch and Flower (flwr), handling non-IID client label skews, and how our network converged in 25 rounds with zero raw data leakage.",
+      tags: ["#FederatedLearning", "#MachineLearning", "#PrivacyAI", "#PyTorch", "#DataScience"],
+      stats: { likes: "420+", comments: "38", reposts: "18", views: "14.2k" },
+      url: "https://www.linkedin.com/in/aarav-shah-681641275/?isSelfProfile=true"
+    },
+    {
+      id: "post-2",
+      date: "September 2024",
+      topic: "Generative AI Systems",
+      title: "From Karpathy's 3-Layer Philosophy to Production Prompt Engineering: Spec, Verifier, Environment",
+      excerpt: "Prompt engineering shouldn't be vague natural language gambling. By structuring prompts into a formal Specification, an automated Verification step, and a strict Execution Environment, we elevated first-shot LLM code generation accuracy from 62% to 94% across multi-turn workflows.",
+      tags: ["#GenerativeAI", "#PromptEngineering", "#LLMs", "#AIArchitecture", "#SoftwareEngineering"],
+      stats: { likes: "385+", comments: "42", reposts: "15", views: "12.8k" },
+      url: "https://www.linkedin.com/in/aarav-shah-681641275/?isSelfProfile=true"
+    },
+    {
+      id: "post-3",
+      date: "August 2024",
+      topic: "Computer Vision & SIH",
+      title: "Smart India Hackathon: Deploying ChangeFormer for Satellite Earth Observation & Change Detection",
+      excerpt: "Detecting environmental change across bitemporal satellite tiles is fraught with seasonal foliage shifts, illumination changes, and atmospheric distortion. Sharing our architectural insights using Siamese Vision Transformer encoders (ChangeFormerV6) achieving 97.8% validation accuracy for optical and SAR Earth imagery.",
+      tags: ["#SIH2024", "#ComputerVision", "#Transformers", "#RemoteSensing", "#DeepLearning"],
+      stats: { likes: "610+", comments: "54", reposts: "32", views: "21.5k" },
+      url: "https://www.linkedin.com/in/aarav-shah-681641275/?isSelfProfile=true"
+    },
+    {
+      id: "post-4",
+      date: "July 2024",
+      topic: "Mathematical Rigor",
+      title: "Why Pure Machine Learning Fails Without Sound Inferential Statistics",
+      excerpt: "A high test R² or 95% accuracy score means very little if your evaluation dataset suffers from selection bias or violated independence assumptions. Why every data science practitioner needs rigorous two-sample hypothesis testing, Cohen's d effect size benchmarking, and power analysis before deploying models to production.",
+      tags: ["#Statistics", "#DataScience", "#HypothesisTesting", "#Python", "#Research"],
+      stats: { likes: "290+", comments: "27", reposts: "11", views: "9.6k" },
+      url: "https://www.linkedin.com/in/aarav-shah-681641275/?isSelfProfile=true"
+    }
+  ]
 };
 
 // Expose projects alias for CLI terminal & quick filters

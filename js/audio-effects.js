@@ -292,6 +292,308 @@ class SoundEngine {
       osc.stop(now + 0.35);
     } catch (e) {}
   }
+
+  playLaserShot() {
+    if (this.isMuted || !this.audioCtx) return;
+    try {
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(1400, now);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.18);
+
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.18);
+    } catch (e) {}
+  }
+
+  playSupernova() {
+    if (this.isMuted || !this.audioCtx) return;
+    try {
+      const now = this.audioCtx.currentTime;
+      // 1. Low sub explosion
+      const sub = this.audioCtx.createOscillator();
+      const subGain = this.audioCtx.createGain();
+      sub.type = "triangle";
+      sub.frequency.setValueAtTime(180, now);
+      sub.frequency.exponentialRampToValueAtTime(30, now + 0.8);
+      subGain.gain.setValueAtTime(0.12, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+      sub.connect(subGain);
+      subGain.connect(this.audioCtx.destination);
+      sub.start(now);
+      sub.stop(now + 0.8);
+
+      // 2. High sizzle burst
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.4);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    } catch (e) {}
+  }
+
+  playSingularity() {
+    if (this.isMuted || !this.audioCtx) return;
+    try {
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(80, now);
+      osc.frequency.linearRampToValueAtTime(260, now + 0.3);
+      osc.frequency.exponentialRampToValueAtTime(50, now + 0.6);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.6);
+    } catch (e) {}
+  }
+
+  playCrystalChime() {
+    if (this.isMuted || !this.audioCtx) return;
+    try {
+      const now = this.audioCtx.currentTime;
+      const freqs = [880, 1174.66, 1567.98];
+      freqs.forEach((f, idx) => {
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(f, now + idx * 0.04);
+        gain.gain.setValueAtTime(0.02, now + idx * 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.04 + 0.35);
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.start(now + idx * 0.04);
+        osc.stop(now + idx * 0.04 + 0.35);
+      });
+    } catch (e) {}
+  }
+
+  playSpiderJump() {
+    if (this.isMuted || !this.audioCtx) return;
+    try {
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(740, now + 0.12);
+      gain.gain.setValueAtTime(0.03, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } catch (e) {}
+  }
+
+  /**
+   * Acoustic Silk Resonance: Crystalline Plucked String Synthesis
+   * Micro-harmonic feedback when cursor crosses or plucks living spider silk threads.
+   */
+  playSilkPluck(pitchIndex = 0) {
+    if (this.isMuted || !this.audioCtx) return;
+
+    // Rate limiter: prevent audio clutter during rapid cursor swipes
+    const now = this.audioCtx.currentTime;
+    if (this.lastPluckTime && now - this.lastPluckTime < 0.045) return;
+    this.lastPluckTime = now;
+
+    try {
+      // Celestial Pentatonic Scale (D Dorian / Aeolian harmonics)
+      const scale = [293.66, 329.63, 369.99, 440.0, 493.88, 587.33, 659.25, 739.99, 880.0];
+      const freq = scale[Math.abs(Math.floor(pitchIndex)) % scale.length];
+
+      const osc = this.audioCtx.createOscillator();
+      const filter = this.audioCtx.createBiquadFilter();
+      const gain = this.audioCtx.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.99, now + 0.22); // subtle string tension decay
+
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(freq * 3.5, now);
+      filter.frequency.exponentialRampToValueAtTime(freq * 1.2, now + 0.2);
+
+      // Fast organic impulse attack (2ms) followed by natural exponential decay
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.028, now + 0.003);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.22);
+    } catch (e) {}
+  }
+
+  /**
+   * Node Lock Chime: Futuristic Target Acquired Feedback
+   * Triggered when keyboard gliding locks onto a project hub.
+   */
+  playNodeLock() {
+    if (this.isMuted || !this.audioCtx) return;
+    try {
+      const now = this.audioCtx.currentTime;
+      const osc1 = this.audioCtx.createOscillator();
+      const osc2 = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      osc1.type = "sine";
+      osc2.type = "sine";
+
+      osc1.frequency.setValueAtTime(880, now);
+      osc1.frequency.setValueAtTime(1320, now + 0.04);
+
+      osc2.frequency.setValueAtTime(1760, now + 0.04);
+
+      gain.gain.setValueAtTime(0.02, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc1.start(now);
+      osc2.start(now + 0.04);
+      osc1.stop(now + 0.12);
+      osc2.stop(now + 0.12);
+    } catch (e) {}
+  }
+
+  /**
+   * Executive Reel Flagship Transition Chime:
+   * Sophisticated triple-harmonic arrival chord (F# -> A -> C# -> E).
+   */
+  playExecutiveChime() {
+    if (this.isMuted || !this.audioCtx) return;
+    try {
+      const now = this.audioCtx.currentTime;
+      const freqs = [369.99, 440.0, 554.37, 659.25];
+      freqs.forEach((freq, idx) => {
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        const t = now + idx * 0.045;
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.025 / (idx + 1), t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.65);
+
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.65);
+      });
+    } catch (e) {}
+  }
+
+  /**
+   * Procedural Ambient Celestial Harmonic Drone (432Hz D harmonic pad)
+   * Super soft, lush, calming, zero harsh frequencies.
+   */
+  startAmbientDrone() {
+    this.init();
+    if (!this.audioCtx) return;
+    if (this.audioCtx.state === "suspended") this.audioCtx.resume();
+    if (this.ambientNodes) return;
+
+    try {
+      const ctx = this.audioCtx;
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(0.028, ctx.currentTime + 1.8);
+
+      const freqs = [108.0, 216.0, 324.0, 432.0];
+      const oscs = [];
+
+      freqs.forEach((f, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = idx === 0 ? "sine" : (idx % 2 === 0 ? "triangle" : "sine");
+        osc.frequency.setValueAtTime(f, ctx.currentTime);
+
+        // Slow organic detuning drift
+        const lfo = ctx.createOscillator();
+        const lfoG = ctx.createGain();
+        lfo.frequency.setValueAtTime(0.07 + idx * 0.025, ctx.currentTime);
+        lfoG.gain.setValueAtTime(1.8, ctx.currentTime);
+        lfo.connect(lfoG);
+        lfoG.connect(osc.detune);
+        lfo.start();
+
+        g.gain.setValueAtTime(0.22 / (idx + 1), ctx.currentTime);
+        osc.connect(g);
+        g.connect(masterGain);
+        osc.start();
+        oscs.push(osc, lfo);
+      });
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(520, ctx.currentTime);
+      filter.Q.setValueAtTime(1.0, ctx.currentTime);
+
+      masterGain.connect(filter);
+      filter.connect(ctx.destination);
+
+      this.ambientNodes = { masterGain, oscs, filter };
+      this.isAmbientPlaying = true;
+    } catch (e) {
+      console.warn("Ambient drone error", e);
+    }
+  }
+
+  stopAmbientDrone() {
+    if (!this.ambientNodes || !this.audioCtx) return;
+    try {
+      const ctx = this.audioCtx;
+      const { masterGain, oscs } = this.ambientNodes;
+      masterGain.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+      setTimeout(() => {
+        oscs.forEach(o => {
+          try { o.stop(); } catch(e){}
+        });
+        this.ambientNodes = null;
+        this.isAmbientPlaying = false;
+      }, 550);
+    } catch (e) {
+      this.ambientNodes = null;
+      this.isAmbientPlaying = false;
+    }
+  }
+
+  toggleAmbient() {
+    if (this.isAmbientPlaying) {
+      this.stopAmbientDrone();
+      return false;
+    } else {
+      this.isMuted = false;
+      this.startAmbientDrone();
+      return true;
+    }
+  }
 }
 
 if (typeof window !== "undefined") {
