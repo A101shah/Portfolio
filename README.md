@@ -14,30 +14,34 @@
 This portfolio showcases machine learning models, statistical deployments, and full-stack software applications through an interactive, organic **Infinite Spider Web Canvas**. Users can pan, zoom, glide between web junctions along dewy silk strands, and interact with cybernetic project cards.
 
 ### Key Features
-- **Infinite Organic Canvas**: Dynamic silk radial spokes, concentric web spirals, dew droplets, and smooth glide transit physics.
-- **Project Junctions**: Dedicated nodes with detailed key cards for featured repositories:
-  - **AWS Student Portal & Academic Intelligence**: Cloud-deployed university GPA/ICA computation engine, syllabus PDF ingestion, and grade forecasting.
-  - **Karpathy 3-Layer Prompt Architect & AI Generator**: Systematic prompt engineering environment (Spec, Verifier, Environment) with automated prompt.md synthesis and multi-LLM benchmark scoring.
-  - **MNIST Federated Learning & Neural Cyphering Engine**: Privacy-preserving decentralized neural network training utilizing Flower (flwr), PyTorch, non-IID client distributions, and encrypted gradient aggregation.
-  - **Blitzit Desktop Deep Work & Task Focus Suite**: Next.js 16 + Electron desktop productivity suite with native macOS titlebars, persistent floating pill timers, deep focus mode, and Prisma SQLite persistence.
-  - **ChangeFormer Satellite Earth Observation AI**: Bitemporal satellite change detection platform (SIH) deploying ChangeFormerV6 for optical and SAR Earth imagery with 97%+ accuracy.
-  - **IPL Auction Predictive Analytics**: Machine learning regression models & squad optimization.
-  - **2-Sample T-Test Inferential Suite**: Automated hypothesis testing, variance diagnostics, and normality checks.
-  - **Job Track AI Platform**: AI opportunity tracking and application workflow pipelines.
-  - **Stochastic Startup Valuation Platform**: Galton-Watson branching process simulation platform computing startup valuation probability distributions under variance and churn.
-  - **LinkedIn Intelligence & Talent Pipeline Scraper**: Automated recruitment data extraction pipeline and profile parser collecting structured hiring metrics.
-  - **ISP Suite & Deep Learning Tools**: Image processing, neural networks, and interactive utilities.
-- **Audio Synthesizer Engine**: Procedural Web Audio API sound effects for node hover, selection, and glide transit.
-- **Minimalist Cyber HUD**: Real-time coordinates display, zoom controls, recenter mechanism, and quick navigation pills.
+- **3D Three.js Universe & Celestial Particle Field**: Interactive WebGL stardust field, orbital coordinate grid, and cosmic depth layers integrated with the 2D silk canvas.
+- **Infinite Organic Spider Web Canvas**: Dynamic silk radial spokes, concentric web spirals, dew droplets, and smooth glide transit physics.
+- **Right-Docked Key Card Architecture**: Ultra-smooth slide-in cards docked to the right edge with interactive data science model inference sandboxes.
+- **Nexus Core Multi-Tab Hub (`00 // NEXUS`)**:
+  - `01 // OVERVIEW & BIO`: Educational background (NMIMS MPSTME), career origin story, and impact metrics.
+  - `02 // PERSONALITY & ETHOS`: First-Principles engineering philosophy, 4 core traits (Intellectual Curiosity, Craftsmanship, Relentless Discipline, Collaborative Velocity), and operational working styles.
+  - `03 // HOBBIES & INTERESTS`: 6 authentic pursuits (Competitive Chess 1500+ Elo, Modular Synth & Audio DSP, arXiv Paper Dissections, Calisthenics, 5:30 AM Coffee Ritual, Astrophysics).
+  - `04 // LINKEDIN & WRITING`: Direct feed of published technical thought leadership essays with engagement metrics and verified profile links.
+- **Executive Command Dock & Candidate Dossier**:
+  - `[G]` Guided Cinematic Executive Reel tour through flagship repositories.
+  - `[P]` 60-Second Executive Dossier modal with full credentials and human dimension breakdown.
+  - `[L]` Direct hotkey to LinkedIn Thought Leadership & About Hub.
+- **Interactive Project Sandboxes**: Real-time parameter sliders and live client-side inference:
+  - **IPL Auction Predictive Analytics**: Run-chase win probability & required run rate inference.
+  - **ChangeFormer Satellite Earth Observation AI (SIH)**: Bitemporal confidence thresholding and change mask delta detection.
+  - **MNIST Federated Learning Engine**: Communication round tuning, accuracy convergence curve, and differential privacy epsilon readout.
+  - **Stochastic Startup Valuation Platform**: Galton-Watson branching process probability distribution and Monte Carlo confidence intervals.
+- **Synthesizer Soundscape**: Procedural Web Audio API sound generator for cybernetic clicks, glide swooshes, and celestial drones.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Core**: Vanilla HTML5, CSS3 Glassmorphism, Modern Vanilla JavaScript (ES6+)
-- **Graphics**: HTML5 2D Canvas API with custom physics and particle effects
-- **Audio**: Web Audio API synthesizer
-- **Design**: Dark cybernetic aesthetics, responsive HUD, glowing vectors
+- **Core & Logic**: Vanilla HTML5, CSS3 Glassmorphism, Modern Vanilla JavaScript (ES6+)
+- **3D Graphics**: Three.js WebGL rendering engine with dynamic celestial particle systems
+- **2D Canvas**: HTML5 2D Canvas API with bespoke radial geometry & physics equations
+- **Audio Engine**: Procedural Web Audio API synthesizer
+- **Design System**: Obsidian glassmorphism, ice-cyan neon accents, responsive layout, cyber-reticle navigation
 
 ---
 
