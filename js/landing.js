@@ -202,6 +202,7 @@ class LandingPortal {
     this.setupMagneticButton();
     this.setupSoundHooks();
     this.startTelemetryClock();
+    this.init2DPortfolio();
 
     // Run Preloader Boot Sequence
     this.runBootSequence();
@@ -375,11 +376,19 @@ class LandingPortal {
       }
     }, { passive: true });
 
-    // Interactive Shockwave on Canvas Click
+    // Interactive Shockwave on Canvas Click (Isolate to Hero Backdrop only)
     if (this.container) {
       this.container.addEventListener("click", (e) => {
-        // Ignore if clicking the enter button or links
-        if (e.target.closest("#landing-enter-btn") || e.target.closest("a")) return;
+        if (
+          e.target.closest("#linear-portfolio-2d") ||
+          e.target.closest(".dock-2d-nav") ||
+          e.target.closest("button") ||
+          e.target.closest("a") ||
+          e.target.closest("input") ||
+          e.target.closest("textarea") ||
+          e.target.closest(".landing-center") ||
+          e.target.closest(".warp-telemetry-hud")
+        ) return;
 
         this.triggerShockwave(e.clientX, e.clientY);
       });
@@ -404,19 +413,36 @@ class LandingPortal {
       });
     }
 
-    // Keyboard support: Enter key initiates warp if landing page is active
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && this.isActive && !this.isWarping) {
-        this.triggerWarpEntrance();
-      }
-    });
-
     // Gateway return button from web world
     if (this.gatewayBtn) {
       this.gatewayBtn.addEventListener("click", () => {
         this.reenterGateway();
       });
     }
+
+    // Switch to 2D Button in 3D Web Dock
+    const switch2dBtn = document.getElementById("btn-switch-2d");
+    if (switch2dBtn) {
+      switch2dBtn.addEventListener("click", () => {
+        this.reenterGateway(true);
+      });
+    }
+
+    // Global keyboard hotkeys:
+    // [W] or [Enter] -> Trigger Warp to 3D Universe
+    // [V] -> Switch back to 2D normal portfolio view
+    window.addEventListener("keydown", (e) => {
+      const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
+      if (activeTag === "input" || activeTag === "textarea") return;
+
+      if ((e.key === "Enter" || e.key === "w" || e.key === "W") && this.isActive && !this.isWarping) {
+        this.triggerWarpEntrance();
+      }
+
+      if ((e.key === "v" || e.key === "V") && !this.isActive) {
+        this.reenterGateway(true);
+      }
+    });
   }
 
   triggerShockwave(x, y) {
@@ -609,7 +635,7 @@ class LandingPortal {
     }, 2300);
   }
 
-  reenterGateway() {
+  reenterGateway(scrollTo2D = false) {
     this.isActive = true;
     this.isWarping = false;
     this.isDissolving = false;
@@ -625,7 +651,7 @@ class LandingPortal {
     if (this.enterBtn) {
       this.enterBtn.classList.remove("charging");
       const btnText = this.enterBtn.querySelector("span:first-child");
-      if (btnText) btnText.textContent = "INITIALIZE NEURAL UNIVERSE";
+      if (btnText) btnText.textContent = "INITIALIZE 3D UNIVERSE";
     }
 
     if (this.centerBlock) {
@@ -666,6 +692,15 @@ class LandingPortal {
       setTimeout(() => {
         if (this.container) this.container.classList.remove("gateway-reentry");
       }, 800);
+
+      if (scrollTo2D) {
+        setTimeout(() => {
+          const sec2d = document.getElementById("sec-2d-about");
+          if (sec2d) {
+            sec2d.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 120);
+      }
     }
 
     // Re-create particles and reset web weave data
@@ -1109,6 +1144,359 @@ class LandingPortal {
         this.lastStatusStr = statusStr;
         this.hudStatusText.textContent = statusStr;
       }
+    }
+  }
+
+  init2DPortfolio() {
+    // 1. Explore 2D Button & Scroll Down Prompt in Hero
+    const exploreBtn = document.getElementById("landing-explore-2d-btn");
+    const scrollPrompt = document.getElementById("landing-scroll-prompt");
+    const secAbout = document.getElementById("sec-2d-about");
+
+    const scrollTo2D = () => {
+      if (secAbout) {
+        secAbout.scrollIntoView({ behavior: "smooth" });
+        if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
+          window.soundEngineInstance.playNodeHover();
+        }
+      }
+    };
+
+    if (exploreBtn) exploreBtn.addEventListener("click", scrollTo2D);
+    if (scrollPrompt) scrollPrompt.addEventListener("click", scrollTo2D);
+
+    // 2. 2D Sticky Top Navigation Bar
+    const brandBtn = document.getElementById("dock-2d-brand-btn");
+    if (brandBtn) {
+      brandBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const hero = document.getElementById("landing-hero");
+        if (hero) hero.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+
+    const navLinks = document.querySelectorAll(".dock-2d-link");
+    navLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute("href")?.replace("#", "");
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: "smooth" });
+          navLinks.forEach(l => l.classList.remove("active"));
+          link.classList.add("active");
+          if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
+            window.soundEngineInstance.playNodeHover();
+          }
+        }
+      });
+    });
+
+    // ScrollSpy: Update active nav link on scroll
+    if (this.container) {
+      this.container.addEventListener("scroll", () => {
+        const sections = document.querySelectorAll(".sec-2d");
+        const scrollPos = this.container.scrollTop + 220;
+        sections.forEach(sec => {
+          const top = sec.offsetTop;
+          const height = sec.offsetHeight;
+          const id = sec.getAttribute("id");
+          if (scrollPos >= top && scrollPos < top + height) {
+            navLinks.forEach(link => {
+              link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
+            });
+          }
+        });
+      }, { passive: true });
+    }
+
+    // Dossier button in 2D Dock
+    const dockDossierBtn = document.getElementById("dock-2d-dossier-btn");
+    if (dockDossierBtn) {
+      dockDossierBtn.addEventListener("click", () => {
+        if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeClick === "function") {
+          window.soundEngineInstance.playNodeClick();
+        }
+        window.dispatchEvent(new CustomEvent("toggle-executive-dossier"));
+      });
+    }
+
+    // Launch 3D Universe buttons in 2D Dock and 2D Footer
+    const dockWarpBtn = document.getElementById("dock-2d-warp-btn");
+    const footerWarpBtn = document.getElementById("footer-2d-warp-btn");
+    if (dockWarpBtn) dockWarpBtn.addEventListener("click", () => this.triggerWarpEntrance());
+    if (footerWarpBtn) footerWarpBtn.addEventListener("click", () => this.triggerWarpEntrance());
+
+    // 3. Skills Matrix Category Filter
+    const skillTabBtns = document.querySelectorAll(".skills-2d-tab-btn");
+    const skillCards = document.querySelectorAll(".skill-2d-card");
+    skillTabBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        skillTabBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const cat = btn.getAttribute("data-skill-cat");
+        skillCards.forEach(card => {
+          if (cat === "all" || card.getAttribute("data-cat") === cat) {
+            card.style.display = "flex";
+          } else {
+            card.style.display = "none";
+          }
+        });
+        if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
+          window.soundEngineInstance.playNodeHover();
+        }
+      });
+    });
+
+    // 4. Projects Filter Pills
+    const projPills = document.querySelectorAll(".projects-2d-pill");
+    const projCards = document.querySelectorAll(".project-2d-card");
+    projPills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        projPills.forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        const domain = pill.getAttribute("data-pfilter");
+        projCards.forEach(card => {
+          if (domain === "all" || card.getAttribute("data-domain") === domain) {
+            card.style.display = "flex";
+          } else {
+            card.style.display = "none";
+          }
+        });
+        if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
+          window.soundEngineInstance.playNodeHover();
+        }
+      });
+    });
+
+    // 5. Inspect in 3D Button Handlers
+    const jump3dBtns = document.querySelectorAll(".p2d-jump-3d");
+    jump3dBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const targetNode = btn.getAttribute("data-target");
+        this.triggerWarpEntrance();
+        setTimeout(() => {
+          if (window.spiderWebInstance && targetNode) {
+            window.spiderWebInstance.selectJunction(targetNode);
+          }
+          const openCardEvt = new CustomEvent("open-node-card", { detail: { targetId: targetNode } });
+          window.dispatchEvent(openCardEvt);
+        }, 1800);
+      });
+    });
+
+    // 6. Interactive Model Inference Sandboxes
+    // R5: SIH ChangeFormer Slider
+    const cfSlider = document.getElementById("p2d-cf-slider");
+    const cfVal = document.getElementById("p2d-cf-val");
+    const cfF1 = document.getElementById("p2d-cf-f1");
+    const cfBadge = document.getElementById("p2d-cf-badge");
+    if (cfSlider && cfVal && cfF1 && cfBadge) {
+      cfSlider.addEventListener("input", () => {
+        const val = parseFloat(cfSlider.value);
+        cfVal.textContent = val.toFixed(2);
+        const diff = Math.abs(val - 0.55);
+        const f1 = Math.max(0.72, 0.978 - diff * 0.45).toFixed(3);
+        cfF1.textContent = `${f1} ${val === 0.55 ? '(Peak SIH)' : ''}`;
+        cfBadge.textContent = val === 0.55 ? 'OPTIMAL: 0.55' : (val < 0.55 ? 'HIGH RECALL' : 'HIGH PRECISION');
+        cfBadge.style.color = val === 0.55 ? '#10b981' : '#38bdf8';
+      });
+    }
+
+    // R6: Federated Learning Slider
+    const flSlider = document.getElementById("p2d-fl-slider");
+    const flVal = document.getElementById("p2d-fl-val");
+    const flAcc = document.getElementById("p2d-fl-acc");
+    const flStatus = document.getElementById("p2d-fl-status");
+    if (flSlider && flVal && flAcc && flStatus) {
+      flSlider.addEventListener("input", () => {
+        const rounds = parseInt(flSlider.value, 10);
+        flVal.textContent = rounds;
+        flStatus.textContent = `ROUNDS: ${rounds}`;
+        const acc = Math.min(99.1, (68.0 + 30.4 * (1 - Math.exp(-rounds / 7)))).toFixed(1);
+        flAcc.textContent = `${acc}% ${rounds >= 25 ? '(Converged)' : '(Training)'}`;
+      });
+    }
+
+    // R12: Stochastic Valuation Slider
+    const mcSlider = document.getElementById("p2d-mc-slider");
+    const mcVal = document.getElementById("p2d-mc-val");
+    const mcProb = document.getElementById("p2d-mc-prob");
+    const mcBadge = document.getElementById("p2d-mc-badge");
+    if (mcSlider && mcVal && mcProb && mcBadge) {
+      mcSlider.addEventListener("input", () => {
+        const paths = parseInt(mcSlider.value, 10);
+        mcVal.textContent = paths >= 1000 ? `${(paths / 1000).toFixed(0)}k` : paths;
+        mcBadge.textContent = `PATHS: ${(paths / 1000).toFixed(0)}k`;
+        const p = (18.4 + Math.sin(paths * 0.001) * 0.3).toFixed(1);
+        const valM = (14.2 + Math.cos(paths * 0.001) * 0.2).toFixed(1);
+        mcProb.textContent = `${p}% • Valuation: $${valM}M`;
+      });
+    }
+
+    // R1: IPL Auction Slider
+    const iplSlider = document.getElementById("p2d-ipl-slider");
+    const iplVal = document.getElementById("p2d-ipl-val");
+    const iplBid = document.getElementById("p2d-ipl-bid");
+    const iplBadge = document.getElementById("p2d-ipl-badge");
+    if (iplSlider && iplVal && iplBid && iplBadge) {
+      iplSlider.addEventListener("input", () => {
+        const sr = parseInt(iplSlider.value, 10);
+        iplVal.textContent = sr;
+        iplBadge.textContent = `STRIKE RATE: ${sr}`;
+        const price = Math.max(0.5, 0.5 + Math.pow((sr - 100) / 25, 2.3) * 0.85).toFixed(2);
+        const tier = sr >= 160 ? 'Tier 1 Finisher' : (sr >= 140 ? 'Tier 1 Match-Winner' : (sr >= 125 ? 'Anchor Bat' : 'Base Squad'));
+        iplBid.textContent = `₹ ${price} Cr (${tier})`;
+      });
+    }
+
+    // 7. Interactive Developer Console (2D Terminal)
+    const termForm = document.getElementById("term-2d-form");
+    const termInput = document.getElementById("term-2d-input");
+    const termOutput = document.getElementById("term-2d-output");
+
+    if (termForm && termInput && termOutput) {
+      termForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const rawCmd = termInput.value.trim();
+        if (!rawCmd) return;
+        termInput.value = "";
+
+        // Print entered command line
+        const cmdRow = document.createElement("div");
+        cmdRow.style.color = "#00f0ff";
+        cmdRow.style.fontWeight = "700";
+        cmdRow.style.marginTop = "6px";
+        cmdRow.textContent = `aarav@nexus:~$ ${rawCmd}`;
+        termOutput.appendChild(cmdRow);
+
+        const cmd = rawCmd.toLowerCase();
+        let resHtml = "";
+
+        if (cmd === "help") {
+          resHtml = `
+            <div style="color:#cbd5e1;padding-left:8px;line-height:1.6">
+              <div>AVAILABLE NEXUS COMMANDS:</div>
+              <div><span style="color:#00f0ff">whoami</span>      - Executive profile bio & credentials</div>
+              <div><span style="color:#00f0ff">projects</span>    - List all 13 deployed production & research repos</div>
+              <div><span style="color:#00f0ff">skills</span>      - Technical competency cluster</div>
+              <div><span style="color:#00f0ff">hobbies</span>     - Strategy, acoustics, chess, reading & astrophysics</div>
+              <div><span style="color:#00f0ff">thought</span>     - Technical LinkedIn essays on Federated AI & CV</div>
+              <div><span style="color:#00f0ff">stats</span>       - Key performance & verification impact metrics</div>
+              <div><span style="color:#00f0ff">contact</span>     - Direct transmission channels & coordinates</div>
+              <div><span style="color:#00f0ff">3d</span>          - Launch organic 3D Spider Web universe</div>
+              <div><span style="color:#00f0ff">clear</span>       - Clear terminal window</div>
+            </div>`;
+        } else if (cmd === "whoami") {
+          resHtml = `
+            <div style="color:#cbd5e1;padding-left:8px">
+              <div>OPERATOR: Aarav Shah (A101shah)</div>
+              <div>TITLE: Data Scientist & Full-Stack Architect</div>
+              <div>EDUCATION: NMIMS MPSTME, Mumbai</div>
+              <div>SPECIALIZATION: Deep Learning, Computer Vision, Federated Learning, Stochastic Valuation</div>
+              <div>STATUS: Ready for Production Engineering & Research Roles</div>
+            </div>`;
+        } else if (cmd === "projects") {
+          resHtml = `
+            <div style="color:#cbd5e1;padding-left:8px">
+              <div>[R1] IPL Auction Predictive Analytics (Python, ML, R² = 0.84)</div>
+              <div>[R2] 2-Sample T-Test Inferential Suite (SciPy, Statsmodels, &lt;35ms)</div>
+              <div>[R3] Job Track AI Platform (React, TypeScript, Node.js, AI APIs)</div>
+              <div>[R4] ISP Bandwidth & Latency Monitor (Socket Telemetry, Dash)</div>
+              <div>[R5] SIH ChangeFormer Earth Observation (PyTorch, ViT, 97.8% Accuracy)</div>
+              <div>[R6] Federated Learning Flower Suite (FedAvg, 25 Edge Rounds)</div>
+              <div>[R7] NMIMS Academics Intelligence Suite (Knowledge Vault)</div>
+              <div>[R8] Karpathy 3-Layer Prompt Architect (Spec, Verifier, 94% First-Shot)</div>
+              <div>[R9] College ERP Management Portal (React, PostgreSQL)</div>
+              <div>[R10] Blitzit Focus & Deep Work Suite (Next.js 16, Electron, SQLite)</div>
+              <div>[R11] Spider Universe Portfolio (Three.js, WebGL, Web Audio DSP)</div>
+              <div>[R12] Galton-Watson Stochastic Startup Valuation (10k Monte Carlo Paths)</div>
+              <div>[R13] Personal Academic Research Vault (Proofs, Preprints & Notes)</div>
+            </div>`;
+        } else if (cmd === "skills") {
+          resHtml = `
+            <div style="color:#cbd5e1;padding-left:8px">
+              <div>AI & ML:     PyTorch, Vision Transformers (ChangeFormer), Flower (flwr), Scikit-Learn</div>
+              <div>LANGUAGES:   Python 3.11+, TypeScript, JavaScript ES2024, SQL, C/C++</div>
+              <div>FULL-STACK:  React 19, Next.js 16, Electron, Node.js, Prisma ORM, PostgreSQL, SQLite</div>
+              <div>QUANT MATH:  Galton-Watson Branching, Merton Diffusion, Monte Carlo, Hypothesis Testing</div>
+              <div>CLOUD/TOOLS: AWS Cloud, Docker Containers, Three.js / WebGL, Web Audio DSP, Git</div>
+            </div>`;
+        } else if (cmd === "hobbies") {
+          resHtml = `
+            <div style="color:#cbd5e1;padding-left:8px">
+              <div>♟️ Chess: 1500+ Elo on chess platforms (Minimax analysis, positional tension)</div>
+              <div>🎧 Modular Synths: Procedural sound synthesis & Web Audio DSP filters</div>
+              <div>📚 arXiv: Dissecting transformer backbones and privacy federated learning papers</div>
+              <div>🏋️‍♂️ Calisthenics: Progressive overload as an iterative model training metaphor</div>
+              <div>☕ Coffee: Aeropress ritual & uninterrupted 5:30 AM deep work blocks</div>
+              <div>🌌 Astrophysics: N-body gravitational mechanics and orbital simulations</div>
+            </div>`;
+        } else if (cmd === "thought") {
+          resHtml = `
+            <div style="color:#cbd5e1;padding-left:8px">
+              <div>[01] Demystifying Federated Learning: Training Neural Nets Without Exposing Private Data</div>
+              <div>[02] From Karpathy's 3-Layer Philosophy to Production Prompt Engineering</div>
+              <div>[03] Smart India Hackathon: Deploying ChangeFormer for Satellite Earth Observation</div>
+              <div>[04] Why Pure Machine Learning Fails Without Sound Inferential Statistics</div>
+            </div>`;
+        } else if (cmd === "stats") {
+          resHtml = `
+            <div style="color:#cbd5e1;padding-left:8px">
+              <div>13+ Production Repositories &bull; 97.8% SIH Transformer Accuracy</div>
+              <div>25 FedAvg Privacy Edge Rounds &bull; 10,000+ Monte Carlo Paths</div>
+              <div>Sub-35ms Hypothesis Testing &bull; 60 FPS WebGL Engine</div>
+            </div>`;
+        } else if (cmd === "contact") {
+          resHtml = `
+            <div style="color:#cbd5e1;padding-left:8px">
+              <div>EMAIL:    shahaarav602@gmail.com</div>
+              <div>LINKEDIN: linkedin.com/in/aarav-shah-681641275/</div>
+              <div>GITHUB:   github.com/A101shah</div>
+              <div>STATION:  Mumbai [19.0760° N, 72.8777° E] &bull; IST</div>
+            </div>`;
+        } else if (cmd === "3d" || cmd === "warp") {
+          resHtml = `<div style="color:#38bdf8;padding-left:8px">INITIALIZING 3D SPIDER WEB UNIVERSE...</div>`;
+          setTimeout(() => this.triggerWarpEntrance(), 500);
+        } else if (cmd === "clear") {
+          termOutput.innerHTML = `
+            <p style="color:#94a3b8">// QUANTUM NEXUS CLI &bull; SCREEN CLEARED</p>
+            <p style="color:#38bdf8">Type <span style="color:#00f0ff;font-weight:700">help</span> for commands.</p>`;
+          return;
+        } else {
+          resHtml = `<div style="color:#ef4444;padding-left:8px">Command not recognized: '${rawCmd}'. Type <span style="color:#00f0ff">help</span> for available commands.</div>`;
+        }
+
+        const resEl = document.createElement("div");
+        resEl.innerHTML = resHtml;
+        termOutput.appendChild(resEl);
+        termOutput.scrollTop = termOutput.scrollHeight;
+
+        if (window.soundEngineInstance && typeof window.soundEngineInstance.playTerminalKey === "function") {
+          window.soundEngineInstance.playTerminalKey();
+        }
+      });
+    }
+
+    // 8. Contact Form Submission
+    const contactForm = document.getElementById("contact-2d-form");
+    const contactFeedback = document.getElementById("c2d-feedback");
+    if (contactForm && contactFeedback) {
+      contactForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("c2d-name")?.value || "Colleague";
+        contactFeedback.style.color = "#38bdf8";
+        contactFeedback.textContent = "TRANSMITTING ENCRYPTED QUANTUM SIGNAL...";
+        if (window.soundEngineInstance && typeof window.soundEngineInstance.playWarpJump === "function") {
+          window.soundEngineInstance.playWarpJump();
+        }
+
+        setTimeout(() => {
+          contactFeedback.style.color = "#10b981";
+          contactFeedback.textContent = `✓ Signal successfully transmitted. Thank you, ${name}. Aarav will establish contact shortly.`;
+          contactForm.reset();
+        }, 800);
+      });
     }
   }
 }

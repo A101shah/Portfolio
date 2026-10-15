@@ -109,6 +109,14 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.classList.add("active");
   }
 
+  // Handle cross-component requests to open key cards (e.g. from 2D portfolio)
+  window.addEventListener("open-node-card", (e) => {
+    if (e.detail && e.detail.targetId) {
+      spiderWeb.selectJunction(e.detail.targetId);
+      openKeyCard(e.detail.targetId);
+    }
+  });
+
   // 5. Close Key Card -> Return to "Spider Web Only"
   function closeKeyCard() {
     soundEngine.playNodeClick();

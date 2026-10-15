@@ -17,8 +17,8 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0b0e'/><polygon points='50,15 85,32 85,68 50,85 15,68 15,32' fill='none' stroke='%2300f0ff' stroke-width='4'/><polygon points='50,28 72,40 72,60 50,72 28,60 28,40' fill='none' stroke='%2300f0ff' stroke-width='3'/><line x1='50' y1='15' x2='50' y2='85' stroke='%2300f0ff' stroke-width='2'/><line x1='15' y1='32' x2='85' y2='68' stroke='%2300f0ff' stroke-width='2'/><line x1='15' y1='68' x2='85' y2='32' stroke='%2300f0ff' stroke-width='2'/><circle cx='50' cy='50' r='5' fill='%2300f0ff'/></svg>">
 
   <!-- Core Stylesheet & Landing Page Styles -->
-  <link rel="stylesheet" href="css/style.css?v=28">
-  <link rel="stylesheet" href="css/landing.css?v=28">
+  <link rel="stylesheet" href="css/style.css?v=29">
+  <link rel="stylesheet" href="css/landing.css?v=29">
 </head>
 <body class="web-only-mode">
 
@@ -59,8 +59,10 @@
        Interactive Constellation, 3D Tilt & Hyperspace Warp Entrance
        ====================================================================== -->
   <section id="landing-page" aria-label="Aarav Shah Portfolio Gateway">
-    <!-- Starfield & Constellation Canvas -->
-    <canvas id="landing-particles" aria-hidden="true"></canvas>
+    <!-- 100vh Hero Warp Gateway Section -->
+    <div class="landing-hero-section" id="landing-hero">
+      <!-- Starfield & Constellation Canvas -->
+      <canvas id="landing-particles" aria-hidden="true"></canvas>
 
     <!-- Deep Ambient Glow Core Orb -->
     <div class="landing-glow-orb" aria-hidden="true"></div>
@@ -156,13 +158,17 @@
       <!-- Executive Action Button Group -->
       <div class="landing-actions-dual">
         <button class="landing-enter-btn" id="landing-enter-btn" aria-label="Enter Neural Spider Web Universe">
-          <span>INITIALIZE NEURAL UNIVERSE</span>
+          <span>INITIALIZE 3D UNIVERSE</span>
           <span class="enter-arrow">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
           </span>
+        </button>
+        <button class="landing-explore-btn" id="landing-explore-2d-btn" aria-label="Explore 2D Linear Portfolio">
+          <span>EXPLORE 2D PORTFOLIO</span>
+          <span class="explore-arrow">↓</span>
         </button>
         <button class="landing-dossier-direct-btn" id="landing-dossier-direct-btn" aria-label="Open 60-Second Executive Dossier">
           <span class="bolt-icon">⚡</span>
@@ -178,15 +184,1146 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
         <span>GITHUB</span>
       </a>
-      <a href="https://linkedin.com/in/aarav-shah-81525b293" target="_blank" rel="noopener noreferrer" class="landing-social-link" title="LinkedIn Profile">
+      <a href="https://www.linkedin.com/in/aarav-shah-681641275/" target="_blank" rel="noopener noreferrer" class="landing-social-link" title="LinkedIn Profile">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
         <span>LINKEDIN</span>
       </a>
-      <a href="mailto:aaravshah101@gmail.com" class="landing-social-link" title="Direct Email">
+      <a href="mailto:shahaarav602@gmail.com" class="landing-social-link" title="Direct Email">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         <span>CONTACT</span>
       </a>
     </nav>
+
+    <!-- Scroll Down Prompt Indicator -->
+    <div class="landing-scroll-prompt" id="landing-scroll-prompt" aria-hidden="true">
+      <span>SCROLL DOWN FOR 2D WORKSTATION</span>
+      <div class="scroll-arrow-anim"></div>
+    </div>
+  </div> <!-- end #landing-hero -->
+
+  <!-- ======================================================================
+       2D STICKY COMMAND & ANCHOR NAVIGATION BAR
+       ====================================================================== -->
+  <nav class="dock-2d-nav" id="dock-2d-nav" aria-label="2D Portfolio Navigation">
+    <div class="dock-2d-inner">
+      <a href="#landing-hero" class="dock-2d-brand" id="dock-2d-brand-btn">
+        <span class="dock-2d-dot"></span>
+        <span class="dock-2d-name">AARAV SHAH</span>
+        <span class="dock-2d-mode">// 2D WORKSTATION</span>
+      </a>
+
+      <div class="dock-2d-links">
+        <a href="#sec-2d-about" class="dock-2d-link active">01 // PROFILE</a>
+        <a href="#sec-2d-human" class="dock-2d-link">02 // MINDSET</a>
+        <a href="#sec-2d-hobbies" class="dock-2d-link">03 // PURSUITS</a>
+        <a href="#sec-2d-skills" class="dock-2d-link">04 // SKILLS</a>
+        <a href="#sec-2d-projects" class="dock-2d-link">05 // REPOSITORIES</a>
+        <a href="#sec-2d-thought" class="dock-2d-link">06 // WRITING</a>
+        <a href="#sec-2d-terminal" class="dock-2d-link">07 // CONSOLE</a>
+        <a href="#sec-2d-contact" class="dock-2d-link">08 // CONTACT</a>
+      </div>
+
+      <div class="dock-2d-actions">
+        <button class="dock-2d-btn" id="dock-2d-dossier-btn" title="Open 60-Second Dossier">
+          <span>⚡ DOSSIER</span>
+        </button>
+        <button class="dock-2d-btn dock-2d-btn--warp" id="dock-2d-warp-btn" title="Launch 3D Web Universe (Hotkey: W)">
+          <span>🌌 LAUNCH 3D UNIVERSE</span>
+          <kbd style="font-size:0.6rem;background:rgba(0,0,0,0.3);padding:1px 4px;border-radius:3px;border:1px solid rgba(0,240,255,0.4)">W</kbd>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======================================================================
+       2D LINEAR PORTFOLIO MAIN WORKSTATION
+       ====================================================================== -->
+  <main class="portfolio-2d-wrap" id="linear-portfolio-2d">
+    
+    <!-- ── SECTION 01: EXECUTIVE PROFILE ── -->
+    <section class="sec-2d" id="sec-2d-about">
+      <header class="sec-2d-header">
+        <div class="sec-2d-tag-row">
+          <span class="sec-2d-code">01 // IDENTITY CORE</span>
+          <span class="sec-2d-badge">EXECUTIVE PROFILE</span>
+        </div>
+        <h2 class="sec-2d-title">Data Scientist &amp; Full-Stack Architect</h2>
+        <p class="sec-2d-desc">
+          Engineering reproducible machine learning models, decentralized privacy networks, and high-performance full-stack architectures.
+        </p>
+      </header>
+
+      <div class="about-2d-card">
+        <div class="about-2d-avatar-wrap">
+          <img src="assets/images/avatar.jpg" alt="Aarav Shah" class="about-2d-avatar-img">
+        </div>
+        <div class="about-2d-content">
+          <h3 class="about-2d-lead">
+            Bridging theoretical statistics, deep learning architectures, and scalable production systems.
+          </h3>
+          <div class="about-2d-bio-text">
+            <p>
+              I am a Data Science and Software Developer at NMIMS (Narsee Monjee Institute of Management Studies), Mumbai. My work centers on designing intelligent computational systems where mathematical precision meets ergonomic, modern interfaces.
+            </p>
+            <p>
+              From building Siamese Vision Transformers for satellite Earth observation (Smart India Hackathon 2024) and federated edge training with PyTorch &amp; Flower, to engineering stochastic Galton-Watson startup valuation engines, I build software that solves tangible, non-trivial problems.
+            </p>
+            <p>
+              I value first-principles reasoning, high ownership, typed systems, and building tools that make complex quantitative workflows accessible and reliable.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Impact Metrics Grid -->
+      <div class="stats-2d-grid">
+        <div class="stat-2d-card">
+          <div class="stat-2d-val">13+</div>
+          <div class="stat-2d-lbl">Production &amp; Research Repositories</div>
+        </div>
+        <div class="stat-2d-card">
+          <div class="stat-2d-val">97.8%</div>
+          <div class="stat-2d-lbl">Peak Vision Transformer Accuracy (SIH)</div>
+        </div>
+        <div class="stat-2d-card">
+          <div class="stat-2d-val">25 FedAvg</div>
+          <div class="stat-2d-lbl">Decentralized Privacy Training Rounds</div>
+        </div>
+        <div class="stat-2d-card">
+          <div class="stat-2d-val">10,000+</div>
+          <div class="stat-2d-lbl">Monte Carlo Stochastic Valuation Paths</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 02: HUMAN DIMENSION & MINDSET ── -->
+    <section class="sec-2d" id="sec-2d-human">
+      <header class="sec-2d-header">
+        <div class="sec-2d-tag-row">
+          <span class="sec-2d-code">02 // HUMAN DIMENSION</span>
+          <span class="sec-2d-badge">PHILOSOPHY &amp; WORKING STYLE</span>
+        </div>
+        <h2 class="sec-2d-title">Principles, Mindset &amp; Operating System</h2>
+        <p class="sec-2d-desc">
+          How I approach engineering challenges, team collaboration, and continuous technical growth.
+        </p>
+      </header>
+
+      <!-- First-Principles Quote Card -->
+      <div class="human-phil-card">
+        <blockquote class="human-phil-quote">
+          &ldquo;True engineering excellence is born where mathematical rigor meets high-velocity human execution. I value clean mental models, verifiable empirical metrics, and transparent communication over arbitrary complexity.&rdquo;
+        </blockquote>
+        <span class="human-phil-author">// AARAV SHAH &bull; FIRST-PRINCIPLES MANIFESTO</span>
+      </div>
+
+      <!-- 4 Core Traits -->
+      <div class="traits-2d-grid">
+        <div class="trait-2d-card">
+          <div class="trait-2d-header">
+            <span class="trait-2d-icon">⚡</span>
+            <h3 class="trait-2d-title">Algorithmic Rigor</h3>
+          </div>
+          <p class="trait-2d-desc">
+            Grounding intuition in statistical testing, verifiable benchmarks, seed reproducibility, and error bounds rather than heuristic guesses.
+          </p>
+        </div>
+        <div class="trait-2d-card">
+          <div class="trait-2d-header">
+            <span class="trait-2d-icon">🛡️</span>
+            <h3 class="trait-2d-title">End-to-End Ownership</h3>
+          </div>
+          <p class="trait-2d-desc">
+            Taking systems across the finish line: from initial data curation and mathematical formulation to typed APIs, cloud deployment, and UI polish.
+          </p>
+        </div>
+        <div class="trait-2d-card">
+          <div class="trait-2d-header">
+            <span class="trait-2d-icon">🔭</span>
+            <h3 class="trait-2d-title">Relentless Curiosity</h3>
+          </div>
+          <p class="trait-2d-desc">
+            Actively reading and dissecting arXiv preprints across transformer backbones, federated privacy, and orbital physics to cross-pollinate solutions.
+          </p>
+        </div>
+        <div class="trait-2d-card">
+          <div class="trait-2d-header">
+            <span class="trait-2d-icon">⚙️</span>
+            <h3 class="trait-2d-title">Pragmatic Craftsmanship</h3>
+          </div>
+          <p class="trait-2d-desc">
+            Shipping with high momentum while refusing to compromise on modular architecture, comprehensive documentation, and empathetic user experience.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3 Operational Workstyles -->
+      <div class="workstyles-2d-grid">
+        <div class="workstyle-2d-card">
+          <span class="workstyle-2d-tag">WORKSTYLE 01</span>
+          <h4 class="workstyle-2d-title">Deep Asynchronous Focus</h4>
+          <p class="workstyle-2d-desc">Protecting early morning 5:30 AM deep work blocks for high-cognitive tasks, math proofs, and core algorithm implementation.</p>
+        </div>
+        <div class="workstyle-2d-card">
+          <span class="workstyle-2d-tag">WORKSTYLE 02</span>
+          <h4 class="workstyle-2d-title">First-Principles Deconstruction</h4>
+          <p class="workstyle-2d-desc">Stripping problems down to their fundamental truths before selecting frameworks, eliminating unnecessary abstractions.</p>
+        </div>
+        <div class="workstyle-2d-card">
+          <span class="workstyle-2d-tag">WORKSTYLE 03</span>
+          <h4 class="workstyle-2d-title">Rapid Empirical Feedback</h4>
+          <p class="workstyle-2d-desc">Testing hypotheses against live data and user telemetry early, optimizing for tight learning and deployment loops.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 03: AUTHENTIC HOBBIES & PURSUITS ── -->
+    <section class="sec-2d" id="sec-2d-hobbies">
+      <header class="sec-2d-header">
+        <div class="sec-2d-tag-row">
+          <span class="sec-2d-code">03 // AUTHENTIC PURSUITS</span>
+          <span class="sec-2d-badge">BEYOND THE TERMINAL</span>
+        </div>
+        <h2 class="sec-2d-title">Hobbies, Strategy &amp; Discipline</h2>
+        <p class="sec-2d-desc">
+          The personal passions and cognitive routines that balance, inform, and inspire my engineering work.
+        </p>
+      </header>
+
+      <div class="hobbies-2d-grid">
+        <div class="hobby-2d-card">
+          <div class="hobby-2d-top">
+            <span class="hobby-2d-icon">♟️</span>
+            <span class="hobby-2d-cat">Strategy &amp; Heuristics</span>
+          </div>
+          <h3 class="hobby-2d-title">Competitive Chess (1500+ Elo)</h3>
+          <p class="hobby-2d-desc">
+            Evaluating dynamic position trees, minimax branching, and managing positional tension under clock pressure directly sharpens my algorithmic decision-making.
+          </p>
+        </div>
+
+        <div class="hobby-2d-card">
+          <div class="hobby-2d-top">
+            <span class="hobby-2d-icon">🎧</span>
+            <span class="hobby-2d-cat">Acoustics &amp; Signal Processing</span>
+          </div>
+          <h3 class="hobby-2d-title">Modular Synth &amp; Audio DSP</h3>
+          <p class="hobby-2d-desc">
+            Fascinated by Fourier transforms, envelope oscillators, and acoustic feedback. Engineered the procedural Web Audio synthesizer powering this portfolio's cybernetic sonics.
+          </p>
+        </div>
+
+        <div class="hobby-2d-card">
+          <div class="hobby-2d-top">
+            <span class="hobby-2d-icon">📚</span>
+            <span class="hobby-2d-cat">Research &amp; Reading</span>
+          </div>
+          <h3 class="hobby-2d-title">arXiv Deep Tech Paper Reading</h3>
+          <p class="hobby-2d-desc">
+            Reading arXiv preprints across transformer backbones, decentralized federated learning, and branching processes. Writing annotated summaries and building minimal reproduction repos.
+          </p>
+        </div>
+
+        <div class="hobby-2d-card">
+          <div class="hobby-2d-top">
+            <span class="hobby-2d-icon">🏋️‍♂️</span>
+            <span class="hobby-2d-cat">Physical Discipline</span>
+          </div>
+          <h3 class="hobby-2d-title">Calisthenics &amp; Progressive Overload</h3>
+          <p class="hobby-2d-desc">
+            Daily discipline and bodyweight control. Progressive overload serves as my physical metaphor for iterative model training — gradual, compounding improvements lead to breakthrough performance.
+          </p>
+        </div>
+
+        <div class="hobby-2d-card">
+          <div class="hobby-2d-top">
+            <span class="hobby-2d-icon">☕</span>
+            <span class="hobby-2d-cat">Focus Rituals</span>
+          </div>
+          <h3 class="hobby-2d-title">Specialty Coffee &amp; Morning Flow</h3>
+          <p class="hobby-2d-desc">
+            Aeropress dialing-in, zero-distraction 5:30 AM coding blocks, and ambient synthwave playlists to enter uninterrupted deep work states.
+          </p>
+        </div>
+
+        <div class="hobby-2d-card">
+          <div class="hobby-2d-top">
+            <span class="hobby-2d-icon">🌌</span>
+            <span class="hobby-2d-cat">Cosmic Systems</span>
+          </div>
+          <h3 class="hobby-2d-title">Astrophysics &amp; Orbital Mechanics</h3>
+          <p class="hobby-2d-desc">
+            Captivated by N-body gravity simulations, orbital trajectories, and cosmic coordinate systems — the primary inspiration behind this portfolio's 3D universe.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 04: SKILLS MATRIX ── -->
+    <section class="sec-2d" id="sec-2d-skills">
+      <header class="sec-2d-header">
+        <div class="sec-2d-tag-row">
+          <span class="sec-2d-code">04 // VERIFIED COMPETENCIES</span>
+          <span class="sec-2d-badge">SKILLS MATRIX</span>
+        </div>
+        <h2 class="sec-2d-title">Technical Mastery &amp; Toolchain</h2>
+        <p class="sec-2d-desc">
+          Proficiency benchmarks across machine learning frameworks, programming languages, web systems, and mathematics.
+        </p>
+      </header>
+
+      <!-- Category Filter Tabs -->
+      <div class="skills-2d-filter" id="skills-2d-filter">
+        <button class="skills-2d-tab-btn active" data-skill-cat="all">ALL SKILLS (12)</button>
+        <button class="skills-2d-tab-btn" data-skill-cat="ai">AI &amp; DEEP LEARNING</button>
+        <button class="skills-2d-tab-btn" data-skill-cat="languages">LANGUAGES</button>
+        <button class="skills-2d-tab-btn" data-skill-cat="web">FULL-STACK &amp; CLOUD</button>
+        <button class="skills-2d-tab-btn" data-skill-cat="stats">STATISTICS &amp; TOOLS</button>
+      </div>
+
+      <div class="skills-2d-grid" id="skills-2d-grid">
+        <!-- PyTorch -->
+        <div class="skill-2d-card" data-cat="ai">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">⚡ PyTorch &amp; Deep Learning</span>
+            <span class="skill-2d-exp">3+ Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 92%"></div></div>
+          <div class="skill-2d-meta">
+            <span>CNNs, Transformers, Optimization</span>
+            <span class="skill-2d-pct">92%</span>
+          </div>
+        </div>
+
+        <!-- Computer Vision -->
+        <div class="skill-2d-card" data-cat="ai">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">👁️ Computer Vision &amp; ChangeFormer</span>
+            <span class="skill-2d-exp">2+ Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 90%"></div></div>
+          <div class="skill-2d-meta">
+            <span>Siamese Encoders, Segmentation, OpenCV</span>
+            <span class="skill-2d-pct">90%</span>
+          </div>
+        </div>
+
+        <!-- Federated Learning -->
+        <div class="skill-2d-card" data-cat="ai">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">🔒 Federated Learning (Flower / flwr)</span>
+            <span class="skill-2d-exp">2 Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 88%"></div></div>
+          <div class="skill-2d-meta">
+            <span>FedAvg, Non-IID Skew, Privacy AI</span>
+            <span class="skill-2d-pct">88%</span>
+          </div>
+        </div>
+
+        <!-- Python -->
+        <div class="skill-2d-card" data-cat="languages">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">🐍 Python 3.11+</span>
+            <span class="skill-2d-exp">4+ Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 95%"></div></div>
+          <div class="skill-2d-meta">
+            <span>NumPy, Pandas, SciPy, AsyncIO</span>
+            <span class="skill-2d-pct">95%</span>
+          </div>
+        </div>
+
+        <!-- TypeScript & JavaScript -->
+        <div class="skill-2d-card" data-cat="languages">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">🔷 TypeScript &amp; Modern JS</span>
+            <span class="skill-2d-exp">3+ Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 90%"></div></div>
+          <div class="skill-2d-meta">
+            <span>Strict Typing, Generics, Node.js runtime</span>
+            <span class="skill-2d-pct">90%</span>
+          </div>
+        </div>
+
+        <!-- React & Next.js -->
+        <div class="skill-2d-card" data-cat="web">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">⚛️ React 19 &amp; Next.js 16</span>
+            <span class="skill-2d-exp">3+ Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 88%"></div></div>
+          <div class="skill-2d-meta">
+            <span>Server Components, App Router, Hooks</span>
+            <span class="skill-2d-pct">88%</span>
+          </div>
+        </div>
+
+        <!-- Electron & Desktop -->
+        <div class="skill-2d-card" data-cat="web">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">💻 Electron &amp; Desktop Engineering</span>
+            <span class="skill-2d-exp">2 Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 82%"></div></div>
+          <div class="skill-2d-meta">
+            <span>IPC Bridges, Prisma SQLite, Native Packaging</span>
+            <span class="skill-2d-pct">82%</span>
+          </div>
+        </div>
+
+        <!-- Node.js & Prisma -->
+        <div class="skill-2d-card" data-cat="web">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">🟢 Node.js &amp; Prisma ORM</span>
+            <span class="skill-2d-exp">3 Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 85%"></div></div>
+          <div class="skill-2d-meta">
+            <span>REST APIs, PostgreSQL, SQLite, Microservices</span>
+            <span class="skill-2d-pct">85%</span>
+          </div>
+        </div>
+
+        <!-- Inferential Statistics -->
+        <div class="skill-2d-card" data-cat="stats">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">📐 Inferential Statistics &amp; Hypothesis Testing</span>
+            <span class="skill-2d-exp">3+ Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 92%"></div></div>
+          <div class="skill-2d-meta">
+            <span>Two-Sample T-Tests, ANOVA, Power Analysis</span>
+            <span class="skill-2d-pct">92%</span>
+          </div>
+        </div>
+
+        <!-- Stochastic Modeling -->
+        <div class="skill-2d-card" data-cat="stats">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">🎲 Monte Carlo &amp; Stochastic Processes</span>
+            <span class="skill-2d-exp">2+ Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 89%"></div></div>
+          <div class="skill-2d-meta">
+            <span>Galton-Watson Branching, Merton Diffusion</span>
+            <span class="skill-2d-pct">89%</span>
+          </div>
+        </div>
+
+        <!-- Cloud & Docker -->
+        <div class="skill-2d-card" data-cat="stats">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">☁️ AWS Cloud &amp; Docker Containers</span>
+            <span class="skill-2d-exp">2 Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 82%"></div></div>
+          <div class="skill-2d-meta">
+            <span>EC2, S3, Docker Compose, CI/CD</span>
+            <span class="skill-2d-pct">82%</span>
+          </div>
+        </div>
+
+        <!-- Three.js & WebGL -->
+        <div class="skill-2d-card" data-cat="web">
+          <div class="skill-2d-top">
+            <span class="skill-2d-name">🌐 Three.js, WebGL &amp; Web Audio</span>
+            <span class="skill-2d-exp">2+ Years</span>
+          </div>
+          <div class="skill-2d-bar-bg"><div class="skill-2d-bar-fill" style="width: 85%"></div></div>
+          <div class="skill-2d-meta">
+            <span>Shaders, Particle Sim, Procedural Audio DSP</span>
+            <span class="skill-2d-pct">85%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 05: PRODUCTION & RESEARCH REPOSITORIES ── -->
+    <section class="sec-2d" id="sec-2d-projects">
+      <header class="sec-2d-header">
+        <div class="sec-2d-tag-row">
+          <span class="sec-2d-code">05 // PRODUCTION REPOSITORIES</span>
+          <span class="sec-2d-badge">13 OPEN-SOURCE PROJECTS</span>
+        </div>
+        <h2 class="sec-2d-title">Featured Projects &amp; Research Software</h2>
+        <p class="sec-2d-desc">
+          Filter through all 13 deployed repositories. Includes embedded interactive client-side model simulators for live exploration.
+        </p>
+      </header>
+
+      <!-- Category Filter Pills -->
+      <div class="projects-2d-filter" id="projects-2d-filter">
+        <button class="projects-2d-pill active" data-pfilter="all">ALL PROJECTS (13)</button>
+        <button class="projects-2d-pill" data-pfilter="ai">AI &amp; DEEP LEARNING</button>
+        <button class="projects-2d-pill" data-pfilter="stats">INFERENTIAL STATS</button>
+        <button class="projects-2d-pill" data-pfilter="systems">SYSTEMS &amp; CLOUD</button>
+      </div>
+
+      <div class="projects-2d-grid" id="projects-2d-grid">
+        
+        <!-- R5: SIH ChangeFormer (AI) with Live Slider -->
+        <article class="project-2d-card" data-domain="ai">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R5 // SIH2024</span>
+            <span class="p2d-badge">VISION TRANSFORMER</span>
+          </div>
+          <h3 class="p2d-title">SIH ChangeFormer Earth Observation</h3>
+          <p class="p2d-summary">
+            Siamese Vision Transformer encoder (ChangeFormerV6) built for the Smart India Hackathon to perform automated bitemporal change detection across satellite imagery.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">PyTorch</span>
+            <span class="p2d-tech-chip">Vision Transformers</span>
+            <span class="p2d-tech-chip">OpenCV</span>
+            <span class="p2d-tech-chip">NumPy</span>
+          </div>
+
+          <!-- Interactive Client-side Sandbox Drawer -->
+          <div class="sandbox-2d-drawer">
+            <div class="sandbox-2d-header">
+              <span>LIVE INFERENCE: SATELLITE THRESHOLD</span>
+              <span id="p2d-cf-badge" style="color:#10b981">OPTIMAL: 0.55</span>
+            </div>
+            <div class="sandbox-2d-ctrls">
+              <div class="sandbox-slider-row">
+                <span class="sandbox-slider-lbl">Confidence:</span>
+                <input type="range" class="sandbox-slider-input" id="p2d-cf-slider" min="0.10" max="0.95" step="0.05" value="0.55">
+                <span class="sandbox-slider-val" id="p2d-cf-val">0.55</span>
+              </div>
+              <div class="sandbox-res-metric">
+                <span>Validation F1 Score:</span>
+                <strong id="p2d-cf-f1">0.978 (Peak SIH)</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">Accuracy: 97.8% &bull; Bitemporal Optical/SAR</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/SIH" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-sih">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R6: Federated Learning (AI) with Live Slider -->
+        <article class="project-2d-card" data-domain="ai">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R6 // PRIVACY AI</span>
+            <span class="p2d-badge">FEDERATED LEARNING</span>
+          </div>
+          <h3 class="p2d-title">Federated Learning with Flower &amp; PyTorch</h3>
+          <p class="p2d-summary">
+            Decentralized neural network training across edge nodes using Flower (flwr) and PyTorch. Preserves raw user data privacy while aggregating model weight updates via FedAvg.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">Flower (flwr)</span>
+            <span class="p2d-tech-chip">PyTorch</span>
+            <span class="p2d-tech-chip">FedAvg</span>
+            <span class="p2d-tech-chip">Privacy AI</span>
+          </div>
+
+          <!-- Interactive Client-side Sandbox Drawer -->
+          <div class="sandbox-2d-drawer">
+            <div class="sandbox-2d-header">
+              <span>FEDAVG CONVERGENCE SIMULATOR</span>
+              <span id="p2d-fl-status" style="color:#00f0ff">ROUNDS: 25</span>
+            </div>
+            <div class="sandbox-2d-ctrls">
+              <div class="sandbox-slider-row">
+                <span class="sandbox-slider-lbl">Edge Rounds:</span>
+                <input type="range" class="sandbox-slider-input" id="p2d-fl-slider" min="1" max="50" step="1" value="25">
+                <span class="sandbox-slider-val" id="p2d-fl-val">25</span>
+              </div>
+              <div class="sandbox-res-metric">
+                <span>Model Global Accuracy:</span>
+                <strong id="p2d-fl-acc">98.4% (Converged)</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">25 Rounds &bull; Zero Raw Data Leakage</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/federated_learning" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-fl">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R12: Stochastic Startup Valuation (Stats) with Live Slider -->
+        <article class="project-2d-card" data-domain="stats">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R12 // QUANT MATH</span>
+            <span class="p2d-badge">STOCHASTIC VALUATION</span>
+          </div>
+          <h3 class="p2d-title">Galton-Watson Stochastic Startup Valuation</h3>
+          <p class="p2d-summary">
+            Mathematical modeling suite applying Galton-Watson branching processes and Merton jump-diffusion to model early-stage venture survival and probabilistic valuations.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">Python</span>
+            <span class="p2d-tech-chip">Monte Carlo</span>
+            <span class="p2d-tech-chip">NumPy</span>
+            <span class="p2d-tech-chip">SciPy</span>
+          </div>
+
+          <!-- Interactive Client-side Sandbox Drawer -->
+          <div class="sandbox-2d-drawer">
+            <div class="sandbox-2d-header">
+              <span>MONTE CARLO SURVIVAL MODEL</span>
+              <span id="p2d-mc-badge" style="color:#facc15">PATHS: 10,000</span>
+            </div>
+            <div class="sandbox-2d-ctrls">
+              <div class="sandbox-slider-row">
+                <span class="sandbox-slider-lbl">Sim Paths:</span>
+                <input type="range" class="sandbox-slider-input" id="p2d-mc-slider" min="1000" max="25000" step="1000" value="10000">
+                <span class="sandbox-slider-val" id="p2d-mc-val">10k</span>
+              </div>
+              <div class="sandbox-res-metric">
+                <span>Estimated 5-Yr Survival:</span>
+                <strong id="p2d-mc-prob">18.4% &bull; Valuation: $14.2M</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">10k Paths &bull; Merton Jump-Diffusion</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/startup_valuation" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-startupval">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R1: IPL Auction Analytics (AI/Stats) with Live Slider -->
+        <article class="project-2d-card" data-domain="ai">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R1 // PREDICTIVE ML</span>
+            <span class="p2d-badge">AUCTION ANALYTICS</span>
+          </div>
+          <h3 class="p2d-title">IPL Auction Predictive Analytics</h3>
+          <p class="p2d-summary">
+            Machine learning pipeline analyzing historical player performance, batting strike rates, bowling economies, and franchise bidding strategies to discover undervalued talent.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">Python</span>
+            <span class="p2d-tech-chip">Pandas</span>
+            <span class="p2d-tech-chip">Scikit-Learn</span>
+            <span class="p2d-tech-chip">Matplotlib</span>
+          </div>
+
+          <!-- Interactive Client-side Sandbox Drawer -->
+          <div class="sandbox-2d-drawer">
+            <div class="sandbox-2d-header">
+              <span>PLAYER VALUATION BENCHMARK</span>
+              <span id="p2d-ipl-badge" style="color:#00f0ff">STRIKE RATE: 145</span>
+            </div>
+            <div class="sandbox-2d-ctrls">
+              <div class="sandbox-slider-row">
+                <span class="sandbox-slider-lbl">Strike Rate:</span>
+                <input type="range" class="sandbox-slider-input" id="p2d-ipl-slider" min="110" max="185" step="5" value="145">
+                <span class="sandbox-slider-val" id="p2d-ipl-val">145</span>
+              </div>
+              <div class="sandbox-res-metric">
+                <span>Predicted Clearing Price:</span>
+                <strong id="p2d-ipl-bid">₹ 7.85 Cr (Tier 1 Match-Winner)</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">1,200+ Players &bull; R² = 0.84</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/ipl_auction" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-ipl">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R2: 2-Sample T-Test (Stats) -->
+        <article class="project-2d-card" data-domain="stats">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R2 // INFERENTIAL STATS</span>
+            <span class="p2d-badge">HYPOTHESIS TESTING</span>
+          </div>
+          <h3 class="p2d-title">2-Sample T-Test Inferential Suite</h3>
+          <p class="p2d-summary">
+            End-to-end automated deployment for two-sample t-tests, variance diagnostics, normality evaluations, and confidence intervals.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">Python</span>
+            <span class="p2d-tech-chip">SciPy</span>
+            <span class="p2d-tech-chip">Statsmodels</span>
+            <span class="p2d-tech-chip">HTML5 / CSS3</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">Latency: &lt; 35ms &bull; α = 0.05 Threshold</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/2_sample_ttest_deployment" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-ttest">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R3: Job Track AI (Systems) -->
+        <article class="project-2d-card" data-domain="systems">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R3 // FULL-STACK</span>
+            <span class="p2d-badge">CAREER PLATFORM</span>
+          </div>
+          <h3 class="p2d-title">Job Track AI Platform</h3>
+          <p class="p2d-summary">
+            Intelligent career opportunity tracker and application analytics platform utilizing AI parsing for job listings and resume alignment.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">React</span>
+            <span class="p2d-tech-chip">TypeScript</span>
+            <span class="p2d-tech-chip">Node.js</span>
+            <span class="p2d-tech-chip">AI APIs</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">Real-time Pipeline &bull; Full-Stack</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/Job_Track_AI" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-jobtrack">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R8: Karpathy Prompt Architect (AI) -->
+        <article class="project-2d-card" data-domain="ai">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R8 // GENAI BENCH</span>
+            <span class="p2d-badge">PROMPT ARCHITECT</span>
+          </div>
+          <h3 class="p2d-title">Karpathy 3-Layer Prompt Architect</h3>
+          <p class="p2d-summary">
+            Deterministic prompt formulation following Andrej Karpathy's 3-layer architecture: Formal Specification, Automated Verifier, and Execution Environment.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">LLM Systems</span>
+            <span class="p2d-tech-chip">TypeScript</span>
+            <span class="p2d-tech-chip">Prompt Verification</span>
+            <span class="p2d-tech-chip">JSON Schema</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">Accuracy: 94% &bull; Latency &lt; 650ms</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/Karpathy-prompt-generator" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-promptgen">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R10: Blitzit Focus Suite (Systems) -->
+        <article class="project-2d-card" data-domain="systems">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R10 // DESKTOP SUITE</span>
+            <span class="p2d-badge">DEEP WORK FOCUS</span>
+          </div>
+          <h3 class="p2d-title">Blitzit Desktop Focus &amp; Deep Work Suite</h3>
+          <p class="p2d-summary">
+            Modern desktop productivity client featuring micro-sprint task management, daily cadence timers, and local-first SQLite persistence via Prisma.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">Electron</span>
+            <span class="p2d-tech-chip">Next.js 16</span>
+            <span class="p2d-tech-chip">Prisma</span>
+            <span class="p2d-tech-chip">SQLite</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">Zero-Cloud Dependency &bull; Sub-10ms UI</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/blitzit_landing_page" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-blitzit">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R4: ISP Performance (Systems) -->
+        <article class="project-2d-card" data-domain="systems">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R4 // TELEMETRY</span>
+            <span class="p2d-badge">NETWORK MONITOR</span>
+          </div>
+          <h3 class="p2d-title">ISP Bandwidth &amp; Latency Monitor</h3>
+          <p class="p2d-summary">
+            Continuous telemetry pipeline capturing latency jitter, packet loss, and bandwidth speeds to diagnose Internet Service Provider reliability.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">Python</span>
+            <span class="p2d-tech-chip">Socket</span>
+            <span class="p2d-tech-chip">Pandas</span>
+            <span class="p2d-tech-chip">Dash</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">Granularity: 10s &bull; Auto-Failover Alerts</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/ISP" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-isp">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R7: NMIMS Academics Suite (Systems) -->
+        <article class="project-2d-card" data-domain="systems">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R7 // DATA PLATFORM</span>
+            <span class="p2d-badge">ACADEMIC SUITE</span>
+          </div>
+          <h3 class="p2d-title">NMIMS Academics Intelligence Suite</h3>
+          <p class="p2d-summary">
+            Centralized academic repository and knowledge retrieval platform organizing university course materials, lecture notes, and syllabus tracking.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">JavaScript</span>
+            <span class="p2d-tech-chip">HTML5</span>
+            <span class="p2d-tech-chip">CSS3</span>
+            <span class="p2d-tech-chip">Markdown</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">4+ Semesters &bull; 25+ Course Modules</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/NMIMS_Academics" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-nmims">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R9: College ERP Suite (Systems) -->
+        <article class="project-2d-card" data-domain="systems">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R9 // ENTERPRISE ERP</span>
+            <span class="p2d-badge">INSTITUTIONAL PORTAL</span>
+          </div>
+          <h3 class="p2d-title">College ERP Management Portal</h3>
+          <p class="p2d-summary">
+            Comprehensive institutional portal for student enrollment, faculty course allotment, grading records, and timetable scheduling.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">React</span>
+            <span class="p2d-tech-chip">Node.js</span>
+            <span class="p2d-tech-chip">Express</span>
+            <span class="p2d-tech-chip">PostgreSQL</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">Role-Based Access &bull; Relational Schema</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/college_ERP" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-erp">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R11: Spider Universe Portfolio (Systems) -->
+        <article class="project-2d-card" data-domain="systems">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R11 // GRAPHICS &amp; DSP</span>
+            <span class="p2d-badge">SPIDER UNIVERSE</span>
+          </div>
+          <h3 class="p2d-title">Aarav Shah Spider Universe Portfolio</h3>
+          <p class="p2d-summary">
+            The flagship dual-engine interactive universe combining WebGL 3D volumetric particles, procedural arachnid silk cable mathematics, and procedural Web Audio sonics.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">Three.js</span>
+            <span class="p2d-tech-chip">Canvas2D</span>
+            <span class="p2d-tech-chip">Web Audio API</span>
+            <span class="p2d-tech-chip">Vanilla JS</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">60 FPS Render &bull; 0 Dependencies</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/Portfolio" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="nexus">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- R13: Research Vault (Stats/AI) -->
+        <article class="project-2d-card" data-domain="stats">
+          <div class="p2d-top-row">
+            <span class="p2d-code">R13 // KNOWLEDGE VAULT</span>
+            <span class="p2d-badge">ACADEMIC RESEARCH</span>
+          </div>
+          <h3 class="p2d-title">Personal Academic Research &amp; Code Vault</h3>
+          <p class="p2d-summary">
+            Curated archive of algorithm implementations, mathematical proofs, paper annotations, and experimental sandboxes across machine learning and statistical modeling.
+          </p>
+          <div class="p2d-tech-row">
+            <span class="p2d-tech-chip">LaTeX</span>
+            <span class="p2d-tech-chip">Jupyter</span>
+            <span class="p2d-tech-chip">Python</span>
+            <span class="p2d-tech-chip">Markdown</span>
+          </div>
+          <div class="p2d-footer-row">
+            <div class="p2d-metrics-preview">50+ Papers &bull; Minimal Reproductions</div>
+            <div class="p2d-links-group">
+              <a href="https://github.com/A101shah/Aarav_shah" target="_blank" rel="noopener noreferrer" class="p2d-btn p2d-btn--primary">GitHub</a>
+              <button class="p2d-btn p2d-jump-3d" data-target="repo-academic">Inspect 3D</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ── SECTION 06: THOUGHT LEADERSHIP & LINKEDIN WRITING ── -->
+    <section class="sec-2d" id="sec-2d-thought">
+      <header class="sec-2d-header">
+        <div class="sec-2d-tag-row">
+          <span class="sec-2d-code">06 // THOUGHT LEADERSHIP</span>
+          <span class="sec-2d-badge">LINKEDIN ARTICLES</span>
+        </div>
+        <h2 class="sec-2d-title">Technical Writing &amp; Architecture Essays</h2>
+        <p class="sec-2d-desc">
+          Deep dives into decentralized machine learning, prompt verification specifications, computer vision transformers, and statistical integrity.
+        </p>
+      </header>
+
+      <div class="articles-2d-grid">
+        <!-- Post 1 -->
+        <article class="article-2d-card">
+          <div class="article-2d-meta">
+            <span class="article-2d-date">October 2024</span>
+            <span class="article-2d-topic">Decentralized AI &amp; Privacy</span>
+          </div>
+          <h3 class="article-2d-title">Demystifying Federated Learning: Training Neural Networks Without Exposing Private Data</h3>
+          <p class="article-2d-excerpt">
+            Why transfer raw patient records or private mobile data to a centralized cloud when you can train locally on edge devices and aggregate only weight differentials? In this deep dive, I break down FedAvg with PyTorch and Flower (flwr), handling non-IID client label skews, and how our network converged in 25 rounds with zero raw data leakage.
+          </p>
+          <div class="article-2d-tags">
+            <span class="article-2d-tag">#FederatedLearning</span>
+            <span class="article-2d-tag">#MachineLearning</span>
+            <span class="article-2d-tag">#PrivacyAI</span>
+            <span class="article-2d-tag">#PyTorch</span>
+          </div>
+          <div class="article-2d-footer">
+            <div class="article-2d-stats">
+              <span>👍 420+ Likes</span>
+              <span>💬 38 Comments</span>
+            </div>
+            <a href="https://www.linkedin.com/in/aarav-shah-681641275/" target="_blank" rel="noopener noreferrer" class="article-2d-link">
+              <span>Discuss on LinkedIn</span> &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- Post 2 -->
+        <article class="article-2d-card">
+          <div class="article-2d-meta">
+            <span class="article-2d-date">September 2024</span>
+            <span class="article-2d-topic">Generative AI Systems</span>
+          </div>
+          <h3 class="article-2d-title">From Karpathy's 3-Layer Philosophy to Production Prompt Engineering: Spec, Verifier, Environment</h3>
+          <p class="article-2d-excerpt">
+            Prompt engineering shouldn't be vague natural language gambling. By structuring prompts into a formal Specification, an automated Verification step, and a strict Execution Environment, we elevated first-shot LLM code generation accuracy from 62% to 94% across multi-turn workflows.
+          </p>
+          <div class="article-2d-tags">
+            <span class="article-2d-tag">#GenerativeAI</span>
+            <span class="article-2d-tag">#PromptEngineering</span>
+            <span class="article-2d-tag">#LLMs</span>
+            <span class="article-2d-tag">#Architecture</span>
+          </div>
+          <div class="article-2d-footer">
+            <div class="article-2d-stats">
+              <span>👍 385+ Likes</span>
+              <span>💬 42 Comments</span>
+            </div>
+            <a href="https://www.linkedin.com/in/aarav-shah-681641275/" target="_blank" rel="noopener noreferrer" class="article-2d-link">
+              <span>Discuss on LinkedIn</span> &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- Post 3 -->
+        <article class="article-2d-card">
+          <div class="article-2d-meta">
+            <span class="article-2d-date">August 2024</span>
+            <span class="article-2d-topic">Computer Vision &amp; SIH</span>
+          </div>
+          <h3 class="article-2d-title">Smart India Hackathon: Deploying ChangeFormer for Satellite Earth Observation</h3>
+          <p class="article-2d-excerpt">
+            Detecting environmental change across bitemporal satellite tiles is fraught with seasonal foliage shifts, illumination changes, and atmospheric distortion. Sharing our architectural insights using Siamese Vision Transformer encoders (ChangeFormerV6) achieving 97.8% validation accuracy for optical and SAR Earth imagery.
+          </p>
+          <div class="article-2d-tags">
+            <span class="article-2d-tag">#SIH2024</span>
+            <span class="article-2d-tag">#ComputerVision</span>
+            <span class="article-2d-tag">#Transformers</span>
+            <span class="article-2d-tag">#DeepLearning</span>
+          </div>
+          <div class="article-2d-footer">
+            <div class="article-2d-stats">
+              <span>👍 610+ Likes</span>
+              <span>💬 54 Comments</span>
+            </div>
+            <a href="https://www.linkedin.com/in/aarav-shah-681641275/" target="_blank" rel="noopener noreferrer" class="article-2d-link">
+              <span>Discuss on LinkedIn</span> &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- Post 4 -->
+        <article class="article-2d-card">
+          <div class="article-2d-meta">
+            <span class="article-2d-date">July 2024</span>
+            <span class="article-2d-topic">Mathematical Rigor</span>
+          </div>
+          <h3 class="article-2d-title">Why Pure Machine Learning Fails Without Sound Inferential Statistics</h3>
+          <p class="article-2d-excerpt">
+            A high test R² or 95% accuracy score means very little if your evaluation dataset suffers from selection bias or violated independence assumptions. Why every data science practitioner needs rigorous two-sample hypothesis testing, Cohen's d effect size benchmarking, and power analysis before deploying models to production.
+          </p>
+          <div class="article-2d-tags">
+            <span class="article-2d-tag">#Statistics</span>
+            <span class="article-2d-tag">#DataScience</span>
+            <span class="article-2d-tag">#HypothesisTesting</span>
+            <span class="article-2d-tag">#Python</span>
+          </div>
+          <div class="article-2d-footer">
+            <div class="article-2d-stats">
+              <span>👍 290+ Likes</span>
+              <span>💬 27 Comments</span>
+            </div>
+            <a href="https://www.linkedin.com/in/aarav-shah-681641275/" target="_blank" rel="noopener noreferrer" class="article-2d-link">
+              <span>Discuss on LinkedIn</span> &rarr;
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ── SECTION 07: INTERACTIVE DEVELOPER CONSOLE ── -->
+    <section class="sec-2d" id="sec-2d-terminal">
+      <header class="sec-2d-header">
+        <div class="sec-2d-tag-row">
+          <span class="sec-2d-code">07 // DEVELOPER CONSOLE</span>
+          <span class="sec-2d-badge">INTERACTIVE CLI</span>
+        </div>
+        <h2 class="sec-2d-title">Interactive Terminal Interface</h2>
+        <p class="sec-2d-desc">
+          Direct terminal access for engineers and evaluators. Type <code style="color:#00f0ff">help</code>, <code style="color:#00f0ff">whoami</code>, <code style="color:#00f0ff">projects</code>, <code style="color:#00f0ff">skills</code>, or <code style="color:#00f0ff">3d</code> to query the system.
+        </p>
+      </header>
+
+      <div class="terminal-2d-wrap">
+        <div class="term-2d-titlebar">
+          <div class="term-2d-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="mono text-xs" style="color: #94a3b8">aarav@nexus: ~/portfolio-v2.6.4</span>
+          <span class="mono text-xs" style="color: #10b981">ONLINE</span>
+        </div>
+        <div class="term-2d-body" id="term-2d-output">
+          <p style="color:#94a3b8">// QUANTUM NEXUS CLI &bull; ARCHITECTURE WORKSTATION</p>
+          <p style="color:#38bdf8">Type <span style="color:#00f0ff;font-weight:700">help</span> to view available commands, or <span style="color:#00f0ff;font-weight:700">3d</span> to launch the 3D Spider Web.</p>
+        </div>
+        <form class="term-2d-input-row" id="term-2d-form" autocomplete="off">
+          <span class="term-2d-prompt">aarav@nexus:~$</span>
+          <input type="text" class="term-2d-input" id="term-2d-input" placeholder="Type command here (e.g. help, whoami, projects, 3d)..." spellcheck="false">
+        </form>
+      </div>
+    </section>
+
+    <!-- ── SECTION 08: TRANSMIT SIGNAL & CONTACT ── -->
+    <section class="sec-2d" id="sec-2d-contact">
+      <header class="sec-2d-header">
+        <div class="sec-2d-tag-row">
+          <span class="sec-2d-code">08 // TRANSMIT SIGNAL</span>
+          <span class="sec-2d-badge">DIRECT COMMUNICATION</span>
+        </div>
+        <h2 class="sec-2d-title">Connect &amp; Collaborate</h2>
+        <p class="sec-2d-desc">
+          Open to full-time roles, machine learning research collaborations, and ambitious engineering challenges.
+        </p>
+      </header>
+
+      <div class="contact-2d-grid">
+        <!-- Contact Form -->
+        <form class="contact-2d-form" id="contact-2d-form">
+          <div class="c2d-field">
+            <label class="c2d-label" for="c2d-name">SENDER NAME / ORGANIZATION</label>
+            <input type="text" id="c2d-name" class="c2d-input" placeholder="e.g. Elena Rostova / DeepMind" required>
+          </div>
+          <div class="c2d-field">
+            <label class="c2d-label" for="c2d-email">RETURN EMAIL ADDRESS</label>
+            <input type="email" id="c2d-email" class="c2d-input" placeholder="e.g. elena@research.org" required>
+          </div>
+          <div class="c2d-field">
+            <label class="c2d-label" for="c2d-subject">TOPIC / MISSION OBJECTIVE</label>
+            <input type="text" id="c2d-subject" class="c2d-input" placeholder="e.g. ML Engineering Role / Research Partnership">
+          </div>
+          <div class="c2d-field">
+            <label class="c2d-label" for="c2d-message">TRANSMISSION BODY</label>
+            <textarea id="c2d-message" class="c2d-textarea" rows="4" placeholder="Brief project scope, timeline, and collaboration details..." required></textarea>
+          </div>
+          <button type="submit" class="footer-2d-warp-btn" style="width:100%;justify-content:center;margin-top:0.5rem">
+            <span>TRANSMIT ENCRYPTED MESSAGE</span> &rarr;
+          </button>
+          <div id="c2d-feedback" class="mono text-xs" style="text-align:center;min-height:1rem;color:#10b981"></div>
+        </form>
+
+        <!-- Direct Verified Channels -->
+        <div class="c2d-channels-card">
+          <h3 style="font-family:var(--font-display);font-size:1.1rem;color:#ffffff;margin-bottom:0.5rem">Verified Channels</h3>
+          
+          <a href="mailto:shahaarav602@gmail.com" class="c2d-channel-item">
+            <span class="c2d-ch-icon">✉️</span>
+            <div class="c2d-ch-meta">
+              <strong>Direct Email</strong>
+              <span>shahaarav602@gmail.com</span>
+            </div>
+          </a>
+
+          <a href="https://www.linkedin.com/in/aarav-shah-681641275/" target="_blank" rel="noopener noreferrer" class="c2d-channel-item">
+            <span class="c2d-ch-icon">💼</span>
+            <div class="c2d-ch-meta">
+              <strong>LinkedIn Network</strong>
+              <span>linkedin.com/in/aarav-shah-681641275</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/A101shah" target="_blank" rel="noopener noreferrer" class="c2d-channel-item">
+            <span class="c2d-ch-icon">🐙</span>
+            <div class="c2d-ch-meta">
+              <strong>GitHub Repositories</strong>
+              <span>github.com/A101shah</span>
+            </div>
+          </a>
+
+          <div class="c2d-channel-item" style="cursor:default">
+            <span class="c2d-ch-icon">📍</span>
+            <div class="c2d-ch-meta">
+              <strong>Primary Station</strong>
+              <span>Mumbai [19.0760° N, 72.8777° E] &bull; IST</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D Warp Callout Footer Banner -->
+      <div class="footer-2d-cta">
+        <div class="footer-2d-inner">
+          <span class="sec-2d-code">// DUAL-EXPERIENCE SYSTEM</span>
+          <h3 class="footer-2d-title">Ready for the 3D Spider Web Universe?</h3>
+          <p class="footer-2d-desc">
+            Explore all 13 repositories mapped across organic silk cables, interactive tension physics, and dynamic Web Audio spatial nodes.
+          </p>
+          <button class="footer-2d-warp-btn" id="footer-2d-warp-btn">
+            <span>INITIALIZE 3D UNIVERSE [W]</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+          <div class="footer-2d-copy">
+            AARAV SHAH &bull; HIGH-INTEGRITY MACHINE LEARNING &amp; FULL-STACK SYSTEMS &bull; 2026
+          </div>
+        </div>
+      </div>
+    </main>
   </section>
 
   <!-- 3D Three.js WebGL Hologram & Universe Canvas -->
@@ -241,6 +1378,14 @@
         </span>
         <span class="dock-btn-label">LINKEDIN &amp; ABOUT</span>
         <kbd class="dock-kbd">L</kbd>
+      </button>
+
+      <button class="dock-btn dock-btn--cyan" id="btn-switch-2d" title="Switch to 2D Normal Portfolio View (Hotkey: V)" aria-label="Switch to 2D Normal Portfolio View">
+        <span class="dock-btn-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        </span>
+        <span class="dock-btn-label">2D VIEW</span>
+        <kbd class="dock-kbd">V</kbd>
       </button>
     </div>
 
@@ -649,13 +1794,13 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/portfolio-data.js?v=28"></script>
-  <script src="js/audio-effects.js?v=28"></script>
+  <script src="js/portfolio-data.js?v=29"></script>
+  <script src="js/audio-effects.js?v=29"></script>
   <script src="js/three.min.js"></script>
-  <script src="js/three-universe.js?v=28"></script>
-  <script src="js/spider-web.js?v=28"></script>
-  <script src="js/landing.js?v=28"></script>
-  <script src="js/interactive-terminal.js?v=28"></script>
-  <script src="js/main.js?v=28"></script>
+  <script src="js/three-universe.js?v=29"></script>
+  <script src="js/spider-web.js?v=29"></script>
+  <script src="js/landing.js?v=29"></script>
+  <script src="js/interactive-terminal.js?v=29"></script>
+  <script src="js/main.js?v=29"></script>
 </body>
 </html>
