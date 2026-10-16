@@ -13,15 +13,16 @@ const PortfolioData = {
     status: "OPEN TO COLLABORATION & ROLES",
     avatar: "assets/images/avatar.jpg",
     bio: [
-      "I am a Data Science and Software Developer at NMIMS passionate about designing intelligent computational systems, statistical deployments, and modern web architectures.",
-      "With hands-on experience across Generative AI prompt architecture, Federated Learning, Computer Vision (satellite change detection), Cloud platforms (AWS), and full-stack web & desktop applications, I engineer reproducible, production-grade systems.",
-      "Continuously creating open-source software spanning AI prompt generators, academic intelligence suites, desktop productivity tools, and statistical valuation engines."
+      "I am a Data Science and Software Developer based in Mumbai, pursuing my degree at NMIMS (Narsee Monjee Institute of Management Studies).",
+      "My work centers on solving complex real-world challenges through first-principles mathematical rigor—from developing Siamese Vision Transformer encoders (ChangeFormerV6) for automated satellite change detection (Smart India Hackathon 2024, 97.8% validation accuracy) to decentralized privacy-preserving federated edge learning with PyTorch and Flower (flwr).",
+      "Beyond deep learning models, I build full-stack web and desktop applications using React, TypeScript, Node.js, and high-performance WebGL/Canvas graphics, ensuring complex quantitative workflows feel instantaneous, deterministic, and ergonomic for end users.",
+      "Continuously architecting reproducible open-source software, writing research paper dissections, and building tools that bridge theoretical statistics with production engineering."
     ],
     stats: [
-      { label: "Active Project Nodes", value: "13 Deployed" },
+      { label: "Flagship Research Systems", value: "2 Featured" },
       { label: "Core Competencies", value: "AI, ML & Full-Stack" },
       { label: "Academic Standing", value: "NMIMS MPSTME" },
-      { label: "Status", value: "Available" }
+      { label: "Status", value: "Available for Roles" }
     ],
     social: {
       github: "https://github.com/A101shah",

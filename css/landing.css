@@ -1531,6 +1531,56 @@
   gap: 0.45rem;
 }
 
+/* ── About Journey Story Grid ── */
+.about-story-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.story-card {
+  background: rgba(15, 22, 36, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 10px;
+  padding: 0.75rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: all 0.22s ease;
+}
+
+.story-card:hover {
+  background: rgba(20, 30, 48, 0.75);
+  border-color: rgba(0, 240, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 240, 255, 0.08);
+}
+
+.story-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.story-card-icon {
+  font-size: 1rem;
+}
+
+.story-card-title {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.story-card-desc {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  line-height: 1.42;
+}
+
 .stats-2d-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1869,6 +1919,89 @@
   color: #090d16;
   border-color: #00f0ff;
   box-shadow: 0 0 10px rgba(0, 240, 255, 0.35);
+}
+
+/* ── Flagship Archive Banner ── */
+.projects-archive-banner {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.75), rgba(20, 30, 50, 0.55));
+  border: 1px dashed rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+  padding: 0.95rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+
+.archive-banner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 580px;
+}
+
+.archive-banner-title {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.archive-banner-desc {
+  font-size: 0.73rem;
+  color: #94a3b8;
+  line-height: 1.38;
+}
+
+.archive-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.archive-banner-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.archive-banner-btn.primary {
+  color: #050508;
+  background: #00f0ff;
+  border: 1px solid #00f0ff;
+}
+
+.archive-banner-btn.primary:hover {
+  background: #38bdf8;
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.archive-banner-btn.secondary {
+  color: #f1f5f9;
+  background: rgba(30, 41, 59, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.archive-banner-btn.secondary:hover {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 /* ── 2D Terminal Section ── */
@@ -2524,6 +2657,10 @@
   }
 
   .projects-2d-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-story-grid {
     grid-template-columns: 1fr;
   }
 

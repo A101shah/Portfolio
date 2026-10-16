@@ -1264,11 +1264,13 @@ class LandingPortal {
       });
     }
 
-    // Launch 3D Universe buttons in 2D Dock and 2D Footer
+    // Launch 3D Universe buttons in 2D Dock, 2D Footer, and 2D Archive Banner
     const dockWarpBtn = document.getElementById("dock-2d-warp-btn");
     const footerWarpBtn = document.getElementById("footer-2d-warp-btn");
+    const bannerWarpBtn = document.getElementById("banner-warp-btn");
     if (dockWarpBtn) dockWarpBtn.addEventListener("click", () => this.triggerWarpEntrance());
     if (footerWarpBtn) footerWarpBtn.addEventListener("click", () => this.triggerWarpEntrance());
+    if (bannerWarpBtn) bannerWarpBtn.addEventListener("click", () => this.triggerWarpEntrance());
 
     // 3. Skills Matrix Category Filter
     const skillTabBtns = document.querySelectorAll(".skills-2d-tab-btn");
@@ -1430,14 +1432,14 @@ class LandingPortal {
               <div><span style="color:#00f0ff">3d</span>          - Launch organic 3D Spider Web universe</div>
               <div><span style="color:#00f0ff">clear</span>       - Clear terminal window</div>
             </div>`;
-        } else if (cmd === "whoami") {
+        } else if (cmd === "whoami" || cmd === "about" || cmd === "bio") {
           resHtml = `
-            <div style="color:#cbd5e1;padding-left:8px">
+            <div style="color:#cbd5e1;padding-left:8px;line-height:1.5">
               <div>OPERATOR: Aarav Shah (A101shah)</div>
-              <div>TITLE: Data Scientist & Full-Stack Architect</div>
-              <div>EDUCATION: NMIMS MPSTME, Mumbai</div>
-              <div>SPECIALIZATION: Deep Learning, Computer Vision, Federated Learning, Stochastic Valuation</div>
-              <div>STATUS: Ready for Production Engineering & Research Roles</div>
+              <div>TITLE: Data Scientist & Full-Stack Architect | NMIMS MPSTME, Mumbai</div>
+              <div>SPECIALIZATION: Computer Vision Transformers, Federated Learning, Stochastic Modeling, WebGL DSP</div>
+              <div>NARRATIVE: Pursuing Data Science & Software Engineering with a focus on first-principles mathematics, reproducible neural network training, and high-performance interactive interfaces.</div>
+              <div>STATUS: Open for Production Machine Learning & Full-Stack Roles</div>
             </div>`;
         } else if (cmd === "projects") {
           resHtml = `
