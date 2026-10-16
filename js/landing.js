@@ -1282,14 +1282,25 @@ class LandingPortal {
         updateDockVisibility();
 
         const sections = document.querySelectorAll(".sec-2d");
-        const scrollPos = this.container.scrollTop + 220;
+        const scrollPos = this.container.scrollTop + 180;
+        const sectionToNavMap = {
+          "sec-2d-about": "#sec-2d-about",
+          "sec-2d-human": "#sec-2d-about",
+          "sec-2d-hobbies": "#sec-2d-about",
+          "sec-2d-skills": "#sec-2d-skills",
+          "sec-2d-projects": "#sec-2d-projects",
+          "sec-2d-thought": "#sec-2d-thought",
+          "sec-2d-terminal": "#sec-2d-contact",
+          "sec-2d-contact": "#sec-2d-contact"
+        };
         sections.forEach(sec => {
           const top = sec.offsetTop;
           const height = sec.offsetHeight;
           const id = sec.getAttribute("id");
           if (scrollPos >= top && scrollPos < top + height) {
+            const activeNavHref = sectionToNavMap[id] || `#${id}`;
             navLinks.forEach(link => {
-              link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
+              link.classList.toggle("active", link.getAttribute("href") === activeNavHref);
             });
           }
         });

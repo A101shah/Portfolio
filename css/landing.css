@@ -1475,23 +1475,47 @@ body.page-scrolled .landing-bottom-bar,
 .dock-2d-links {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1.6rem;
 }
 
 .dock-2d-link {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.67rem;
-  font-weight: 500;
+  font-size: 0.72rem;
+  font-weight: 600;
   color: #94a3b8;
   text-decoration: none;
-  transition: all 0.2s ease;
-  letter-spacing: 0.03em;
+  transition: all 0.25s ease;
+  letter-spacing: 0.08em;
+  padding: 4px 2px;
+  position: relative;
 }
 
 .dock-2d-link:hover,
 .dock-2d-link.active {
   color: #00f0ff;
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.dock-2d-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #00f0ff;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #00f0ff;
+}
+
+.dock-kbd-mini {
+  font-size: 0.6rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(0, 240, 255, 0.15);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: #00f0ff;
+  margin-left: 4px;
 }
 
 .dock-2d-actions {
@@ -1567,22 +1591,20 @@ body.page-scrolled .landing-bottom-bar,
 }
 
 .sec-2d-code {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #00f0ff;
-  letter-spacing: 0.08em;
+  display: none !important;
 }
 
 .sec-2d-badge {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: rgba(0, 240, 255, 0.12);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  color: #00f0ff;
-  letter-spacing: 0.05em;
+  font-size: 0.64rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.28);
+  color: #38bdf8;
+  letter-spacing: 0.08em;
+  display: inline-block;
 }
 
 .sec-2d-title {
