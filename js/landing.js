@@ -529,6 +529,11 @@ class LandingPortal {
     this.warpStartTime = performance.now();
     this.warpDuration = 2200; // 2.2s total smooth organic weave
 
+    // Ensure executive dock is visible in 3D universe
+    document.body.classList.remove("page-scrolled");
+    const dock = document.getElementById("executive-dock");
+    if (dock) dock.classList.remove("dock--hidden");
+
     // Change button status
     if (this.enterBtn) {
       this.enterBtn.classList.add("charging");
@@ -641,6 +646,17 @@ class LandingPortal {
     this.isDissolving = false;
     this.warpProgress = 0;
     document.body.classList.remove("web-mode-active");
+
+    const dock = document.getElementById("executive-dock");
+    if (scrollTo2D) {
+      document.body.classList.add("page-scrolled");
+      if (dock) dock.classList.add("dock--hidden");
+    } else {
+      if (!this.container || this.container.scrollTop <= 50) {
+        document.body.classList.remove("page-scrolled");
+        if (dock) dock.classList.remove("dock--hidden");
+      }
+    }
 
     // Reset Three.js Universe to Landing Quantum Core
     if (window.threeUniverseInstance && typeof window.threeUniverseInstance.setMode === "function") {
@@ -1152,8 +1168,28 @@ class LandingPortal {
     const exploreBtn = document.getElementById("landing-explore-2d-btn");
     const scrollPrompt = document.getElementById("landing-scroll-prompt");
     const secAbout = document.getElementById("sec-2d-about");
+    const executiveDock = document.getElementById("executive-dock");
+
+    const updateDockVisibility = () => {
+      if (document.body.classList.contains("web-mode-active")) {
+        if (executiveDock) executiveDock.classList.remove("dock--hidden");
+        document.body.classList.remove("page-scrolled");
+        return;
+      }
+      const scrollY = Math.max(this.container ? this.container.scrollTop : 0, window.scrollY || 0);
+      const isScrolled = scrollY > 50;
+      if (isScrolled) {
+        document.body.classList.add("page-scrolled");
+        if (executiveDock) executiveDock.classList.add("dock--hidden");
+      } else {
+        document.body.classList.remove("page-scrolled");
+        if (executiveDock) executiveDock.classList.remove("dock--hidden");
+      }
+    };
 
     const scrollTo2D = () => {
+      document.body.classList.add("page-scrolled");
+      if (executiveDock) executiveDock.classList.add("dock--hidden");
       if (secAbout) {
         secAbout.scrollIntoView({ behavior: "smooth" });
         if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
@@ -1192,9 +1228,11 @@ class LandingPortal {
       });
     });
 
-    // ScrollSpy: Update active nav link on scroll
+    // ScrollSpy & Executive Dock Toggle on scroll
     if (this.container) {
       this.container.addEventListener("scroll", () => {
+        updateDockVisibility();
+
         const sections = document.querySelectorAll(".sec-2d");
         const scrollPos = this.container.scrollTop + 220;
         sections.forEach(sec => {
@@ -1208,6 +1246,11 @@ class LandingPortal {
           }
         });
       }, { passive: true });
+
+      window.addEventListener("scroll", updateDockVisibility, { passive: true });
+
+      // Initial check on load
+      updateDockVisibility();
     }
 
     // Dossier button in 2D Dock

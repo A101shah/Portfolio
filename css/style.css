@@ -1969,7 +1969,23 @@ body:has(.dossier-overlay.active) .cyber-reticle {
   border: 1px solid rgba(226, 232, 240, 0.14);
   border-radius: 9999px;
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65);
-  transition: all 0.3s ease;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+/* Hide floating executive dock when scrolled down into 2D linear workstation */
+.executive-dock.dock--hidden,
+body.page-scrolled:not(.web-mode-active) .executive-dock {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-80px);
+  pointer-events: none;
+}
+
+/* Always ensure executive dock is visible and active when in 3D Web mode */
+body.web-mode-active .executive-dock {
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0) !important;
+  pointer-events: auto !important;
 }
 
 .dock-actions-group {
