@@ -752,9 +752,16 @@ class LandingPortal {
     this.lastTime = timestamp;
 
     if (this.isActive) {
+      // Auto-pause constellation canvas when scrolled into 2D workstation to maximize CPU/GPU performance
+      const isHeroVisible = this.container ? (this.container.scrollTop < (window.innerHeight || 800)) : true;
+      if (!isHeroVisible) {
+        requestAnimationFrame((t) => this.render(t));
+        return;
+      }
+
       // Smooth mouse follow
-      this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.1;
-      this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.1;
+      this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.15;
+      this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.15;
 
       // Parallax Tilt on Center Content Block
       if (this.centerBlock && !this.isWarping) {
@@ -1276,37 +1283,62 @@ class LandingPortal {
       });
     });
 
-    // ScrollSpy & Executive Dock Toggle on scroll
+    // Throttled ScrollSpy & Executive Dock Toggle on scroll (Zero layout thrashing)
     if (this.container) {
-      this.container.addEventListener("scroll", () => {
+      const sections = Array.from(document.querySelectorAll(".sec-2d"));
+      const sectionToNavMap = {
+        "sec-2d-about": "#sec-2d-about",
+        "sec-2d-human": "#sec-2d-about",
+        "sec-2d-hobbies": "#sec-2d-about",
+        "sec-2d-skills": "#sec-2d-skills",
+        "sec-2d-projects": "#sec-2d-projects",
+        "sec-2d-thought": "#sec-2d-thought",
+        "sec-2d-terminal": "#sec-2d-contact",
+        "sec-2d-contact": "#sec-2d-contact"
+      };
+
+      let isScrollTicking = false;
+      const onScrollFrame = () => {
         updateDockVisibility();
 
-        const sections = document.querySelectorAll(".sec-2d");
         const scrollPos = this.container.scrollTop + 180;
-        const sectionToNavMap = {
-          "sec-2d-about": "#sec-2d-about",
-          "sec-2d-human": "#sec-2d-about",
-          "sec-2d-hobbies": "#sec-2d-about",
-          "sec-2d-skills": "#sec-2d-skills",
-          "sec-2d-projects": "#sec-2d-projects",
-          "sec-2d-thought": "#sec-2d-thought",
-          "sec-2d-terminal": "#sec-2d-contact",
-          "sec-2d-contact": "#sec-2d-contact"
-        };
-        sections.forEach(sec => {
+        let activeNavHref = null;
+
+        for (let i = 0; i < sections.length; i++) {
+          const sec = sections[i];
           const top = sec.offsetTop;
           const height = sec.offsetHeight;
-          const id = sec.getAttribute("id");
           if (scrollPos >= top && scrollPos < top + height) {
-            const activeNavHref = sectionToNavMap[id] || `#${id}`;
-            navLinks.forEach(link => {
-              link.classList.toggle("active", link.getAttribute("href") === activeNavHref);
-            });
+            activeNavHref = sectionToNavMap[sec.id] || `#${sec.id}`;
+            break;
           }
-        });
+        }
+
+        if (activeNavHref) {
+          navLinks.forEach(link => {
+            const shouldBeActive = link.getAttribute("href") === activeNavHref;
+            if (link.classList.contains("active") !== shouldBeActive) {
+              link.classList.toggle("active", shouldBeActive);
+            }
+          });
+        }
+
+        isScrollTicking = false;
+      };
+
+      this.container.addEventListener("scroll", () => {
+        if (!isScrollTicking) {
+          requestAnimationFrame(onScrollFrame);
+          isScrollTicking = true;
+        }
       }, { passive: true });
 
-      window.addEventListener("scroll", updateDockVisibility, { passive: true });
+      window.addEventListener("scroll", () => {
+        if (!isScrollTicking) {
+          requestAnimationFrame(onScrollFrame);
+          isScrollTicking = true;
+        }
+      }, { passive: true });
 
       // Initial check on load
       updateDockVisibility();

@@ -878,6 +878,8 @@ class SpiderWeb {
         const dy = (this.mouse.screenY - this.mouse.dragStartY) / this.camera.zoom;
         this.camera.targetX = this.mouse.dragCamStartX - dx;
         this.camera.targetY = this.mouse.dragCamStartY - dy;
+        this.camera.x = this.camera.targetX;
+        this.camera.y = this.camera.targetY;
         this.mouse.dragDistance += Math.abs(dx) + Math.abs(dy);
         this.canvas.style.cursor = "grabbing";
       } else {
@@ -1002,6 +1004,8 @@ class SpiderWeb {
         const dy = (curY - this.mouse.dragStartY) / this.camera.zoom;
         this.camera.targetX = this.mouse.dragCamStartX - dx;
         this.camera.targetY = this.mouse.dragCamStartY - dy;
+        this.camera.x = this.camera.targetX;
+        this.camera.y = this.camera.targetY;
         this.mouse.dragDistance += Math.abs(dx) + Math.abs(dy);
       } else if (e.touches.length === 2) {
         const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -1517,9 +1521,14 @@ class SpiderWeb {
 
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    // Smooth camera inertia with cinematic glide
-    this.camera.x += (this.camera.targetX - this.camera.x) * 0.085;
-    this.camera.y += (this.camera.targetY - this.camera.y) * 0.085;
+    // Smooth camera inertia with cinematic glide (instant 1:1 during active drag)
+    if (this.mouse.isDragging) {
+      this.camera.x = this.camera.targetX;
+      this.camera.y = this.camera.targetY;
+    } else {
+      this.camera.x += (this.camera.targetX - this.camera.x) * 0.16;
+      this.camera.y += (this.camera.targetY - this.camera.y) * 0.16;
+    }
     const zoomEasing = this.camera.isGliding ? 0.045 : 0.09;
     this.camera.zoom += (this.camera.targetZoom - this.camera.zoom) * zoomEasing;
     if (this.camera.isGliding && Math.abs(this.camera.targetZoom - this.camera.zoom) < 0.01) {

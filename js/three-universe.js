@@ -623,9 +623,19 @@ class ThreeUniverse {
     const delta = Math.min(this.clock.getDelta(), 0.05);
     const elapsedTime = this.clock.getElapsedTime();
 
-    // Smooth Mouse Interpolation (High-damping inertia)
-    this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.065;
-    this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.065;
+    // Auto-pause WebGL render calls if scrolled into 2D portfolio to eliminate GPU/CPU overhead
+    if (this.currentMode === "landing" && this.landingGroup.visible) {
+      const landingContainer = document.getElementById("landing-page");
+      const isHeroVisible = landingContainer ? (landingContainer.scrollTop < (window.innerHeight || 800)) : true;
+      if (!isHeroVisible) {
+        return;
+      }
+    }
+
+    // Snappy, responsive mouse interpolation
+    const mouseLerp = this.astrolabeDrag.isDragging ? 0.35 : 0.12;
+    this.mouse.x += (this.mouse.targetX - this.mouse.x) * mouseLerp;
+    this.mouse.y += (this.mouse.targetY - this.mouse.y) * mouseLerp;
 
     // -----------------------------------------------------------------------
     // MODE 1: LANDING PAGE ASTROLABE
@@ -676,8 +686,15 @@ class ThreeUniverse {
 
         const targetTiltX = -this.mouse.y * 0.35 + this.astrolabeDrag.rotX;
         const targetTiltY = this.mouse.x * 0.35 + this.astrolabeDrag.rotY;
-        this.astrolabeHolder.rotation.x += (targetTiltX - this.astrolabeHolder.rotation.x) * 0.08;
-        this.astrolabeHolder.rotation.y += (targetTiltY - this.astrolabeHolder.rotation.y) * 0.08;
+
+        if (this.astrolabeDrag.isDragging) {
+          // Direct 1:1 rotation response during drag
+          this.astrolabeHolder.rotation.x = targetTiltX;
+          this.astrolabeHolder.rotation.y = targetTiltY;
+        } else {
+          this.astrolabeHolder.rotation.x += (targetTiltX - this.astrolabeHolder.rotation.x) * 0.14;
+          this.astrolabeHolder.rotation.y += (targetTiltY - this.astrolabeHolder.rotation.y) * 0.14;
+        }
       }
     }
 
