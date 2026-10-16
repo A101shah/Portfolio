@@ -6,12 +6,15 @@
 class TextScramble {
   constructor(el) {
     this.el = el;
-    this.chars = '!<>-_\\/[]{}—=+*^?#________01αβΩ';
+    this.chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     this.update = this.update.bind(this);
+    this.targetText = el ? (el.textContent || '').trim() : '';
   }
 
   setText(newText) {
-    const oldText = this.el.innerText || '';
+    if (!this.el) return Promise.resolve();
+    this.targetText = newText;
+    const oldText = (this.el.textContent || '').trim();
     const length = Math.max(oldText.length, newText.length);
     const promise = new Promise((resolve) => (this.resolve = resolve));
     this.queue = [];
@@ -19,14 +22,23 @@ class TextScramble {
     for (let i = 0; i < length; i++) {
       const from = oldText[i] || '';
       const to = newText[i] || '';
-      const start = Math.floor(Math.random() * 15);
-      const end = start + Math.floor(Math.random() * 15) + 6;
-      this.queue.push({ from, to, start, end });
+      const start = Math.floor(Math.random() * 5);
+      const end = start + Math.floor(Math.random() * 7) + 4;
+      this.queue.push({ from, to, start, end, char: '' });
     }
 
     cancelAnimationFrame(this.frameRequest);
+    clearTimeout(this.safetyTimeout);
     this.frame = 0;
     this.update();
+
+    // Absolute fallback: ensure target text is 100% restored after max 300ms
+    this.safetyTimeout = setTimeout(() => {
+      cancelAnimationFrame(this.frameRequest);
+      if (this.el) this.el.textContent = this.targetText;
+      if (this.resolve) this.resolve();
+    }, 300);
+
     return promise;
   }
 
@@ -40,11 +52,11 @@ class TextScramble {
         complete++;
         output += to;
       } else if (this.frame >= start) {
-        if (!char || Math.random() < 0.28) {
+        if (!char || Math.random() < 0.3) {
           char = this.chars[Math.floor(Math.random() * this.chars.length)];
           this.queue[i].char = char;
         }
-        output += `<span style="color:rgba(180,200,255,0.9);">${char}</span>`;
+        output += `<span style="color:#00f0ff;">${char}</span>`;
       } else {
         output += from;
       }
@@ -53,6 +65,8 @@ class TextScramble {
     this.el.innerHTML = output;
 
     if (complete === this.queue.length) {
+      if (this.el) this.el.textContent = this.targetText;
+      clearTimeout(this.safetyTimeout);
       if (this.resolve) this.resolve();
     } else {
       this.frameRequest = requestAnimationFrame(this.update);
@@ -60,6 +74,7 @@ class TextScramble {
     }
   }
 }
+
 
 class LandingPortal {
   constructor() {
@@ -1171,20 +1186,18 @@ class LandingPortal {
     const executiveDock = document.getElementById("executive-dock");
 
     const updateDockVisibility = () => {
-      if (document.body.classList.contains("web-mode-active")) {
-        if (executiveDock) executiveDock.classList.remove("dock--hidden");
-        document.body.classList.remove("page-scrolled");
+      if (!document.body.classList.contains("web-mode-active")) {
+        if (executiveDock) executiveDock.classList.add("dock--hidden");
+        const scrollY = Math.max(this.container ? this.container.scrollTop : 0, window.scrollY || 0);
+        if (scrollY > 50) {
+          document.body.classList.add("page-scrolled");
+        } else {
+          document.body.classList.remove("page-scrolled");
+        }
         return;
       }
-      const scrollY = Math.max(this.container ? this.container.scrollTop : 0, window.scrollY || 0);
-      const isScrolled = scrollY > 50;
-      if (isScrolled) {
-        document.body.classList.add("page-scrolled");
-        if (executiveDock) executiveDock.classList.add("dock--hidden");
-      } else {
-        document.body.classList.remove("page-scrolled");
-        if (executiveDock) executiveDock.classList.remove("dock--hidden");
-      }
+      document.body.classList.remove("page-scrolled");
+      if (executiveDock) executiveDock.classList.remove("dock--hidden");
     };
 
     const scrollTo2D = () => {

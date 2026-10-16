@@ -1973,16 +1973,18 @@ body:has(.dossier-overlay.active) .cyber-reticle {
   will-change: transform, opacity;
 }
 
-/* Hide floating executive dock when scrolled down into 2D linear workstation */
-.executive-dock.dock--hidden,
-body.page-scrolled:not(.web-mode-active) .executive-dock {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-80px);
-  pointer-events: none;
+/* Hide floating executive dock when NOT in 3D Web mode */
+.executive-dock,
+body:not(.web-mode-active) .executive-dock {
+  display: none !important;
+  opacity: 0 !important;
+  transform: translateX(-50%) translateY(-80px) !important;
+  pointer-events: none !important;
 }
 
 /* Always ensure executive dock is visible and active when in 3D Web mode */
 body.web-mode-active .executive-dock {
+  display: flex !important;
   opacity: 1 !important;
   transform: translateX(-50%) translateY(0) !important;
   pointer-events: auto !important;
