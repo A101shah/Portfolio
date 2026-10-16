@@ -127,12 +127,23 @@ class HudNavigator {
 
     // Smooth scroll with header offset
     const navHeight = 72;
-    const targetY = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight;
+    const container = document.getElementById("landing-page");
 
-    window.scrollTo({
-      top: targetY,
-      behavior: "smooth"
-    });
+    if (container) {
+      const containerTop = container.getBoundingClientRect().top;
+      const elTop = targetEl.getBoundingClientRect().top;
+      const targetY = container.scrollTop + (elTop - containerTop) - navHeight;
+      container.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: "smooth"
+      });
+    } else {
+      const targetY = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight;
+      window.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: "smooth"
+      });
+    }
 
     // Update active node immediately
     const nodeIdx = this.nodes.findIndex(n => n.id === targetId);

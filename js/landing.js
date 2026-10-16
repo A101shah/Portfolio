@@ -1185,26 +1185,62 @@ class LandingPortal {
     const secAbout = document.getElementById("sec-2d-about");
     const executiveDock = document.getElementById("executive-dock");
 
+    const navHeight = 58;
+    const scrollToTarget = (targetEl) => {
+      if (!targetEl) return;
+      if (this.container) {
+        const containerRect = this.container.getBoundingClientRect();
+        const elRect = targetEl.getBoundingClientRect();
+        const targetScrollTop = this.container.scrollTop + (elRect.top - containerRect.top) - navHeight;
+        this.container.scrollTo({
+          top: Math.max(0, targetScrollTop),
+          behavior: "smooth"
+        });
+      } else {
+        const elTop = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight;
+        window.scrollTo({
+          top: Math.max(0, elTop),
+          behavior: "smooth"
+        });
+      }
+    };
+
+    const scrollToHero = () => {
+      if (this.container) {
+        this.container.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      document.body.classList.remove("page-scrolled");
+      if (this.container) this.container.classList.remove("page-scrolled");
+    };
+
     const updateDockVisibility = () => {
+      const scrollY = Math.max(this.container ? this.container.scrollTop : 0, window.scrollY || 0);
+      const isScrolled = scrollY > 60;
+      if (isScrolled) {
+        document.body.classList.add("page-scrolled");
+        if (this.container) this.container.classList.add("page-scrolled");
+      } else {
+        document.body.classList.remove("page-scrolled");
+        if (this.container) this.container.classList.remove("page-scrolled");
+      }
+
       if (!document.body.classList.contains("web-mode-active")) {
         if (executiveDock) executiveDock.classList.add("dock--hidden");
-        const scrollY = Math.max(this.container ? this.container.scrollTop : 0, window.scrollY || 0);
-        if (scrollY > 50) {
-          document.body.classList.add("page-scrolled");
-        } else {
-          document.body.classList.remove("page-scrolled");
-        }
         return;
       }
       document.body.classList.remove("page-scrolled");
+      if (this.container) this.container.classList.remove("page-scrolled");
       if (executiveDock) executiveDock.classList.remove("dock--hidden");
     };
 
     const scrollTo2D = () => {
       document.body.classList.add("page-scrolled");
+      if (this.container) this.container.classList.add("page-scrolled");
       if (executiveDock) executiveDock.classList.add("dock--hidden");
       if (secAbout) {
-        secAbout.scrollIntoView({ behavior: "smooth" });
+        scrollToTarget(secAbout);
         if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
           window.soundEngineInstance.playNodeHover();
         }
@@ -1219,8 +1255,7 @@ class LandingPortal {
     if (brandBtn) {
       brandBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        const hero = document.getElementById("landing-hero");
-        if (hero) hero.scrollIntoView({ behavior: "smooth" });
+        scrollToHero();
       });
     }
 
@@ -1231,7 +1266,7 @@ class LandingPortal {
         const targetId = link.getAttribute("href")?.replace("#", "");
         const targetEl = document.getElementById(targetId);
         if (targetEl) {
-          targetEl.scrollIntoView({ behavior: "smooth" });
+          scrollToTarget(targetEl);
           navLinks.forEach(l => l.classList.remove("active"));
           link.classList.add("active");
           if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
