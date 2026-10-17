@@ -984,11 +984,12 @@ class SpiderWeb {
       this.zoomAtScreen(this.mouse.screenX, this.mouse.screenY, zoomFactor);
     }, { passive: false });
 
-    // Touch Support
+    // Touch Support with smooth pinch zoom, double-tap, and robust touch hit detection
     let touchStartDist = 0;
+    let lastTapTime = 0;
     this.canvas.addEventListener("touchstart", (e) => {
       if (e.touches.length === 1) {
-        const rect = this.canvas.getBoundingClientRect();
+        const rect = this.canvasRect || this.canvas.getBoundingClientRect();
         this.mouse.screenX = e.touches[0].clientX - rect.left;
         this.mouse.screenY = e.touches[0].clientY - rect.top;
         const world = this.screenToWorld(this.mouse.screenX, this.mouse.screenY);
@@ -1002,6 +1003,7 @@ class SpiderWeb {
         this.mouse.dragCamStartY = this.camera.targetY;
         this.mouse.dragDistance = 0;
       } else if (e.touches.length === 2) {
+        this.mouse.isDragging = false;
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         touchStartDist = Math.sqrt(dx * dx + dy * dy);
@@ -1021,22 +1023,43 @@ class SpiderWeb {
         this.camera.x = this.camera.targetX;
         this.camera.y = this.camera.targetY;
         this.mouse.dragDistance += Math.abs(dx) + Math.abs(dy);
+
+        // Keep world coordinates up to date
+        this.mouse.screenX = curX;
+        this.mouse.screenY = curY;
+        const world = this.screenToWorld(curX, curY);
+        this.mouse.worldX = world.x;
+        this.mouse.worldY = world.y;
       } else if (e.touches.length === 2) {
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         const curDist = Math.sqrt(dx * dx + dy * dy);
         if (touchStartDist > 0) {
           const ratio = curDist / touchStartDist;
-          this.camera.targetZoom = Math.min(Math.max(this.camera.zoom * (ratio > 1 ? 1.04 : 0.96), this.camera.minZoom), this.camera.maxZoom);
+          const zoomFactor = Math.pow(ratio, 0.7);
+          this.camera.targetZoom = Math.min(Math.max(this.camera.targetZoom * zoomFactor, this.camera.minZoom), this.camera.maxZoom);
+          touchStartDist = curDist; // incremental update for silky smooth pinch zoom
         }
       }
     }, { passive: true });
 
-    this.canvas.addEventListener("touchend", () => {
+    this.canvas.addEventListener("touchend", (e) => {
+      const now = Date.now();
+      const isDoubleTap = (now - lastTapTime < 320) && (this.mouse.dragDistance < 12);
+      lastTapTime = now;
+
+      if (isDoubleTap) {
+        this.recenter();
+        this.mouse.isDragging = false;
+        touchStartDist = 0;
+        return;
+      }
+
       if (this.mouse.isDragging) {
         this.mouse.isDragging = false;
-        if (this.mouse.dragDistance < 10) {
-          const clicked = this.getJunctionAt(this.mouse.worldX, this.mouse.worldY);
+        // 18px touch threshold handles natural thumb wobble
+        if (this.mouse.dragDistance < 18) {
+          const clicked = this.getJunctionAt(this.mouse.worldX, this.mouse.worldY, true);
           if (clicked) {
             this.selectJunction(clicked.id);
             return;
@@ -1208,18 +1231,25 @@ class SpiderWeb {
     }
   }
 
-  getJunctionAt(wx, wy) {
+  getJunctionAt(wx, wy, isTouch = false) {
+    const extraRadius = isTouch ? 48 : 32;
+    const extraPad = isTouch ? 12 : 0;
     for (let i = 0; i < this.junctions.length; i++) {
       const j = this.junctions[i];
       const dx = wx - j.worldX;
       const dy = wy - j.worldY;
-      const hitRadius = (j.coreRadius + 32) / this.camera.zoom;
+      const hitRadius = (j.coreRadius + extraRadius) / this.camera.zoom;
       if (dx * dx + dy * dy <= hitRadius * hitRadius) {
         return j;
       }
       if (j.badgeBounds) {
         const b = j.badgeBounds;
-        if (wx >= b.x && wx <= b.x + b.w && wy >= b.y && wy <= b.y + b.h) {
+        if (
+          wx >= b.x - extraPad &&
+          wx <= b.x + b.w + extraPad &&
+          wy >= b.y - extraPad &&
+          wy <= b.y + b.h + extraPad
+        ) {
           return j;
         }
       }

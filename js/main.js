@@ -1340,6 +1340,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (dossierCloseBtn) dossierCloseBtn.addEventListener("click", closeDossier);
   if (dossierBackdrop) dossierBackdrop.addEventListener("click", closeDossier);
   window.addEventListener("toggle-executive-dossier", toggleDossier);
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && dossierOverlay && dossierOverlay.classList.contains("active")) {
+      closeDossier();
+    }
+  });
 
   if (dossierCopyEmailBtn) {
     dossierCopyEmailBtn.addEventListener("click", () => {

@@ -634,10 +634,15 @@ class LandingPortal {
       this.isWarping = false;
       document.body.classList.add("web-mode-active");
 
-      // Cybernetic hint banner update
+      // Cybernetic hint banner update (Adaptive for touch vs desktop)
       const hint = document.getElementById("web-instruction-hint");
       if (hint) {
-        hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>➔ <strong>NEURAL NEXUS SYNCHRONIZED</strong> &bull; DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK NODES TO INSPECT</span></div>`;
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.innerWidth <= 768;
+        if (isTouch) {
+          hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>👆 <strong>NEURAL NEXUS</strong> &bull; DRAG TO PAN &bull; PINCH TO ZOOM &bull; TAP NODES TO INSPECT</span></div>`;
+        } else {
+          hint.innerHTML = `<div class="hint-pill"><span class="hint-pulse-dot"></span><span>➔ <strong>NEURAL NEXUS SYNCHRONIZED</strong> &bull; DRAG TO PAN &bull; SCROLL TO ZOOM &bull; CLICK NODES TO INSPECT</span></div>`;
+        }
         hint.style.opacity = "1";
       }
     }, 2300);
@@ -1256,6 +1261,82 @@ class LandingPortal {
     }
 
     const navLinks = document.querySelectorAll(".dock-2d-link");
+    const mobileDrawer = document.getElementById("dock-2d-mobile-drawer");
+    const mobileToggle = document.getElementById("dock-2d-mobile-toggle");
+    const drawerCloseBtn = document.getElementById("dock-2d-drawer-close");
+    const drawerNavItems = document.querySelectorAll(".drawer-nav-item");
+    const quickStripPills = document.querySelectorAll(".quick-strip-pill");
+
+    const closeMobileDrawer = () => {
+      if (mobileDrawer) {
+        mobileDrawer.classList.remove("open");
+        mobileDrawer.setAttribute("aria-hidden", "true");
+      }
+      if (mobileToggle) {
+        mobileToggle.classList.remove("active");
+        mobileToggle.setAttribute("aria-expanded", "false");
+      }
+      document.body.classList.remove("mobile-drawer-open");
+    };
+
+    const toggleMobileDrawer = () => {
+      if (!mobileDrawer) return;
+      const isOpen = mobileDrawer.classList.toggle("open");
+      mobileDrawer.setAttribute("aria-hidden", (!isOpen).toString());
+      if (mobileToggle) {
+        mobileToggle.classList.toggle("active", isOpen);
+        mobileToggle.setAttribute("aria-expanded", isOpen.toString());
+      }
+      document.body.classList.toggle("mobile-drawer-open", isOpen);
+      if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
+        window.soundEngineInstance.playNodeHover();
+      }
+    };
+
+    if (mobileToggle) {
+      mobileToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleMobileDrawer();
+      });
+    }
+
+    if (drawerCloseBtn) {
+      drawerCloseBtn.addEventListener("click", closeMobileDrawer);
+    }
+
+    // Close drawer when clicking outside
+    document.addEventListener("click", (e) => {
+      if (mobileDrawer && mobileDrawer.classList.contains("open")) {
+        if (!mobileDrawer.contains(e.target) && !mobileToggle.contains(e.target)) {
+          closeMobileDrawer();
+        }
+      }
+    });
+
+    // Close drawer on escape key
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && mobileDrawer && mobileDrawer.classList.contains("open")) {
+        closeMobileDrawer();
+      }
+    });
+
+    // Mobile drawer actions
+    const drawerDossierBtn = document.getElementById("drawer-dossier-btn");
+    const drawerWarpBtn = document.getElementById("drawer-warp-btn");
+    if (drawerDossierBtn) {
+      drawerDossierBtn.addEventListener("click", () => {
+        closeMobileDrawer();
+        window.dispatchEvent(new CustomEvent("toggle-executive-dossier"));
+      });
+    }
+    if (drawerWarpBtn) {
+      drawerWarpBtn.addEventListener("click", () => {
+        closeMobileDrawer();
+        this.triggerWarpEntrance();
+      });
+    }
+
+    // Connect standard desktop dock links
     navLinks.forEach(link => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
@@ -1265,6 +1346,39 @@ class LandingPortal {
           scrollToTarget(targetEl);
           navLinks.forEach(l => l.classList.remove("active"));
           link.classList.add("active");
+          if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
+            window.soundEngineInstance.playNodeHover();
+          }
+        }
+      });
+    });
+
+    // Connect mobile drawer nav items
+    drawerNavItems.forEach(item => {
+      item.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = item.getAttribute("data-target") || item.getAttribute("href")?.replace("#", "");
+        const targetEl = document.getElementById(targetId);
+        closeMobileDrawer();
+        if (targetEl) {
+          scrollToTarget(targetEl);
+          if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
+            window.soundEngineInstance.playNodeHover();
+          }
+        }
+      });
+    });
+
+    // Connect quick strip pills
+    quickStripPills.forEach(pill => {
+      pill.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = pill.getAttribute("data-target") || pill.getAttribute("href")?.replace("#", "");
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          scrollToTarget(targetEl);
+          quickStripPills.forEach(p => p.classList.remove("active"));
+          pill.classList.add("active");
           if (window.soundEngineInstance && typeof window.soundEngineInstance.playNodeHover === "function") {
             window.soundEngineInstance.playNodeHover();
           }
@@ -1309,6 +1423,25 @@ class LandingPortal {
             if (link.classList.contains("active") !== shouldBeActive) {
               link.classList.toggle("active", shouldBeActive);
             }
+          });
+
+          // Sync mobile quick strip pills
+          quickStripPills.forEach(pill => {
+            const pillTarget = pill.getAttribute("href");
+            const shouldBeActive = pillTarget === activeNavHref;
+            if (pill.classList.contains("active") !== shouldBeActive) {
+              pill.classList.toggle("active", shouldBeActive);
+              if (shouldBeActive && typeof pill.scrollIntoView === "function") {
+                pill.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+              }
+            }
+          });
+
+          // Sync drawer nav items
+          drawerNavItems.forEach(item => {
+            const itemTarget = item.getAttribute("href");
+            const shouldBeActive = itemTarget === activeNavHref;
+            item.classList.toggle("active", shouldBeActive);
           });
         }
 
@@ -1600,6 +1733,17 @@ class LandingPortal {
         if (window.soundEngineInstance && typeof window.soundEngineInstance.playTerminalKey === "function") {
           window.soundEngineInstance.playTerminalKey();
         }
+      });
+
+      // Quick tap chips for mobile/touch
+      document.querySelectorAll(".term-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          const cmd = chip.getAttribute("data-cmd");
+          if (cmd) {
+            termInput.value = cmd;
+            termForm.dispatchEvent(new Event("submit", { cancelable: true }));
+          }
+        });
       });
     }
 

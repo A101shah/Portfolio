@@ -1540,6 +1540,312 @@ button > span, a > span,
   box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
 }
 
+/* ── Mobile Hamburger Toggle Button (Hidden on desktop) ── */
+.dock-2d-mobile-toggle {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: rgba(30, 41, 59, 0.55);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 9999px;
+  padding: 5px 11px;
+  color: #00f0ff;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+  min-height: 34px;
+  touch-action: manipulation;
+}
+
+.dock-2d-mobile-toggle:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
+
+.toggle-icon-bars {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 14px;
+  height: 11px;
+  position: relative;
+}
+
+.t-bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #00f0ff;
+  border-radius: 2px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  transform-origin: center;
+}
+
+.dock-2d-mobile-toggle.active .t-bar--1 {
+  transform: translateY(4.5px) rotate(45deg);
+}
+
+.dock-2d-mobile-toggle.active .t-bar--2 {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.dock-2d-mobile-toggle.active .t-bar--3 {
+  transform: translateY(-4.5px) rotate(-45deg);
+}
+
+/* ── Mobile Quick-Jump Horizontal Strip (Hidden by default on desktop) ── */
+.dock-2d-quick-strip {
+  display: none;
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.08);
+  background: rgba(6, 8, 14, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  gap: 6px;
+}
+
+.dock-2d-quick-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-strip-pill {
+  flex: 0 0 auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  color: #94a3b8;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.quick-strip-pill:hover,
+.quick-strip-pill.active {
+  color: #00f0ff;
+  background: rgba(0, 240, 255, 0.14);
+  border-color: rgba(0, 240, 255, 0.45);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+/* ── Mobile Navigation Drawer ── */
+.dock-2d-mobile-drawer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(9, 13, 22, 0.98);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 240, 255, 0.1);
+  padding: 1.15rem 1.25rem 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.25s;
+  z-index: 85;
+}
+
+.dock-2d-mobile-drawer.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.1);
+}
+
+.drawer-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drawer-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #00f0ff;
+}
+
+.drawer-close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #cbd5e1;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.drawer-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(18, 25, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.drawer-nav-item:hover,
+.drawer-nav-item.active {
+  background: rgba(0, 240, 255, 0.1);
+  border-color: rgba(0, 240, 255, 0.35);
+  transform: translateX(3px);
+}
+
+.drawer-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #00f0ff;
+  background: rgba(0, 240, 255, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.drawer-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.drawer-name {
+  font-size: 0.88rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.drawer-sub {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.drawer-arrow {
+  color: #00f0ff;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+.drawer-nav-item:hover .drawer-arrow {
+  transform: translateX(3px);
+}
+
+.drawer-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.08);
+}
+
+.drawer-action-btn {
+  padding: 10px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.drawer-btn-dossier {
+  color: #cbd5e1;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.drawer-btn-warp {
+  color: #00f0ff;
+  background: rgba(0, 240, 255, 0.15);
+  border: 1px solid rgba(0, 240, 255, 0.45);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+}
+
+/* ── Terminal Quick Action Chips ── */
+.term-2d-quick-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(12, 16, 24, 0.85);
+  border-top: 1px solid rgba(226, 232, 240, 0.06);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.term-2d-quick-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.term-chip {
+  flex: 0 0 auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  color: #00f0ff;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  touch-action: manipulation;
+}
+
+.term-chip:hover {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: #00f0ff;
+  transform: translateY(-1px);
+}
+
 /* ── 2D Portfolio Main Container ── */
 .portfolio-2d-wrap {
   max-width: 1200px;
@@ -2777,10 +3083,18 @@ button > span, a > span,
   color: #ffffff !important;
 }
 
-/* ── Responsive Refinements ── */
+/* ── Responsive Refinements & Mobile First Engineering ── */
 @media (max-width: 900px) {
   .dock-2d-links {
-    display: none;
+    display: none !important;
+  }
+
+  .dock-2d-mobile-toggle {
+    display: inline-flex;
+  }
+
+  .dock-2d-quick-strip {
+    display: flex;
   }
 
   .projects-2d-grid {
@@ -2812,28 +3126,340 @@ button > span, a > span,
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  /* ── Mobile Hero Screen Adaptation ── */
+  .landing-hero-section {
+    min-height: 540px;
+    height: 100dvh;
+    padding: max(0.85rem, env(safe-area-inset-top)) 0.85rem max(1rem, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .orbital-ring--1 { width: 200px; height: 200px; }
+  .orbital-ring--2 { width: 300px; height: 300px; opacity: 0.4; }
+  .orbital-ring--3 { display: none; }
+  .landing-glow-orb { width: 280px; height: 280px; }
+  .landing-corner { display: none; }
+
+  .landing-center {
+    width: 100%;
+    max-width: min(440px, 100%);
+    padding: 1.25rem 1rem;
+    margin: auto 0;
+  }
+
+  .landing-title {
+    font-size: clamp(2.2rem, 9.5vw, 3.2rem);
+    letter-spacing: -0.01em;
+  }
+
+  .landing-subtitle {
+    font-size: clamp(0.68rem, 2.7vw, 0.82rem);
+    line-height: 1.45;
+    margin-bottom: 0.85rem;
+  }
+
+  .landing-skills-orbit {
+    gap: 4px;
+    margin-bottom: 1.15rem;
+  }
+
+  .skill-tag-float {
+    font-size: 0.62rem;
+    padding: 3px 8px;
+  }
+
+  .landing-actions-dual {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .landing-explore-btn,
+  .landing-enter-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.78rem;
+    touch-action: manipulation;
+  }
+
+  .landing-dossier-direct-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0.65rem 1rem;
+    font-size: 0.74rem;
+  }
+
+  /* Hide desktop keyboard hotkey badges on mobile */
+  .landing-kbd,
+  .dock-kbd-mini,
+  .dock-kbd {
+    display: none !important;
+  }
+
+  /* Sleek mobile bottom bar layout */
+  .landing-bottom-bar {
+    position: static;
+    width: 100%;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0.5rem 0 0;
+    margin-top: auto;
+  }
+
+  .landing-bottom-left {
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 0.66rem;
+  }
+
+  .landing-bottom-center {
+    font-size: 0.65rem;
+    padding: 6px 12px;
+    min-height: 38px;
+  }
+
+  .landing-bottom-right {
+    display: none;
+  }
+
+  /* ── 2D Navigation Bar Mobile Polish ── */
+  .dock-2d-nav {
+    padding: max(0.4rem, env(safe-area-inset-top)) 0.75rem 0.4rem;
+  }
+
+  .dock-2d-inner {
+    gap: 0.5rem;
+  }
+
+  .dock-2d-brand {
+    gap: 5px;
+  }
+
+  .dock-2d-name {
+    font-size: 0.8rem;
+  }
+
+  .dock-2d-actions {
+    gap: 5px;
+  }
+
+  .dock-2d-btn {
+    padding: 5px 9px;
+    font-size: 0.64rem;
+    min-height: 34px;
+    touch-action: manipulation;
+  }
+
+  /* ── 2D Main Workstation & Sections Mobile Polish ── */
+  .portfolio-2d-wrap {
+    padding: 1.25rem 0.85rem 3.5rem;
+  }
+
+  .sec-2d {
+    margin-bottom: 2.25rem;
+    scroll-margin-top: 5.5rem;
+  }
+
+  .sec-2d-title {
+    font-size: clamp(1.4rem, 6vw, 1.95rem);
+  }
+
+  .sec-2d-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
   .about-2d-card {
     grid-template-columns: 1fr;
-    text-align: center;
-    padding: 1.25rem;
+    text-align: left;
+    padding: 1.25rem 1rem;
   }
 
   .about-2d-avatar-wrap {
-    margin: 0 auto 1rem;
-    width: 140px;
-    height: 140px;
+    margin: 0 auto 1.25rem;
+    width: 130px;
+    height: 130px;
+  }
+
+  .about-2d-lead {
+    text-align: left;
+    font-size: 1.02rem;
+    line-height: 1.45;
+  }
+
+  .about-2d-bio-text p {
+    text-align: left;
+    font-size: 0.84rem;
+    line-height: 1.6;
+    margin-bottom: 0.85rem;
   }
 
   .stats-2d-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 
-  .dock-2d-nav {
-    padding: 0.5rem 1rem;
+  .stat-2d-card {
+    padding: 12px 10px;
+  }
+
+  .stat-2d-val {
+    font-size: 1.35rem;
+  }
+
+  .stat-2d-lbl {
+    font-size: 0.65rem;
   }
 
   .hobbies-2d-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── Projects Horizontal Swipe Filter Pills ── */
+  .projects-2d-filter {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 6px;
+    margin-bottom: 0.85rem;
+  }
+
+  .projects-2d-filter::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projects-2d-pill {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 0.65rem;
+    padding: 6px 12px;
+    touch-action: manipulation;
+  }
+
+  .project-2d-card {
+    padding: 1rem;
+    gap: 8px;
+  }
+
+  .p2d-footer-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .p2d-links-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .p2d-btn {
+    justify-content: center;
+    padding: 8px 10px;
+    min-height: 40px;
+    font-size: 0.68rem;
+    touch-action: manipulation;
+  }
+
+  .projects-archive-banner {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.15rem 1rem;
+    gap: 1rem;
+  }
+
+  .archive-banner-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .archive-banner-btn {
+    justify-content: center;
+    min-height: 42px;
+    touch-action: manipulation;
+  }
+
+  /* ── Interactive Terminal Mobile Polish ── */
+  .terminal-2d-wrap {
+    height: 320px;
+  }
+
+  .term-2d-input {
+    font-size: 16px !important; /* Prevents unwanted iOS Safari viewport auto-zoom */
+  }
+
+  /* ── Contact Form Mobile Polish ── */
+  .c2d-input,
+  .c2d-textarea {
+    font-size: 16px !important; /* Prevents iOS Safari input focus auto-zoom */
+    padding: 0.65rem 0.85rem;
+  }
+
+  .contact-2d-form {
+    padding: 1.15rem 1rem;
+  }
+
+  .footer-2d-cta {
+    padding: 1.75rem 1rem;
+  }
+
+  .footer-2d-warp-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.85rem;
+    touch-action: manipulation;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-hero-section {
+    min-height: 500px;
+    padding: max(0.65rem, env(safe-area-inset-top)) 0.65rem max(0.85rem, env(safe-area-inset-bottom));
+  }
+
+  .landing-center {
+    padding: 1rem 0.75rem;
+  }
+
+  .landing-title {
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+  }
+
+  .landing-status-line {
+    font-size: 0.58rem;
+  }
+
+  .card-corner-bracket {
+    width: 10px;
+    height: 10px;
+  }
+
+  .stats-2d-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .stat-2d-card {
+    padding: 10px 8px;
+  }
+
+  .stat-2d-val {
+    font-size: 1.25rem;
+  }
+
+  .drawer-actions {
     grid-template-columns: 1fr;
   }
 }

@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#06080d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Aarav Shah — Data Science &amp; Full-Stack Developer | Infinite Spider Web</title>
   <meta name="description" content="Portfolio of Aarav Shah, Data Science and Software Developer at NMIMS. Explore machine learning models, statistical deployments, and projects through an infinite organic glistening spider web.">
   <meta name="keywords" content="Aarav Shah, A101shah, Data Science, Machine Learning, Python, NMIMS, Infinite Spider Web, Dark Grey Theme">
@@ -22,8 +25,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
 
   <!-- Core Stylesheet & Landing Page Styles -->
-  <link rel="stylesheet" href="css/style.css?v=43">
-  <link rel="stylesheet" href="css/landing.css?v=43">
+  <link rel="stylesheet" href="css/style.css?v=45">
+  <link rel="stylesheet" href="css/landing.css?v=45">
 </head>
 <body class="web-only-mode">
 
@@ -214,6 +217,85 @@
         <button class="dock-2d-btn dock-2d-btn--warp" id="dock-2d-warp-btn" title="Launch 3D Web Universe (Hotkey: W)">
           <span>3D UNIVERSE ↗</span>
           <kbd class="dock-kbd-mini">W</kbd>
+        </button>
+        <!-- Mobile Navigation Hamburger Toggle -->
+        <button class="dock-2d-mobile-toggle" id="dock-2d-mobile-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+          <span class="toggle-icon-bars">
+            <span class="t-bar t-bar--1"></span>
+            <span class="t-bar t-bar--2"></span>
+            <span class="t-bar t-bar--3"></span>
+          </span>
+          <span class="toggle-label">MENU</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Quick-Jump Horizontal Pill Bar -->
+    <div class="dock-2d-quick-strip" id="dock-2d-quick-strip" aria-label="Quick Section Navigation">
+      <a href="#sec-2d-about" class="quick-strip-pill active" data-target="sec-2d-about">ABOUT</a>
+      <a href="#sec-2d-skills" class="quick-strip-pill" data-target="sec-2d-skills">SKILLS</a>
+      <a href="#sec-2d-projects" class="quick-strip-pill" data-target="sec-2d-projects">PROJECTS</a>
+      <a href="#sec-2d-thought" class="quick-strip-pill" data-target="sec-2d-thought">WRITING</a>
+      <a href="#sec-2d-contact" class="quick-strip-pill" data-target="sec-2d-contact">CONTACT</a>
+    </div>
+
+    <!-- Full Mobile Dropdown Drawer -->
+    <div class="dock-2d-mobile-drawer" id="dock-2d-mobile-drawer" aria-hidden="true">
+      <div class="drawer-header">
+        <div class="drawer-header-left">
+          <span class="dock-2d-dot"></span>
+          <span class="drawer-title">// 2D WORKSTATION INDEX</span>
+        </div>
+        <button class="drawer-close-btn" id="dock-2d-drawer-close" aria-label="Close Navigation">✕</button>
+      </div>
+      <div class="drawer-links">
+        <a href="#sec-2d-about" class="drawer-nav-item active" data-target="sec-2d-about">
+          <span class="drawer-num">01</span>
+          <div class="drawer-meta">
+            <strong class="drawer-name">Profile &amp; Journey</strong>
+            <span class="drawer-sub">Data Scientist &amp; Full-Stack Architect</span>
+          </div>
+          <span class="drawer-arrow">→</span>
+        </a>
+        <a href="#sec-2d-skills" class="drawer-nav-item" data-target="sec-2d-skills">
+          <span class="drawer-num">02</span>
+          <div class="drawer-meta">
+            <strong class="drawer-name">Core Competencies</strong>
+            <span class="drawer-sub">Deep Learning, Mathematics, Systems</span>
+          </div>
+          <span class="drawer-arrow">→</span>
+        </a>
+        <a href="#sec-2d-projects" class="drawer-nav-item" data-target="sec-2d-projects">
+          <span class="drawer-num">03</span>
+          <div class="drawer-meta">
+            <strong class="drawer-name">Flagship Deployments</strong>
+            <span class="drawer-sub">13+ Research &amp; Production Repos</span>
+          </div>
+          <span class="drawer-arrow">→</span>
+        </a>
+        <a href="#sec-2d-thought" class="drawer-nav-item" data-target="sec-2d-thought">
+          <span class="drawer-num">04</span>
+          <div class="drawer-meta">
+            <strong class="drawer-name">Writing &amp; Philosophy</strong>
+            <span class="drawer-sub">LinkedIn Deep Dives &amp; Ethos</span>
+          </div>
+          <span class="drawer-arrow">→</span>
+        </a>
+        <a href="#sec-2d-contact" class="drawer-nav-item" data-target="sec-2d-contact">
+          <span class="drawer-num">05</span>
+          <div class="drawer-meta">
+            <strong class="drawer-name">Terminal &amp; Connect</strong>
+            <span class="drawer-sub">Interactive CLI &amp; Direct Transmission</span>
+          </div>
+          <span class="drawer-arrow">→</span>
+        </a>
+      </div>
+      <div class="drawer-actions">
+        <button class="drawer-action-btn drawer-btn-dossier" id="drawer-dossier-btn">
+          <span>⚡ 60-SEC EXECUTIVE DOSSIER</span>
+        </button>
+        <button class="drawer-action-btn drawer-btn-warp" id="drawer-warp-btn">
+          <span>INITIALIZE 3D UNIVERSE ↗</span>
         </button>
       </div>
     </div>
@@ -937,6 +1019,15 @@
           <p style="color:#94a3b8">// QUANTUM NEXUS CLI &bull; ARCHITECTURE WORKSTATION</p>
           <p style="color:#38bdf8">Type <span style="color:#00f0ff;font-weight:700">help</span> to view available commands, or <span style="color:#00f0ff;font-weight:700">3d</span> to launch the 3D Spider Web.</p>
         </div>
+        <!-- Mobile-friendly quick command chips -->
+        <div class="term-2d-quick-chips" aria-label="Quick Terminal Commands">
+          <button type="button" class="term-chip" data-cmd="help">help</button>
+          <button type="button" class="term-chip" data-cmd="whoami">whoami</button>
+          <button type="button" class="term-chip" data-cmd="skills">skills</button>
+          <button type="button" class="term-chip" data-cmd="projects">projects</button>
+          <button type="button" class="term-chip" data-cmd="3d">3d</button>
+          <button type="button" class="term-chip" data-cmd="clear">clear</button>
+        </div>
         <form class="term-2d-input-row" id="term-2d-form" autocomplete="off">
           <span class="term-2d-prompt">aarav@nexus:~$</span>
           <input type="text" class="term-2d-input" id="term-2d-input" placeholder="Type command here (e.g. help, whoami, projects, 3d)..." spellcheck="false">
@@ -1499,13 +1590,13 @@
   </div>
 
   <!-- Scripts (deferred for non-blocking paint) -->
-  <script defer src="js/portfolio-data.js?v=43"></script>
-  <script defer src="js/audio-effects.js?v=43"></script>
+  <script defer src="js/portfolio-data.js?v=45"></script>
+  <script defer src="js/audio-effects.js?v=45"></script>
   <script defer src="js/three.min.js"></script>
-  <script defer src="js/three-universe.js?v=43"></script>
-  <script defer src="js/spider-web.js?v=43"></script>
-  <script defer src="js/landing.js?v=43"></script>
-  <script defer src="js/interactive-terminal.js?v=43"></script>
-  <script defer src="js/main.js?v=43"></script>
+  <script defer src="js/three-universe.js?v=45"></script>
+  <script defer src="js/spider-web.js?v=45"></script>
+  <script defer src="js/landing.js?v=45"></script>
+  <script defer src="js/interactive-terminal.js?v=45"></script>
+  <script defer src="js/main.js?v=45"></script>
 </body>
 </html>

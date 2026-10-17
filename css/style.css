@@ -1632,18 +1632,19 @@ body.web-only-mode {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .key-card-container {
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     border-radius: 0;
-    border-left: none;
-    border-right: none;
+    border: none;
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
     transform: translateX(100%);
   }
 
@@ -1656,11 +1657,12 @@ body.web-only-mode {
   }
 
   .key-card-body {
-    padding: 1.25rem 1rem;
+    padding: 1rem 0.85rem;
+    -webkit-overflow-scrolling: touch;
   }
 
   .nexus-info h2 {
-    font-size: 1.6rem;
+    font-size: 1.45rem;
   }
 }
 
@@ -3176,4 +3178,314 @@ body.web-mode-active .executive-dock {
   background: #004182;
   border-color: #38bdf8;
   box-shadow: 0 0 12px rgba(10, 102, 194, 0.4);
+}
+
+/* ==========================================================================
+   ADVANCED MOBILE & TOUCH OPTIMIZATION SUITE
+   ========================================================================== */
+
+/* 1. Touch & Pointer Isolation: Hide custom magnetic cursor on touch-only devices */
+@media (hover: none) and (pointer: coarse) {
+  .cyber-reticle {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+/* 2. Executive Dock Mobile Styling */
+@media (max-width: 768px) {
+  .executive-dock {
+    top: max(0.6rem, env(safe-area-inset-top, 0.6rem)) !important;
+    width: calc(100vw - 1rem) !important;
+    max-width: calc(100vw - 1rem) !important;
+    padding: 4px 6px !important;
+    border-radius: 9999px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    justify-content: flex-start !important;
+  }
+
+  .executive-dock::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .dock-actions-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .dock-btn {
+    padding: 6px 9px !important;
+    font-size: 0.64rem !important;
+    min-height: 34px !important;
+    white-space: nowrap !important;
+    touch-action: manipulation !important;
+  }
+
+  /* Hide desktop keyboard shortcut badges on mobile */
+  .dock-kbd,
+  .dock-btn-badge {
+    display: none !important;
+  }
+
+  .dock-divider {
+    height: 16px !important;
+    margin: 0 3px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .dock-audio-group {
+    flex-shrink: 0 !important;
+  }
+
+  .dock-audio-btn {
+    padding: 6px 9px !important;
+    font-size: 0.64rem !important;
+    min-height: 34px !important;
+    white-space: nowrap !important;
+    touch-action: manipulation !important;
+  }
+
+  /* 3. Executive Reel Teleprompter HUD on Mobile */
+  .executive-reel-hud {
+    top: max(3.8rem, calc(env(safe-area-inset-top, 0) + 3.4rem)) !important;
+    width: calc(100vw - 1.25rem) !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(-10px) !important;
+  }
+
+  .executive-reel-hud.active {
+    transform: translateX(-50%) translateY(0) !important;
+  }
+
+  .reel-hud-card {
+    padding: 0.85rem 1rem !important;
+    border-radius: 12px !important;
+  }
+
+  .reel-shortcut-hint {
+    display: none !important;
+  }
+
+  .reel-hub-title {
+    font-size: 0.92rem !important;
+  }
+
+  .reel-hub-desc {
+    font-size: 0.74rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .reel-inspect-btn {
+    width: 100% !important;
+    min-height: 38px !important;
+    justify-content: center !important;
+    touch-action: manipulation !important;
+  }
+
+  /* 4. Key Card Sub-Navigation Tabs & Simulations Mobile Refinement */
+  .nexus-tab-bar {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    padding: 4px !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .nexus-tab-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .nexus-tab-btn {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    font-size: 0.66rem !important;
+    padding: 6px 10px !important;
+    min-height: 34px !important;
+    touch-action: manipulation !important;
+  }
+
+  .key-card-footer {
+    padding: 0.75rem 1rem max(0.75rem, env(safe-area-inset-bottom, 0.75rem)) !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  .card-footer-info {
+    text-align: center !important;
+  }
+
+  .card-footer-actions {
+    width: 100% !important;
+  }
+
+  #card-return-web-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 42px !important;
+    touch-action: manipulation !important;
+  }
+
+  .sim-dual-view {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .sim-preview-frame {
+    height: 75px !important;
+  }
+
+  .sim-chart-spark {
+    height: 42px !important;
+  }
+
+  .sim-slider::-webkit-slider-thumb {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  /* 5. Executive Dossier Modal Full-Screen Polish on Mobile */
+  .dossier-container {
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    padding-top: env(safe-area-inset-top, 0) !important;
+    padding-bottom: env(safe-area-inset-bottom, 0) !important;
+  }
+
+  .dossier-header {
+    padding: 1rem 1rem 0.75rem !important;
+  }
+
+  .dossier-badge-row {
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+
+  .dossier-name {
+    font-size: 1.45rem !important;
+  }
+
+  .dossier-subtitle {
+    font-size: 0.72rem !important;
+  }
+
+  .dossier-close-btn {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    touch-action: manipulation !important;
+  }
+
+  .dossier-body {
+    padding: 1rem !important;
+    gap: 1.15rem !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .dossier-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .dossier-metric-card {
+    padding: 10px !important;
+  }
+
+  .metric-val {
+    font-size: 1.25rem !important;
+  }
+
+  .metric-lbl {
+    font-size: 0.65rem !important;
+  }
+
+  .dossier-project-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding: 10px 12px !important;
+  }
+
+  .dp-info {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .dp-jump-btn {
+    align-self: flex-end !important;
+    min-height: 32px !important;
+    padding: 4px 10px !important;
+    touch-action: manipulation !important;
+  }
+
+  .dossier-footer {
+    padding: 0.85rem 1rem max(0.85rem, env(safe-area-inset-bottom, 0.85rem)) !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    text-align: center !important;
+  }
+
+  .dossier-footer-actions {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+
+  #dossier-email-btn {
+    grid-column: 1 / -1 !important;
+    justify-content: center !important;
+    min-height: 38px !important;
+  }
+
+  .dossier-footer-actions .btn {
+    justify-content: center !important;
+    min-height: 38px !important;
+    touch-action: manipulation !important;
+  }
+
+  /* 6. Canvas Bottom Controls & Floating Hints */
+  .infinite-canvas-controls {
+    bottom: max(0.85rem, env(safe-area-inset-bottom, 0.85rem)) !important;
+    padding: 4px 8px !important;
+    gap: 6px !important;
+  }
+
+  #hud-coords-display {
+    display: none !important;
+  }
+
+  .gateway-portal-btn,
+  .canvas-tool-btn {
+    min-height: 38px !important;
+    min-width: 38px !important;
+    touch-action: manipulation !important;
+  }
+
+  .web-instruction-hint {
+    bottom: calc(max(0.85rem, env(safe-area-inset-bottom, 0.85rem)) + 48px) !important;
+    width: calc(100vw - 1.5rem) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .hint-pill {
+    font-size: 0.62rem !important;
+    padding: 5px 10px !important;
+    text-align: center !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+  }
 }
