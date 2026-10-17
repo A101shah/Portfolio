@@ -216,7 +216,6 @@ class LandingPortal {
     this.setupEventListeners();
     this.setupMagneticButton();
     this.setupSoundHooks();
-    this.startTelemetryClock();
     this.init2DPortfolio();
 
     // Run Preloader Boot Sequence
@@ -225,23 +224,6 @@ class LandingPortal {
     // Animation Loop
     this.lastTime = performance.now();
     requestAnimationFrame((t) => this.render(t));
-  }
-
-  startTelemetryClock() {
-    const clockEl = document.getElementById("landing-telemetry-clock");
-    if (!clockEl) return;
-    const update = () => {
-      const now = new Date();
-      // Indian Standard Time (UTC + 5:30)
-      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-      const ist = new Date(utc + (3600000 * 5.5));
-      const hh = String(ist.getHours()).padStart(2, '0');
-      const mm = String(ist.getMinutes()).padStart(2, '0');
-      const ss = String(ist.getSeconds()).padStart(2, '0');
-      clockEl.textContent = `MUMBAI [19.0760° N, 72.8777° E] // ${hh}:${mm}:${ss} IST`;
-    };
-    update();
-    setInterval(update, 1000);
   }
 
   runBootSequence() {

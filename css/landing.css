@@ -555,36 +555,9 @@
   z-index: 3;
 }
 
-/* ── Corner Coordinates ── */
+/* ── Corner Coordinates (Removed for clean, uncluttered hero) ── */
 .landing-corner {
-  position: absolute;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  color: rgba(120, 130, 160, 0.2);
-  letter-spacing: 0.1em;
-  z-index: 5;
-}
-
-.landing-corner--tl {
-  top: 2rem;
-  left: 2rem;
-}
-
-.landing-corner--tr {
-  top: 2rem;
-  right: 2rem;
-  text-align: right;
-}
-
-.landing-corner--bl {
-  bottom: 2rem;
-  left: 2rem;
-}
-
-.landing-corner--br {
-  bottom: 2rem;
-  right: 2rem;
-  text-align: right;
+  display: none !important;
 }
 
 /* ── Unified Non-Overlapping Bottom HUD Bar ── */
