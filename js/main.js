@@ -47,9 +47,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     navContainer.querySelectorAll(".node-pill").forEach(pill => {
       pill.addEventListener("click", () => {
+        soundEngine.playNodeClick();
         const targetId = pill.getAttribute("data-junction");
-        spiderWeb.selectJunction(targetId);
-        openKeyCard(targetId);
+        updateNavPills(targetId);
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            spiderWeb.selectJunction(targetId);
+            openKeyCard(targetId);
+          }, 0);
+        });
       });
 
       pill.addEventListener("mouseenter", () => {
@@ -58,9 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 3. Web Click & Transit Guide Handlers
+  // 3. Web Click & Transit Guide Handlers (Decoupled for instant canvas pointer response)
   spiderWeb.onNodeClick((junctionId) => {
-    openKeyCard(junctionId);
+    requestAnimationFrame(() => {
+      openKeyCard(junctionId);
+    });
   });
 
   spiderWeb.onNavigate((targetId) => {
@@ -144,24 +152,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Stepper Previous / Next Junction
+  // Stepper Previous / Next Junction (Decoupled instant-response for <20ms INP)
   if (prevBtn) {
     prevBtn.addEventListener("click", () => {
       soundEngine.playNodeClick();
+      prevBtn.style.transform = "scale(0.92)";
+      setTimeout(() => { prevBtn.style.transform = ""; }, 100);
+
       currentJunctionIndex = (currentJunctionIndex - 1 + junctions.length) % junctions.length;
       const target = junctions[currentJunctionIndex];
-      spiderWeb.selectJunction(target.id);
-      openKeyCard(target.id);
+      if (nodeCodeLabel) nodeCodeLabel.textContent = `${target.label}`;
+      if (nodeBadgeLabel) nodeBadgeLabel.textContent = target.badge || "KEY SECTION";
+      updateNavPills(target.id);
+
+      // Yield heavy DOM re-rendering & camera warp so the click interaction paints in <16ms
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          spiderWeb.selectJunction(target.id);
+          renderJunctionCard(target);
+        }, 0);
+      });
     });
   }
 
   if (nextBtn) {
     nextBtn.addEventListener("click", () => {
       soundEngine.playNodeClick();
+      nextBtn.style.transform = "scale(0.92)";
+      setTimeout(() => { nextBtn.style.transform = ""; }, 100);
+
       currentJunctionIndex = (currentJunctionIndex + 1) % junctions.length;
       const target = junctions[currentJunctionIndex];
-      spiderWeb.selectJunction(target.id);
-      openKeyCard(target.id);
+      if (nodeCodeLabel) nodeCodeLabel.textContent = `${target.label}`;
+      if (nodeBadgeLabel) nodeBadgeLabel.textContent = target.badge || "KEY SECTION";
+      updateNavPills(target.id);
+
+      // Yield heavy DOM re-rendering & camera warp so the click interaction paints in <16ms
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          spiderWeb.selectJunction(target.id);
+          renderJunctionCard(target);
+        }, 0);
+      });
     });
   }
 
@@ -587,9 +619,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (decisionVal) {
           if (pVal < 0.05) {
-            decisionVal.innerHTML = `<span style="color:#4ade80;">[✓ REJECT H0: STATISTICALLY SIGNIFICANT (p &lt; 0.05)]</span>`;
+            decisionVal.textContent = "[✓ REJECT H0: STATISTICALLY SIGNIFICANT (p < 0.05)]";
+            decisionVal.style.color = "#4ade80";
           } else {
-            decisionVal.innerHTML = `<span style="color:#94a3b8;">[FAIL TO REJECT H0: NO SIGNIFICANT DIFFERENCE (p &ge; 0.05)]</span>`;
+            decisionVal.textContent = "[FAIL TO REJECT H0: NO SIGNIFICANT DIFFERENCE (p ≥ 0.05)]";
+            decisionVal.style.color = "#94a3b8";
           }
         }
       }

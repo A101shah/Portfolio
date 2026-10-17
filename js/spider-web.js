@@ -1533,6 +1533,16 @@ class SpiderWeb {
       return;
     }
 
+    // If card or dossier is open and camera is settled, throttle background web rendering to preserve 60fps card scrolling
+    const isModalOpen = document.body.classList.contains("card-open") || document.body.classList.contains("dossier-open");
+    if (isModalOpen && !this.camera.isGliding && !this.mouse.isDragging && this.vibrations.length === 0) {
+      this.modalFrameThrottle = (this.modalFrameThrottle || 0) + 1;
+      if (this.modalFrameThrottle % 4 !== 0) {
+        requestAnimationFrame(this.animate);
+        return;
+      }
+    }
+
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     // Smooth camera inertia with cinematic glide (instant 1:1 during active drag)

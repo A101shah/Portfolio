@@ -437,10 +437,9 @@ body.web-only-mode {
   position: absolute;
   inset: 0;
   /* Right-anchored soft gradient: deeper under drawer on right, clear on left so spider web is fully visible */
-  background: linear-gradient(270deg, rgba(5, 7, 12, 0.68) 0%, rgba(5, 7, 12, 0.38) 540px, rgba(5, 7, 12, 0.08) 100%);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: linear-gradient(270deg, rgba(5, 7, 12, 0.78) 0%, rgba(5, 7, 12, 0.48) 540px, rgba(5, 7, 12, 0.15) 100%);
   cursor: pointer;
+  contain: strict;
 }
 
 .key-card-container {
@@ -455,15 +454,16 @@ body.web-only-mode {
   max-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
-  background: rgba(10, 13, 20, 0.94);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  background: rgba(10, 13, 20, 0.98);
   border: 1px solid rgba(0, 240, 255, 0.32);
   border-radius: 16px;
   box-shadow: -24px 0 65px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 240, 255, 0.12);
   overflow: hidden;
   transform: translateX(calc(100% + 2rem));
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  contain: layout style;
+  isolation: isolate;
 }
 
 .key-card-overlay.active .key-card-container {
@@ -533,12 +533,18 @@ body.web-only-mode {
   font-size: 0.72rem;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  will-change: transform;
+  touch-action: manipulation;
 }
 
 .stepper-btn:hover {
   color: var(--text-primary);
   border-color: var(--border-medium);
+}
+
+.stepper-btn:active {
+  transform: scale(0.92);
 }
 
 .card-close-btn {
@@ -552,7 +558,9 @@ body.web-only-mode {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  touch-action: manipulation;
+  will-change: transform;
 }
 
 .card-close-btn:hover {
@@ -561,11 +569,20 @@ body.web-only-mode {
   transform: rotate(90deg);
 }
 
+.card-close-btn:active {
+  transform: scale(0.92) rotate(90deg);
+}
+
 /* Card Body (Scrollable) */
 .key-card-body {
   padding: 1.5rem 1.6rem 1.5rem;
   overflow-y: auto;
   flex-grow: 1;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  contain: content;
+  scroll-behavior: auto;
+  will-change: scroll-position;
 }
 
 /* Card Footer */

@@ -650,6 +650,15 @@ class ThreeUniverse {
       }
     }
 
+    // Auto-pause / throttle WebGL render calls while card or dossier is open to eliminate GPU contention during scrolling
+    const isModalOpen = document.body.classList.contains("card-open") || document.body.classList.contains("dossier-open");
+    if (isModalOpen && this.currentMode === "universe" && !this.astrolabeDrag.isDragging) {
+      this.cardThrottle = (this.cardThrottle || 0) + 1;
+      if (this.cardThrottle % 4 !== 0) {
+        return;
+      }
+    }
+
     // Snappy, responsive mouse interpolation
     const mouseLerp = this.astrolabeDrag.isDragging ? 0.35 : 0.12;
     this.mouse.x += (this.mouse.targetX - this.mouse.x) * mouseLerp;
