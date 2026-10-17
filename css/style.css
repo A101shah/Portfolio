@@ -2065,36 +2065,7 @@ body.web-mode-active .executive-dock {
 }
 
 .dock-filter-nav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.dock-filter-pill {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  color: #94a3b8;
-  background: transparent;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.dock-filter-pill:hover {
-  color: #f1f5f9;
-  border-color: rgba(226, 232, 240, 0.15);
-}
-
-.dock-filter-pill.active {
-  color: #ffffff;
-  background: rgba(0, 240, 255, 0.12);
-  border-color: #00f0ff;
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
+  display: none !important;
 }
 
 .dock-audio-btn {

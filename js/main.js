@@ -1221,18 +1221,20 @@ document.addEventListener("DOMContentLoaded", () => {
   window.showCyberToast = showCyberToast;
 
   // ==========================================================================
-  // 1. EXECUTIVE COMMAND DOCK: DOMAIN FILTERS
+  // 1. EXECUTIVE COMMAND DOCK: DOMAIN FILTERS (Optional / Guarded)
   // ==========================================================================
   const filterPills = document.querySelectorAll(".dock-filter-pill");
-  filterPills.forEach(pill => {
-    pill.addEventListener("click", () => {
-      soundEngine.playNodeHover();
-      filterPills.forEach(p => p.classList.remove("active"));
-      pill.classList.add("active");
-      const category = pill.getAttribute("data-filter") || "all";
-      spiderWeb.setCategoryFilter(category);
+  if (filterPills && filterPills.length > 0) {
+    filterPills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        soundEngine.playNodeHover();
+        filterPills.forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        const category = pill.getAttribute("data-filter") || "all";
+        spiderWeb.setCategoryFilter(category);
+      });
     });
-  });
+  }
 
   // ==========================================================================
   // 2. AMBIENT CELESTIAL SOUNDSCAPE TOGGLE
