@@ -857,13 +857,23 @@ class SpiderWeb {
   }
 
   bindEvents() {
+    this.canvasRect = null;
+    const updateCanvasRect = () => {
+      this.canvasRect = this.canvas.getBoundingClientRect();
+    };
+    updateCanvasRect();
+
     window.addEventListener("resize", () => {
       this.resize();
-    });
+      updateCanvasRect();
+    }, { passive: true });
+
+    window.addEventListener("scroll", updateCanvasRect, { passive: true });
 
     // Mouse Move: Pan dragging, hover detection on hubs AND navigation transition cables
+    let isHoverTicking = false;
     this.canvas.addEventListener("mousemove", (e) => {
-      const rect = this.canvas.getBoundingClientRect();
+      const rect = this.canvasRect || this.canvas.getBoundingClientRect();
       this.mouse.screenX = e.clientX - rect.left;
       this.mouse.screenY = e.clientY - rect.top;
 
@@ -882,16 +892,20 @@ class SpiderWeb {
         this.camera.y = this.camera.targetY;
         this.mouse.dragDistance += Math.abs(dx) + Math.abs(dy);
         this.canvas.style.cursor = "grabbing";
-      } else {
-        this.checkHover();
-        this.interactPluck();
+        this.updateHudCoords();
+      } else if (!isHoverTicking) {
+        isHoverTicking = true;
+        requestAnimationFrame(() => {
+          this.checkHover();
+          this.interactPluck();
+          this.updateHudCoords();
+          isHoverTicking = false;
+        });
       }
-
-      this.updateHudCoords();
-    });
+    }, { passive: true });
 
     this.canvas.addEventListener("mousedown", (e) => {
-      const rect = this.canvas.getBoundingClientRect();
+      const rect = this.canvasRect || this.canvas.getBoundingClientRect();
       this.mouse.screenX = e.clientX - rect.left;
       this.mouse.screenY = e.clientY - rect.top;
       const world = this.screenToWorld(this.mouse.screenX, this.mouse.screenY);
@@ -996,7 +1010,7 @@ class SpiderWeb {
 
     this.canvas.addEventListener("touchmove", (e) => {
       if (e.touches.length === 1 && this.mouse.isDragging) {
-        const rect = this.canvas.getBoundingClientRect();
+        const rect = this.canvasRect || this.canvas.getBoundingClientRect();
         const curX = e.touches[0].clientX - rect.left;
         const curY = e.touches[0].clientY - rect.top;
 

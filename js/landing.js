@@ -123,7 +123,7 @@ class LandingPortal {
     this.particles = [];
     this.shockwaves = [];
     this.stardust = [];
-    this.particleCount = window.innerWidth < 768 ? 70 : 130;
+    this.particleCount = window.innerWidth < 768 ? 24 : 46;
     this.maxConnectDist = 115;
 
     // Living Spider Web Weave Geometry
@@ -250,17 +250,22 @@ class LandingPortal {
       return;
     }
 
+    // Skip preloader on subsequent visits in the same session for instant load
+    if (sessionStorage.getItem("aarav_portfolio_booted") === "true") {
+      this.preloader.classList.add("hidden");
+      this.onBootComplete();
+      return;
+    }
+
     const messages = [
-      "> INITIALIZING QUANTUM NEURAL HYPERCORE...",
-      "> COMPILING MULTI-DIMENSIONAL SPIDER TOPOLOGY... [OK]",
-      "> SYNCHRONIZING 32+ PROCEDURAL SILK TAPESTRIES... [OK]",
-      "> CALIBRATING ARACHNID KINEMATICS & DEW SENSORS... [OK]",
+      "> INITIALIZING QUANTUM NEURAL HYPERCORE... [OK]",
+      "> COMPILING SPIDER TOPOLOGY & PROCEDURAL SILK... [OK]",
       "> ALL SYSTEMS OPTIMAL // LAUNCHING GATEWAY."
     ];
 
     let currentMsgIdx = 0;
     let progress = 0;
-    const duration = 1250; // ms
+    const duration = 320; // 320ms fast cyber boot
     const startTime = performance.now();
 
     const updateBoot = (now) => {
@@ -270,33 +275,22 @@ class LandingPortal {
       if (this.preloaderFill) this.preloaderFill.style.width = `${progress}%`;
       if (this.preloaderPercent) this.preloaderPercent.textContent = `${progress < 10 ? '0' : ''}${progress}%`;
 
-      // Update terminal line
       const stepIdx = Math.min(Math.floor((progress / 100) * messages.length), messages.length - 1);
       if (stepIdx !== currentMsgIdx && this.preloaderTerminal) {
         currentMsgIdx = stepIdx;
         this.preloaderTerminal.innerHTML = `<div class="terminal-line active">${messages[currentMsgIdx]}</div>`;
-        if (window.soundEngineInstance && typeof window.soundEngineInstance.playTerminalKey === "function") {
-          window.soundEngineInstance.playTerminalKey();
-        }
       }
 
       if (progress < 100) {
         requestAnimationFrame(updateBoot);
       } else {
-        // Boot complete!
+        sessionStorage.setItem("aarav_portfolio_booted", "true");
         if (this.preloaderStatus) this.preloaderStatus.textContent = "ONLINE // READY";
-        if (window.soundEngineInstance && typeof window.soundEngineInstance.playBootChirp === "function") {
-          window.soundEngineInstance.playBootChirp();
-        }
-
+        this.preloader.classList.add("unlocked");
         setTimeout(() => {
-          this.preloader.classList.add("unlocked");
-          setTimeout(() => {
-            this.preloader.classList.add("hidden");
-          }, 700);
-
-          this.onBootComplete();
-        }, 250);
+          this.preloader.classList.add("hidden");
+        }, 320);
+        this.onBootComplete();
       }
     };
 
@@ -306,14 +300,6 @@ class LandingPortal {
   onBootComplete() {
     if (this.centerBlock) {
       this.centerBlock.classList.add("animate");
-    }
-
-    // Trigger Cyber Decryption Text Scramble
-    if (this.firstNameScramble) this.firstNameScramble.setText("AARAV");
-    if (this.lastNameScramble) {
-      setTimeout(() => {
-        this.lastNameScramble.setText("SHAH");
-      }, 150);
     }
   }
 
@@ -332,17 +318,17 @@ class LandingPortal {
 
   createParticles() {
     this.particles = [];
-    const count = window.innerWidth < 768 ? 65 : 130;
+    const count = window.innerWidth < 768 ? 24 : 46;
 
     for (let i = 0; i < count; i++) {
       this.particles.push({
         x: Math.random() * this.width,
         y: Math.random() * this.height,
         z: Math.random() * 800 + 200,
-        vx: (Math.random() - 0.5) * 0.55,
-        vy: (Math.random() - 0.5) * 0.55,
-        baseRadius: Math.random() * 1.5 + 0.8,
-        alpha: Math.random() * 0.6 + 0.25,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        baseRadius: Math.random() * 1.4 + 0.8,
+        alpha: Math.random() * 0.5 + 0.3,
         color: Math.random() < 0.25 ? "#b0baff" : (Math.random() < 0.5 ? "#9098b8" : "#727788"),
         wx: (Math.random() - 0.5) * this.width * 1.2,
         wy: (Math.random() - 0.5) * this.height * 1.2,
@@ -479,18 +465,30 @@ class LandingPortal {
 
   setupMagneticButton() {
     if (!this.enterBtn) return;
+    let btnRect = null;
+    let isTicking = false;
+
+    this.enterBtn.addEventListener("mouseenter", () => {
+      btnRect = this.enterBtn.getBoundingClientRect();
+    }, { passive: true });
 
     this.enterBtn.addEventListener("mousemove", (e) => {
-      const rect = this.enterBtn.getBoundingClientRect();
-      const relX = e.clientX - rect.left - rect.width / 2;
-      const relY = e.clientY - rect.top - rect.height / 2;
-
-      this.enterBtn.style.transform = `translate(${relX * 0.25}px, ${relY * 0.25}px) scale(1.05)`;
-    });
+      if (!btnRect || isTicking) return;
+      isTicking = true;
+      requestAnimationFrame(() => {
+        if (btnRect) {
+          const relX = e.clientX - btnRect.left - btnRect.width / 2;
+          const relY = e.clientY - btnRect.top - btnRect.height / 2;
+          this.enterBtn.style.transform = `translate(${relX * 0.15}px, ${relY * 0.15}px) scale(1.03)`;
+        }
+        isTicking = false;
+      });
+    }, { passive: true });
 
     this.enterBtn.addEventListener("mouseleave", () => {
-      this.enterBtn.style.transform = `translate(0px, 0px) scale(1)`;
-    });
+      btnRect = null;
+      this.enterBtn.style.transform = "none";
+    }, { passive: true });
   }
 
   setupSoundHooks() {
@@ -499,20 +497,7 @@ class LandingPortal {
         if (window.soundEngineInstance) {
           window.soundEngineInstance.playNodeHover();
         }
-      });
-    }
-
-    // Title Glitch & Re-scramble on hover
-    if (this.titleElement) {
-      this.titleElement.addEventListener("mouseenter", () => {
-        if (window.soundEngineInstance && typeof window.soundEngineInstance.playGlitchChirp === "function") {
-          window.soundEngineInstance.playGlitchChirp();
-        }
-        if (this.firstNameScramble) this.firstNameScramble.setText("AARAV");
-        if (this.lastNameScramble) {
-          setTimeout(() => this.lastNameScramble.setText("SHAH"), 120);
-        }
-      });
+      }, { passive: true });
     }
 
     // Skill Tag floats
@@ -522,7 +507,7 @@ class LandingPortal {
         if (window.soundEngineInstance) {
           window.soundEngineInstance.playTerminalKey();
         }
-      });
+      }, { passive: true });
     });
 
     // Social links hover
@@ -532,7 +517,7 @@ class LandingPortal {
         if (window.soundEngineInstance) {
           window.soundEngineInstance.playNodeHover();
         }
-      });
+      }, { passive: true });
     });
   }
 
@@ -763,11 +748,15 @@ class LandingPortal {
       this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.15;
       this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.15;
 
-      // Parallax Tilt on Center Content Block
+      // Parallax Tilt on Center Content Block (update only when active)
       if (this.centerBlock && !this.isWarping) {
-        this.tilt.x += (this.tilt.targetX - this.tilt.x) * 0.08;
-        this.tilt.y += (this.tilt.targetY - this.tilt.y) * 0.08;
-        this.centerBlock.style.transform = `perspective(1000px) rotateX(${this.tilt.x.toFixed(2)}deg) rotateY(${this.tilt.y.toFixed(2)}deg)`;
+        const diffX = (this.tilt.targetX - this.tilt.x);
+        const diffY = (this.tilt.targetY - this.tilt.y);
+        if (Math.abs(diffX) > 0.04 || Math.abs(diffY) > 0.04) {
+          this.tilt.x += diffX * 0.08;
+          this.tilt.y += diffY * 0.08;
+          this.centerBlock.style.transform = `perspective(1000px) rotateX(${this.tilt.x.toFixed(2)}deg) rotateY(${this.tilt.y.toFixed(2)}deg)`;
+        }
       }
 
       // Clear Canvas
@@ -793,11 +782,14 @@ class LandingPortal {
     const len = pts.length;
     const mx = this.mouse.x;
     const my = this.mouse.y;
+    const maxDist = this.maxConnectDist;
+    const maxDistSq = maxDist * maxDist;
 
-    // 1. Update Positions & Draw Particles
+    // 1. Update Positions & Draw Particles in single batch
+    ctx.fillStyle = "rgba(180, 205, 255, 0.75)";
+    ctx.beginPath();
     for (let i = 0; i < len; i++) {
       const p = pts[i];
-
       p.x += p.vx;
       p.y += p.vy;
 
@@ -806,47 +798,43 @@ class LandingPortal {
       if (p.y < -20) p.y = this.height + 20;
       else if (p.y > this.height + 20) p.y = -20;
 
-      // Mouse repulsion
+      // Mouse gentle repulsion
       if (this.mouse.active) {
         const dx = p.x - mx;
         const dy = p.y - my;
-        const dist = Math.hypot(dx, dy);
-        if (dist < 130 && dist > 1) {
+        const dSq = dx * dx + dy * dy;
+        if (dSq < 16900 && dSq > 1) {
+          const dist = Math.sqrt(dSq);
           const force = (130 - dist) / 130;
-          p.x += (dx / dist) * force * 1.8;
-          p.y += (dy / dist) * force * 1.8;
+          p.x += (dx / dist) * force * 1.5;
+          p.y += (dy / dist) * force * 1.5;
         }
       }
 
-      // Draw particle dot
-      ctx.beginPath();
+      ctx.moveTo(p.x + p.baseRadius, p.y);
       ctx.arc(p.x, p.y, p.baseRadius, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = p.alpha;
-      ctx.fill();
     }
+    ctx.fill();
 
-    // 2. Draw Interconnecting Filaments
-    ctx.lineWidth = 0.65;
+    // 2. Draw Interconnecting Filaments in single batched stroke (Zero draw call thrashing)
+    ctx.lineWidth = 0.6;
+    ctx.strokeStyle = "rgba(160, 175, 240, 0.14)";
+    ctx.beginPath();
     for (let i = 0; i < len; i++) {
       const p1 = pts[i];
       for (let j = i + 1; j < len; j++) {
         const p2 = pts[j];
         const dx = p1.x - p2.x;
         const dy = p1.y - p2.y;
-        const dist = Math.hypot(dx, dy);
+        const dSq = dx * dx + dy * dy;
 
-        if (dist < this.maxConnectDist) {
-          const alpha = (1 - dist / this.maxConnectDist) * 0.22;
-          ctx.beginPath();
+        if (dSq < maxDistSq) {
           ctx.moveTo(p1.x, p1.y);
           ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = "rgba(160, 175, 240, " + alpha + ")";
-          ctx.globalAlpha = 1;
-          ctx.stroke();
         }
       }
     }
+    ctx.stroke();
   }
 
   renderShockwaves(dt) {

@@ -731,24 +731,17 @@ body.page-scrolled .landing-bottom-bar,
   display: none !important;
 }
 
-/* ── Entrance Animations (stagger) ── */
+/* ── Entrance Animations (Non-blocking for instant sub-second LCP) ── */
 .landing-center > * {
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: none;
 }
 
-.landing-center.animate > * {
-  animation: landingFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.landing-center.animate > *:nth-child(1) { animation-delay: 0.3s; }
-.landing-center.animate > *:nth-child(2) { animation-delay: 0.5s; }
-.landing-center.animate > *:nth-child(3) { animation-delay: 0.7s; }
-.landing-center.animate > *:nth-child(4) { animation-delay: 0.9s; }
-.landing-center.animate > *:nth-child(5) { animation-delay: 1.1s; }
-
-@keyframes landingFadeUp {
-  to { opacity: 1; transform: translateY(0); }
+/* Fast hit-testing: prevent nested SVG/span from creating redundant pointer presentation delay */
+button svg, a svg,
+button > span, a > span,
+.landing-kbd, .explore-arrow, .enter-arrow {
+  pointer-events: none;
 }
 
 /* ── Responsive ── */
@@ -817,15 +810,13 @@ body.page-scrolled .landing-bottom-bar,
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.75s ease;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #system-preloader.unlocked {
   opacity: 0;
-  transform: scale(1.12);
-  filter: blur(10px);
+  transform: scale(1.04);
   pointer-events: none;
 }
 
