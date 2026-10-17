@@ -161,6 +161,8 @@
   align-items: center;
   text-align: center;
   gap: 0;
+  contain: layout style;
+  will-change: transform, opacity;
 }
 
 /* ── Status Line (top) ── */
@@ -406,9 +408,14 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 60px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.2s ease, 
+              background 0.2s ease, 
+              box-shadow 0.2s ease;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   z-index: 10;
+  will-change: transform;
+  touch-action: manipulation;
 }
 
 .landing-enter-btn:hover {
@@ -417,6 +424,13 @@
   background: rgba(150, 160, 255, 0.1);
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 0 30px rgba(120, 130, 255, 0.25);
+}
+
+.landing-enter-btn.charging {
+  border-color: rgba(0, 240, 255, 0.6);
+  background: rgba(0, 240, 255, 0.12);
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
+  pointer-events: none;
 }
 
 .landing-kbd {

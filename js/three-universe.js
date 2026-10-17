@@ -95,6 +95,24 @@ class ThreeUniverse {
     this.isWarping = false;
     this.warpStartTime = 0;
 
+    // Precompile WebGL shader pipelines in background during idle time (eliminates user interaction hitch)
+    if (this.renderer && typeof this.renderer.compile === "function") {
+      const precompileShaders = () => {
+        try {
+          this.warpGroup.visible = true;
+          this.universeGroup.visible = true;
+          this.renderer.compile(this.scene, this.camera);
+          this.warpGroup.visible = false;
+          this.universeGroup.visible = false;
+        } catch (e) {}
+      };
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(precompileShaders, { timeout: 1200 });
+      } else {
+        setTimeout(precompileShaders, 350);
+      }
+    }
+
     // Animation Clock
     this.clock = new THREE.Clock();
     this.animate = this.animate.bind(this);
