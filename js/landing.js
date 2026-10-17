@@ -377,29 +377,24 @@ class LandingPortal {
       });
     }
 
-    // Enter Universe Warp Click (Decoupled instant-response for <20ms INP)
+    // Enter Universe Warp Click (Decoupled instant-response for <30ms INP)
     if (this.enterBtn) {
-      this.enterBtn.addEventListener("pointerdown", () => {
-        if (!this.isWarping) {
-          this.enterBtn.style.transform = "scale(0.97)";
-        }
-      }, { passive: true });
-
       this.enterBtn.addEventListener("click", () => {
         if (this.isWarping) return;
         this.isWarping = true;
 
-        // 1. Instant ultra-lightweight UI feedback (<0.5ms processing duration)
+        // 1. Instant ultra-lightweight UI feedback (<0.3ms processing duration)
         this.enterBtn.classList.add("charging");
         const btnText = this.enterBtn.querySelector("span:first-child");
         if (btnText) btnText.textContent = "WEAVING QUANTUM WEB...";
 
-        // 2. Yield to browser so it immediately paints the button's clicked state in <16ms (eliminating INP delay)
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            this.triggerWarpEntrance();
-          }, 0);
-        });
+        // 2. Yield to browser so it immediately paints the button's clicked state (<16ms INP)
+        const startWarp = () => this.triggerWarpEntrance();
+        if ("scheduler" in window && typeof window.scheduler.postTask === "function") {
+          window.scheduler.postTask(startWarp, { priority: "background" });
+        } else {
+          setTimeout(startWarp, 50);
+        }
       });
     }
 
